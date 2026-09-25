@@ -1,0 +1,341 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth"></div>
+    <div class="LeftSide Games">
+        <h2 class="Bold">Filters</h2>
+        <hr>
+        <div class="GamesList">
+            {% for Category in Categories %}
+                <a href="/Games/{{ Category|url_encode }}" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">{{ Category }}</a><br>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="RightSide Games">
+        {% if Category is defined %}
+            <h2 class="Bold InlineBlock PaddingLeft">{{ Category }}</h2>
+        {% else %}
+            <h2 class="Bold InlineBlock PaddingLeft">Games</h2>
+        {% endif %}
+        <form class="SearchForm InlineBlock" action="/Games/Search" method="GET">
+            <input type="text" name="Search" class="InputText InlineBlock">
+            <input type="submit" style="height: 23px;" value="Search" class="SubmitButton Grey">
+        </form>
+        <a href="/Create/Game" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Blue Medium" style="margin-top: 15px;">
+                Create Game
+            </button>
+        </a>
+        <hr class="NoMargin">
+        <h3 class="Bold InlineBlock PaddingLeft">Recommended Games</h3>
+        <a href="/Games/All" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Grey" style="margin-top: 15px;">
+                View All
+            </button>
+        </a>
+        <div class="GamesSlideContainer">
+            <div class="GamesLeft" onclick="trackLeftSlide(this.id)" style="display: none;" id="recommended_games_button"><img src="/Images/vector_23.png"></div>
+            <div class="GamesSlide" id="recommended_games">
+                {% set GameIndex = 0 %}
+                {% for Game in Games %}
+                    {% if Game.id is defined and GameIndex < 50 %}
+                        {% set GameIndex = GameIndex + 1 %}
+                        <a href="{{ Game.server_url }}">
+                            <div class="GamePanel">
+                                <img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" data-src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="tns-lazy-img GameThumbnail">
+                                <span class="GameTitle">{{ Game.server_title }}</span>
+                                <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="GamesRight" onclick="trackRightSlide(this.id)" id="recommended_games_button"><img src="/Images/Vector_22.png"></div>
+        </div>
+        <h3 class="Bold InlineBlock PaddingLeft">Featured Games</h3>
+        <a href="/Games/Featured" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Grey" style="margin-top: 15px;">
+                View All
+            </button>
+        </a>
+        <div class="GamesSlideContainer">
+            <div class="GamesLeft" onclick="trackLeftSlide(this.id)" style="display: none;" id="featured_games_button"><img src="/Images/vector_23.png"></div>
+            <div class="GamesSlide" id="featured_games">
+                {% for Game in Games %}
+                    {% if Game.id is defined and Game.server_featured == "y" %}
+                        <a href="{{ Game.server_url }}">
+                            <div class="GamePanel">
+                                <img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" data-src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="tns-lazy-img GameThumbnail">
+                                <span class="GameTitle">{{ Game.server_title }}</span>
+                                <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="GamesRight" onclick="trackRightSlide(this.id)" id="featured_games_button"><img src="/Images/Vector_22.png"></div>
+        </div>
+        <h3 class="Bold InlineBlock PaddingLeft">Town And City</h3>
+        <a href="/Games/Town%20And%20City" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Grey" style="margin-top: 15px;">
+                View All
+            </button>
+        </a>
+        <hr class="NoMargin">
+        <div class="GamesSlideContainer">
+            <div class="GamesLeft" onclick="trackLeftSlide(this.id)" style="display: none;" id="town_games_button"><img src="/Images/vector_23.png"></div>
+            <div class="GamesSlide" id="town_games">
+                {% for Game in Games %}
+                    {% if Game.id is defined and Game.server_category == "Town And City" %}
+                        <a href="{{ Game.server_url }}">
+                            <div class="GamePanel">
+                                <img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" data-src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="tns-lazy-img GameThumbnail">
+                                <span class="GameTitle">{{ Game.server_title }}</span>
+                                <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="GamesRight" onclick="trackRightSlide(this.id)" id="town_games_button"><img src="/Images/Vector_22.png"></div>
+        </div>
+        <h3 class="Bold InlineBlock PaddingLeft">Funny</h3>
+        <a href="/Games/Funny" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Grey" style="margin-top: 15px;">
+                View All
+            </button>
+        </a>
+        <hr class="NoMargin">
+        <div class="GamesSlideContainer">
+            <div class="GamesLeft" onclick="trackLeftSlide(this.id)" style="display: none;" id="funny_games_button"><img src="/Images/vector_23.png"></div>
+            <div class="GamesSlide" id="funny_games">
+            {% for Game in Games %}
+                {% if Game.id is defined and Game.server_category == "Funny" %}
+                    <a href="{{ Game.server_url }}">
+                        <div class="GamePanel">
+                            <img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" data-src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="tns-lazy-img GameThumbnail">
+                            <span class="GameTitle">{{ Game.server_title }}</span>
+                            <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <div class="GamesRight" onclick="trackRightSlide(this.id)" id="funny_games_button"><img src="/Images/Vector_22.png"></div>        </div>
+        <h3 class="Bold InlineBlock PaddingLeft">War</h3>
+        <a href="/Games/War" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Grey" style="margin-top: 15px;">
+                View All
+            </button>
+        </a>
+        <hr class="NoMargin">
+        <div class="GamesSlideContainer">
+            <div class="GamesLeft" onclick="trackLeftSlide(this.id)" style="display: none;" id="war_games_button"><img src="/Images/vector_23.png"></div>
+            <div class="GamesSlide" id="war_games">
+            {% for Game in Games %}
+                {% if Game.id is defined and Game.server_category == "War" %}
+                    <a href="{{ Game.server_url }}">
+                        <div class="GamePanel">
+                            <img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" data-src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="tns-lazy-img GameThumbnail">
+                            <span class="GameTitle">{{ Game.server_title }}</span>
+                            <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <div class="GamesRight" onclick="trackRightSlide(this.id)" id="war_games_button"><img src="/Images/Vector_22.png"></div>
+        </div>
+    </div>
+    <script>
+        var slider = tns({
+            container: '.GamesSlide#recommended_games',
+            items: 5,
+            loop: false,
+            lazyload: true,
+            prevButton: '.GamesLeft#recommended_games_button',
+            nextButton: '.GamesRight#recommended_games_button',
+            slideBy: 'page',
+        });
+
+        var slider2 = tns({
+            container: '.GamesSlide#featured_games',
+            items: 5,
+            loop: false,
+            lazyload: true,
+            prevButton: '.GamesLeft#featured_games_button',
+            nextButton: '.GamesRight#featured_games_button',
+            slideBy: 'page',
+        });
+
+        var slider3 = tns({
+            container: '.GamesSlide#town_games',
+            items: 5,
+            loop: false,
+            lazyload: true,
+            prevButton: '.GamesLeft#town_games_button',
+            nextButton: '.GamesRight#town_games_button',
+            slideBy: 'page',
+        });
+
+        var slider4 = tns({
+            container: '.GamesSlide#funny_games',
+            items: 5,
+            loop: false,
+            lazyload: true,
+            prevButton: '.GamesLeft#funny_games_button',
+            nextButton: '.GamesRight#funny_games_button',
+            slideBy: 'page',
+        });
+
+        var slider5 = tns({
+            container: '.GamesSlide#war_games',
+            items: 5,
+            loop: false,
+            lazyload: true,
+            prevButton: '.GamesLeft#war_games_button',
+            nextButton: '.GamesRight#war_games_button',
+            slideBy: 'page',
+        });
+
+        var slideOffsets = {};
+        function trackRightSlide(id) {
+            $(`.GamesLeft#${id}`).fadeIn(100);
+            slideOffsets[id] ? slideOffsets[id]++ : slideOffsets[id] = 1;
+        }
+
+        function trackLeftSlide(id) {
+            if (slideOffsets[id] > 0) slideOffsets[id]--;
+            if (slideOffsets[id] === 0) $(`.GamesLeft#${id}`).fadeOut(100);
+        }
+    </script>
+    <style>
+        .RobloxContainer {
+            width: 1300px;
+        }
+
+        .Ad {
+            width: 1300px;
+            height: 130px;
+        }
+
+        .tns-controls, .tns-nav {
+            display: none;
+        }
+
+        .GamesSlideContainer {
+            position: relative;
+        }
+
+        .GamesRight {
+            top: 0px;
+            right: 0px;
+        }
+
+        #recommended_games_button, #featured_games_button, #town_games_button, #funny_games_button, #war_games_button {
+            background-size: cover;
+            width: 30px;
+            height: 170px;
+            position: absolute;
+            z-index: 3;
+            border: 1px solid rgb(0 0 0 / 30%);
+            border-radius: 2px;
+            backdrop-filter: blur(10px);
+        }
+
+        .SearchForm {
+            margin-left: 100px;
+        }
+
+        .GamesLeft img, .GamesRight img {
+            width: 20px;
+            padding: 5px;
+            padding-top: 52px;
+            padding-bottom: 51px;
+            opacity: 0.3;
+        }
+
+        .GameTitle {
+            width: 167px;
+        }
+
+        .GamePanel {
+            width: 190px;
+            display: inline-block;
+            padding: 5px;
+            box-shadow: inset 0px 0px 0px rgb(255 255 255 / 50%), 0px 0px 3px 0px rgb(0 0 0 / 10%);
+            border: 1px solid #ccc;
+            margin-top: 6px;
+            color: #9d0091;
+            line-height: 16px;
+            margin-right: 7px;
+            transition: background-color .2s ease-in-out;
+            position: relative;
+            height: 145px;
+            margin-left: 7px;
+        }
+
+        .GamePanel:hover {
+            background-color: whitesmoke;
+        }
+
+        .GameThumbnail {
+            width: 188px;
+            height: 110px;
+            border: 1px solid #d3d3d3;
+        }
+
+        .GamesList a {
+            display: inline-block;
+            border-bottom: 1px solid #ccc;
+            padding: 7px;
+            font-size: 13px;
+            color: #78006f;
+            width: 92%;
+            background-color: #e7e7e721;
+            border: 1px solid #ccc;
+            margin-bottom: -1px;
+            box-shadow: unset;
+        }
+
+        .RightSide.Games {
+            float: right;
+            width: calc(81.0% - 20px);
+        }
+
+        .LeftSide.Games {
+            float: left;
+            width: calc(22% - 20px);
+            height: 1300px;
+            border-right: 1px solid #ccc;
+        }
+
+        .PaddingLeft {
+            padding-left: 8px;
+        }
+
+        .GamesList {
+            box-shadow: unset;
+        }
+
+        .pagination-area {
+            margin-top: 0px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

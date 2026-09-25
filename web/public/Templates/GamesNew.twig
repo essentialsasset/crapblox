@@ -1,0 +1,103 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth Games" style="overflow: hidden;">
+        {% if Category is defined %}
+            <h2 class="Bold InlineBlock">{{ Category }}</h2>
+        {% else %}
+            <h2 class="Bold InlineBlock">Games</h2>
+        {% endif %}
+        <form class="SearchForm InlineBlock" action="/Games/Search" method="GET">
+            <input type="text" name="Search" class="InputText InlineBlock">
+            <input type="submit" value="Search" class="SubmitButton Grey">
+        </form>
+        <a href="/Create/Game" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Grey">
+                Create Game
+            </button>
+        </a>
+        <hr class="NoMargin">
+        <div class="SearchFilters">
+            <span class="Bold InlineBlock">Search Filters</span>
+        </div>
+        <hr class="NoMargin">
+        {% for Game in Games %}
+            {% if Game.id is defined %}
+                <div class="Game">
+                    <a href="{{ Game.server_url }}" style="margin-bottom: 0px;">
+                        <img class="Thumbnail" src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}">
+                    </a>
+                    <div class="InlineBlock Top" style="width: 650px;padding-left: 10px;padding-top: 2px;">
+                        <a href="{{ Game.server_url }}" class="GameTitle Bold">
+                            {{ Game.server_title }}
+                        </a>
+                        <div class="PlayerCount {% if Game.active == false %}Offline{% endif %}">
+                            Players
+                            {% if Game.active == true %}
+                                (<i class="far fa-user"></i> {{ Game.server_players }}/{{ Game.server_max_players }})
+                            {% else %}
+                                (<i class="far fa-user"></i> 0/{{ Game.server_max_players }})
+                            {% endif %}
+                        </div><br>
+                        <div class="Card" style="position: relative; bottom: 11px;">{{ Game.server_description }}</div>
+                    </div>
+                    <div class="GamesInfo">
+                        {% if Game.server_group == 0 %}
+                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Game.profile_picture }}.png">
+                        {% else %}
+                            <img src="/get-asset/Groups/{{ Game.group_id }}.png">
+                        {% endif %}
+
+                        {% if Game.server_group == 0 %}
+                            <span class="BuilderInfo InlineBlock Bold Top">
+                                <span class="Bold">Builder:</span>
+                                <span class="AuthorLink"><a style="font-size: 12px;margin-top: 4px;" href="/User/{{ Game.server_owner }}">{{ Game.server_owner }}</a></span>
+                                <span class="Caption">Joined:  {{ Game.roblox_created|date('m/d/Y') }}</span>
+                            </span>
+                        {% else %}
+                            <span class="BuilderInfo InlineBlock Bold Top">
+                                <span class="Bold">Group:</span>
+                                <span class="AuthorLink"><a style="font-size: 12px;margin-top: 4px;" href="/Groups/{{ Game.group_id }}">{{ Game.group_title }}</a></span>
+                                <span class="Caption">Created:  {{ Game.group_created|date('m/d/Y') }}</span>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("editDropdown").classList.toggle("show");
+        }
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

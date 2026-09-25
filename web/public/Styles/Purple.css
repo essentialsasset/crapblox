@@ -1,0 +1,31 @@
+header {
+    background-image: url(https://media.discordapp.net/attachments/523625108850343959/998789658760712232/dark_purple_city.png);
+}
+img[src*="Logo"]{ content: url("https://media.discordapp.net/attachments/523625108850343959/998789905054449715/logo_dark_purple.png"); }
+.BuilderInfo a {
+    color: #25057f;
+}
+header .Actions a:hover {
+    background-color: #fff0;
+}
+.SubmitButton.Blue.Medium {
+    border: 1px solid #270781;
+    background-color: #7f4fff;
+    background: rgb(8,81,181);
+    background: linear-gradient(0deg, rgb(91 49 225) 0%, rgb(57 14 187) 35%, rgb(118 71 248) 46%, rgb(129 81 255) 100%);
+}
+.SubmitButton.Blue.Large {
+    border: 1px solid #270781;
+    background-color: #7f4fff;
+    background: rgb(8,81,181);
+    background: linear-gradient(0deg, rgb(91 49 225) 0%, rgb(57 14 187) 35%, rgb(118 71 248) 46%, rgb(129 81 255) 100%);
+}
+.SubmitButton.Green.Large {
+ border: 1px solid #270781;
+    background-color: #7f4fff;
+    background: rgb(8,81,181);
+    background: linear-gradient(0deg, rgb(91 49 225) 0%, rgb(57 14 187) 35%, rgb(118 71 248) 46%, rgb(129 81 255) 100%);
+}
+.GameBar .Icon {
+    filter: hue-rotate(273deg);
+}

@@ -1,0 +1,64 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="FullWidth">
+        <form action="/API/Edit/Group/{{ Group.id }}" method="POST" enctype="multipart/form-data">
+            <div class="LeftSide">
+                <h1 class="Bold">Edit Group</h1>
+                <hr>
+                <div class="SignInForm">
+                    <div class="FormField">
+                        <span class="Middle">Group Title:</span>
+                        <input type="text" name="title" value="{{ Group.group_title }}" class="InputText InlineBlock">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Group Description: <br><span class="Caption">Make sure you describe your group well!</span></span>
+                        <textarea type="text" style="width: 64%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock">{{ Group.group_description }}</textarea>
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Thumbnail: </span>
+                        <input type="file" class="InputText" name="asset">
+                    </div>
+                </div>
+            </div>
+            <div class="RightSide">
+                <h1>&nbsp;</h1>
+                <hr>
+                <div class="SignInForm">
+                    <div class="FormField">
+                        <span class="Middle">Group Visibility: <br><span class="Caption">Toggled.</span></span>
+                        <input type="checkbox" {% if Item.item_visibile == "y" %}checked{% endif %} name="visibility" value="visible" class="InputText InlineBlock">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Group Type: <br><span class="Caption">Determines if people have to request to join.</span></span>
+                        <input type="checkbox" {% if Item.item_onsale == "y" %}checked{% endif %} name="onsale" value="true" class="InputText InlineBlock">
+                    </div>
+
+                    <input type="submit" class="SubmitButton Medium Green Right" value="Update Group">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

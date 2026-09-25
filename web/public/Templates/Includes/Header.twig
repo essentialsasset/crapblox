@@ -1,0 +1,90 @@
+<div class="HeaderContainer">
+    <header class="RobloxHeader">
+        <div class="HeaderMargin">
+            {% if Session.Roblox is defined %}
+                <a href="/Feed">
+                    <img class="Logo" style="width: 73px;" src="/Images/Logo.png">
+                </a>
+            {% else %}
+                <a href="/">
+                    <img class="Logo" style="width: 73px;" src="/Images/Logo.png">
+                </a>
+            {% endif %}
+
+            {% if Session.Roblox is defined %}
+                <div class="Actions Middle InlineBlock">
+                    <a href="/" style="position: relative;right: 15px;border-right: 0px solid #cccccc4d;/*padding-left: 20px;*/font-weight: bold"></a>
+                    <a href="/Games/" style="margin-left: -35px;">Games</a>
+                    <a href="/Catalog/"> Catalog</a>
+                    <a href="/Forum/"> Forum</a>
+                </div>
+            {% endif %}
+
+            {% if Session.Roblox is defined and Currency is defined%}
+                <div class="Actions Right Middle InlineBlock" style="position: relative;top: 2px;">
+                    <div class="dropdown" style="position: relative;right: 10px;top: 1px;">
+                        <a class="dropbtn" style="padding-left: 15px;border-left: 1px solid #cccccc4d;" onclick=";dropdown_user()" href="#"><img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ProfilePicture" src="/get-asset/Headshots/{{ Session.UserID }}.png"> {{ Session.Roblox }}</a>
+                        <div id="userDropdown" class="dropdown-content">
+                            <a href="/User/{{ Session.Roblox }}"><i class="far fa-user"></i> Profile</a>
+                            <a href="/Settings"><i class="far fa-wrench"></i> Settings</a>
+                            <a href="/API/Auth/Logout"><i class="far fa-door-open"></i> Logout</a>
+                        </div>
+                    </div>
+                    <a href="/Inbox/" style="position: relative;left: 20px;font-size: 19px;vertical-align: middle;">
+                        <i class="far fa-bell"></i>
+                        {% if Notifications > 0 %}
+                            <div class="NotificationCount InlineBlock">{{ Notifications }}</div>
+                        {% endif %}
+                    </a>
+                    <a style="padding-left: 5px;" href="/Transactions" id="TransactionsHover">
+                        <img src="/Images/Zuo.png" style="width: 28px;top: unset;top: -1px;" class="Middle">
+                        <span class="InlineBlock Middle" style="position: relative;left: 4px;bottom: 1px;">{{ Currency|round|number_format  }}</span>
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if Session.Roblox is not defined %}
+                <div class="Actions Middle InlineBlock">
+                    <a href="/">Login</a>
+                    <a href="/SignUp">Signup</a>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+    {% if Session.Roblox is defined %}
+    <header class="SecondHeader">
+        <div class="HeaderMargin">
+            <a href="/Develop/"><i class="far fa-plus"></i> Create</a>
+            <a href="/Trades/Incoming"><i class="far fa-right-left"></i> Trading
+                {% if TradeRequests > 0 %}
+                    <div class="NotificationCount InlineBlock">{{ TradeRequests }}</div>
+                {% endif %}
+            </a>
+            <a href="/Avatar/"><i class="far fa-user"></i> Character</a>
+            <a href="/Users/"><i class="far fa-users"></i> Users</a>
+            <a href="/Friends/"><i class="far fa-user-plus"></i> Friends
+                {% if FriendRequests > 0 %}
+                    <div class="NotificationCount InlineBlock">{{ FriendRequests }}</div>
+                {% endif %}
+            </a>
+            <a href="/Groups/"><i class="far fa-user-group-crown"></i> Groups</a>
+            {% if Admin %}
+                <a href="/Admin/"><i class="far fa-gavel"></i> Admin
+                    {% if ApprovalRequests + AdApprovalRequests + GroupApprovalRequests + GameApprovalRequests > 0 %}
+                        <div class="NotificationCount InlineBlock">{{ ApprovalRequests + AdApprovalRequests + GroupApprovalRequests + GameApprovalRequests }}</div>
+                    {% endif %}
+                </a>
+            {% endif %}
+        </div>
+    </header>
+</div>
+    <script>
+        function dropdown_user() {
+            if(document.getElementById("userDropdown").classList.contains("show")) {
+                document.getElementById("userDropdown").classList.remove("show");
+            } else {
+                document.getElementById("userDropdown").classList.toggle("show");
+            }
+        }
+    </script>
+{% endif %}

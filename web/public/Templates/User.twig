@@ -1,0 +1,325 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <!-- Due to unfortunate circumstances I'm going to have to do this shit fix inside the template to get CSP working -->
+    <head>
+    </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    {% if Banned.id is defined and (Session.Admin == "y" or Session.Admin == "m") %}
+        <div class="RobloxAlert TypeError">
+            This user has been banned for the following reason: {{ Banned.ban_reason }}
+        </div>
+    {% endif %}
+
+    {% if User.roblox_css != "" %}
+        <style>
+            {{ User.roblox_css|replace({'/API/': ""})|striptags|raw }}
+        </style>
+    {% endif %}
+    <div class="LeftSide">
+        <h2 class="Bold">{{ User.roblox_username }}</h2>
+        <hr>
+        <div style="padding-right: 8px;">
+            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ User.id }}.png" class="ProfilePicture">
+            <hr>
+            <div class="Center">
+                <a href="/Trades/Create/{{ User.roblox_username }}">
+                    <button class="SubmitButton Grey">
+                        Send Trade
+                    </button>
+                </a>
+                <a href="/Inbox/Compose/{{ User.roblox_username }}">
+                    <button class="SubmitButton Grey">
+                        Send Message
+                    </button>
+                </a>
+                {% if Relationship.id is not defined and RelationshipIncoming.id is not defined %}
+                    <a href="/API/Friend/Add/{{ User.roblox_username }}">
+                        <button class="SubmitButton Grey">
+                            Send Friend Request
+                        </button>
+                    </a>
+                {% elseif Relationship.friend_status == 'u' %}
+                    <a href="#">
+                        <button class="SubmitButton Grey">
+                            Pending Friend Request
+                        </button>
+                    </a>
+                {% elseif Relationship.friend_status == 'a' or RelationshipIncoming.friend_status == 'a' %}
+                    <a href="/API/Friend/Revoke/{{ User.roblox_username }}">
+                        <button class="SubmitButton Grey">
+                            Remove Friend
+                        </button>
+                    </a>
+                {% endif %}
+            </div>
+            <hr>
+            {% if Items.rows != 0 %}
+                <h2 class="Bold InlineBlock">{{ User.roblox_username }}'s Outfit</h2>
+                <a href="#" onclick="viewMoreOutfit()">
+                    <button class="SubmitButton Grey Medium Right" style="margin-top: 13px;">
+                        View More
+                    </button>
+                </a>
+                <hr>
+                <div class="Center">
+                    {% set Wearing = 0 %}
+                    {% for Item in Items %}
+                        {% if Item.id is defined %}
+                            {% if Item.wearing == true %}
+                                {% if Wearing < 3 %}
+                                    {% set Wearing = Wearing + 1 %}
+                                    <a href="/Item/{{ Item.id }}">
+                                        <div class="ItemPanel">
+                                            <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  class="ItemThumbnail">
+                                            <span class="ItemTitle">
+                                                {{ Item.item_title }}
+                                            </span>
+                                            <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <hr>
+            {% endif %}
+            <h2 class="Bold">{{ User.roblox_username }}'s Blurb</h2>
+            <hr>
+            {% if User.roblox_username == Session.Roblox %}
+                <form class="UpdateDescription" action="/API/Update/Profile/Description/{{ User.roblox_username }}" method="POST">
+                    <textarea type="text" name="comment" class="NoResize InputText InlineBlock">{{ User.roblox_description }}</textarea>
+                    <input type="submit" class="SubmitButton Blue Medium">
+                </form><br>
+            {% else %}
+                <p>{{ User.roblox_description|nl2br }}</p>
+            {% endif %}
+
+            {% if User.roblox_username == Session.Roblox %}
+                <hr>
+                <h2 style="margin-bottom: 1px;" class="Bold">Your CSS <i title="This feature is experimental." class="far fa-flask"></i></h2>
+                <span class="Caption">This textbox does not show for others.</span>
+                <hr>
+                <form class="UpdateDescription" action="/API/Update/Profile/CSS/{{ User.roblox_username }}" method="POST">
+                    <textarea type="text" name="comment" class="NoResize InputText InlineBlock" style="height: 120px;resize: vertical;">{{ User.roblox_css }}</textarea>
+                    <input type="submit" class="SubmitButton Blue Medium">
+                </form><br>
+            {% endif %}
+        </div>
+    </div>
+    <div class="RightSide">
+        <h2 class="Bold">{{ User.roblox_username }}'s Places</h2>
+        <hr>
+        <div class="UserGamesContainer" style="border-left: 1px solid #cccccc; padding-left: 8px;min-height: 400px;">
+            <div class="UserGames">
+                {% for Game in Games %}
+                    {% if Game.id is defined %}
+                        <a href="/Game/{{ Game.id }}">
+                            <button class="SubmitButton Grey">
+                                {{ Game.server_title }}
+                            </button>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if Games.rows == 0 %}
+                <span class="Caption">This user has no places.</span>
+            {% endif %}
+            <hr>
+            <h2 class="Bold InlineBlock">{{ User.roblox_username }}'s Friends ({{ Relationship.rows }})</h2>
+            <a href="#" onclick="viewFriends()">
+                <button class="SubmitButton Grey Medium Right" style="margin-top: 13px;">
+                    View More
+                </button>
+            </a>
+            <hr>
+            <div id="FriendsMore" class="modal">
+                <div style="padding: 1px;background-color: #e1e1e1;">
+                    <h2 class="Bold Center">{{ User.roblox_username }}'s Friends</h2>
+                </div>
+                <div style="padding: 14px;">
+                    {% for Item in Relationship %}
+                        {% if Item.id is defined %}
+                            <a href="/User/{{ Item.roblox_username }}">
+                                <div class="ItemPanel Friend" style="    width: 89px;">
+                                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Item.profile_picture }}.png" class="ItemThumbnail" style="/* filter:invert(1); */width: 91px;height: 91px;">
+                                    <span class="ItemTitle Center Bold" style="filter:invert(0);">{{ Item.roblox_username }}</span>
+                                    {% if Item.active == true %}
+                                        <img src="/Images/Silk/bullet_green.png" style="/* filter:invert(1); */" class="Icon">
+                                    {% else %}
+                                        <img src="/Images/Silk/bullet_red.png" style="/* filter:invert(1); */" class="Icon">
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="Center">
+                {% set Friends = 0 %}
+                {% for Item in Relationship %}
+                    {% if Item.id is defined %}
+                        {% if Friends < 8 %}
+                            {% set Friends = Friends + 1 %}
+                            <a href="/User/{{ Item.roblox_username }}">
+                                <div class="ItemPanel Friend">
+                                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Item.profile_picture }}.png" class="ItemThumbnail">
+                                    <span class="ItemTitle Center Bold">{{ Item.roblox_username }}</span>
+                                    {% if Item.active == true %}
+                                        <img style="left: 35px;" src="/Images/Silk/bullet_green.png" class="Icon">
+                                    {% else %}
+                                        <img style="left: 35px;" src="/Images/Silk/bullet_red.png" class="Icon">
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if Relationship.rows == 0 %}
+                <span class="Caption">This user has no friends.</span>
+            {% endif %}
+            <hr>
+            <h2 class="Bold">{{ User.roblox_username }}'s Comments</h2>
+            <hr>
+            <form class="FeedForm" action="/API/Comment/Profile/{{ User.roblox_username }}" method="POST">
+                <textarea type="text" name="comment" class="InputText InlineBlock" style="width: 85%;height: 45px;"></textarea>
+                <input type="submit" class="SubmitButton Grey" value="Submit">
+            </form><br>
+            <div class="UserComments">
+            {% for Comment in Comments %}
+                {% if Comment.id is defined %}
+                    <div class="Comment" id="Comment{{ Comment.id }}">
+                        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Comment.author_id }}.png" class="CommentAuthor">
+                        <div class="CommentContents InlineBlock Top">
+                            <a href="/User/{{ Comment.comment_author }}" class="AuthorLink">{{ Comment.comment_author }}</a>
+                            <p>
+                                {{ Comment.comment_text|nl2br }}
+                            </p>
+                            <span class="Caption">{{ Comment.comment_sent|timeago }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            {% if Session.Admin == "y" %}
+                <hr>
+                <h2 class="Bold">{{ User.roblox_username }}'s Referrals</h2>
+                <hr>
+                <div class="UserAdmin">
+                    Referred by: <a href="/User/{{UserReferredBy.key_from}}">{{ UserReferredBy.key_from }}</a><br>
+                    Reffered:
+                    <table style="width: 100%">
+                        <tr>
+                            <td>Key ID</td>
+                            <td>Key Used By</td>
+                            <td>Key Created</td>
+                            <td>Key Used</td>
+                        </tr>
+                        {% for Referral in UsersReferred %}
+                            <tr>
+                                <td>{{ Referral.id }}</td>
+                                <td>{% if Referral.key_status == "u" %}<a href="/User/{{Referral.key_usedby}}">{{ Referral.key_usedby }}</a><br>{% else %}<small><i>Not Used</i></small>{% endif %}</td>
+                                <td>{{ Referral.key_created }}</td>
+                                <td>{{ Referral.key_used }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <hr>
+                <h2 class="Bold">{{ User.roblox_username }}'s Possible Alts</h2>
+                <hr>
+                <div class="UserAdmin">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>UID</td>
+                            <td>Username</td>
+                            <td>Last Online</td>
+                        </tr>
+                        {% for Alt in Alts %}
+                            {% if Alt.roblox_ip != "" %}
+                            <tr>
+                                <td>{{ Alt.id }}</td>
+                                <td><a href="/User/{{ Alt.roblox_username }}">{{ Alt.roblox_username }}</a></td>
+                                <td>{{ Alt.roblox_lastlogin|timeago }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div id="OutfitMore" class="modal">
+        <div style="padding: 1px;background-color: #e1e1e1;">
+            <h2 class="Bold Center">{{ User.roblox_username }}'s Outfit</h2>
+        </div>
+        <div style="padding: 14px;">
+            {% for Item in Items %}
+                {% if Item.id is defined %}
+                    {% if Item.wearing == true %}
+                        <a href="/Item/{{ Item.id }}">
+                            <div class="ItemPanel">
+                                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail">
+                                <span class="ItemTitle">
+                                                {{ Item.item_title }}
+                                            </span>
+                                <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("editDropdown").classList.toggle("show");
+        }
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function viewMoreOutfit() {
+            $('#OutfitMore').modal();
+        }
+
+        function viewFriends() {
+            $('#FriendsMore').modal();
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

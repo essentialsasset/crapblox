@@ -1,0 +1,286 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div><br>
+    <div class="LeftSide GroupPage">
+        <div class="Padding">
+            <h2 class="Bold">Groups You're In</h2>
+            <hr>
+            <a href="/Create/Group">
+                <button class="Large Blue SubmitButton FullWidth">
+                    Create
+                </button>
+            </a>
+            <hr>
+            <div class="GamesList">
+                {% if GroupsIn|length == 1 %}
+                    <div class="Center">
+                        <h3>&nbsp;</h3>
+                        <span class="Caption">You are currently in no groups.</span>
+                        <h3>&nbsp;</h3>
+                    </div>
+                {% endif %}
+                {% for Group in GroupsIn %}
+                    {% if Group.id is defined %}
+                        <a href="/Groups/{{ Group.id }}"><img src="/Images/Silk/group.png" class="Icon"> {{ Group.group_title }}</a><br>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="CenterSide GroupPage">
+        <h2 class="Bold" style="    font-size: 14px;">&nbsp;</h2><br>
+        <img src="{% if Group.group_thumbnail_moderated == 'y' %}/get-asset/Groups/{{ Group.id }}.png{% elseif Group.group_thumbnail_moderated == 'd' %}/get-asset/Groups/Denied.png{% else %}/get-asset/Groups/Default.png{% endif %}" class="ProfilePicture" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" style="border:1px solid #ccc;width: 100%;height: 180px;"><br>
+        {% if Session.Roblox == Group.group_author %}
+            <div class="dropdown">
+                <img src="/Images/Menu.png" style="filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+                <div id="editDropdown" class="dropdown-content">
+                    <a href="/Edit/Game/{{ Game.id }}">Edit Game</a>
+                    <a href="/API/Game/Delete/{{ Game.id }}">Delete Game</a>
+                </div>
+            </div>
+        {% endif %}
+        <div class="Bold Top" style="line-height: 20px;margin-top: 10px;margin-bottom: 10px;">
+            <span class="Caption">Owned by:</span> <span class="Caption InlineBlock Right"><a href="/User/{{ Author.roblox_username }}">{{ Author.roblox_username }}</a></span></span><br>
+            <span class="Caption">Members:  <span class="InlineBlock Right">{{ Group.members }}</span></span><br>
+            <span class="Caption">Funds:<span class="InlineBlock Right">
+                <img src="/Images/Zuo.png" style="width: 16px;vertical-align: middle;/* filter: invert(1); */position: relative;left: 3px;"> {{ Group.group_funds|number_format  }}</span>
+            </span><br>
+            {% if Group.group_stocks %}
+                <span class="Caption">Shares (<a href="/API/Group/Feed/{{ Group.id }}">Feed</a>):  <span class="InlineBlock Right">{{ Group.group_stocks|number_format }}</span></span><br>
+                <span class="Caption">Shares Available:  <span class="InlineBlock Right">{{ (Group.group_stocks_available-Group.group_stocks_forsale)|number_format }} ({{ Group.group_stocks_available|number_format }})</span></span><br>
+                <span class="Caption">Shares Reserved:  <span class="InlineBlock Right">{{ Group.group_stocks_forsale|number_format }}</span></span><br>
+                <span class="Caption">Share Price:  <span class="InlineBlock Right">{{ Group.share_price|number_format }} zuos/share</span></span><br>
+            {% else %}
+                <span class="Caption"><i>Group NOT publically traded</i></span><br>
+            {% endif %}
+        </div><br>
+        {% if Favorite.id is not defined %}
+            <a href="/API/Group/Join/{{ Group.id }}">
+                <button class="SubmitButton FullWidth Blue Large">
+                    Join Group
+                </button>
+            </a>
+        {% else %}
+            <a href="/API/Group/Join/{{ Group.id }}">
+                <button class="SubmitButton FullWidth Blue Large">
+                    Leave Group
+                </button>
+            </a>
+        {% endif %}
+    </div>
+    <div class="RightSide GroupPage" style="margin-left: 10px;">
+        <form class="SearchForm InlineBlock" action="/Groups/Search/" method="GET">
+            <input type="text" name="Search" placeholder="Search all groups" class="InputText InlineBlock">
+            <input type="submit" style="height: 23px;" value="Search" class="SubmitButton Grey">
+        </form>
+
+        <h2 class="Bold InlineBlock NoMargin" style="padding-top: 5px;">{{ Group.group_title }}</h2>
+        <div class="dropdown" style="top: 15px;">
+            <img src="/Images/Menu.png" style="filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+            <div id="editDropdown" class="dropdown-content">
+                {% if Session.Roblox == Group.group_owner %}
+                    <a href="/Edit/Group/{{ Group.id }}">Edit Group</a>
+                    <a href="/API/Group/Delete/{{ Group.id }}">Delete Group</a>
+                {% endif %}
+                <a href="/Stocks/Group/{{ Group.id }}">Group Shares</a>
+            </div>
+        </div>
+        <hr>
+        <p>{{ Group.group_description|nl2br }}</p>
+        <hr>
+        <h2 class="Bold InlineBlock NoMargin">{{ Group.group_title }}'s Games</h2>
+        {% if Group.group_owner == Session.Roblox %}
+            <a href="/Create/Game?GroupID={{ Group.id }}">
+                <button class="SubmitButton Grey Medium Right">
+                    Create Game
+                </button>
+            </a>
+        {% endif %}
+        <hr>
+        {% for Game in GroupGames %}
+            {% if Game.id is defined %}
+                <a href="/Game/{{ Game.id }}">
+                    <div class="GamePanel RecentlyPlayed">
+                        <img src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="GameThumbnail">
+                        <span class="GameTitle">{{ Game.server_title }}</span>
+                        <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
+        {% if GroupGames|length == 0 %}
+            <p>This group has no games yet.</p>
+        {% endif %}
+        <hr>
+        <h2 class="Bold InlineBlock NoMargin">{{ Group.group_title }}'s Merch</h2>
+        {% if Group.group_owner == Session.Roblox %}
+            <a href="/Create/Asset?GroupID={{ Group.id }}">
+                <button class="SubmitButton Grey Medium Right">
+                    Create Asset
+                </button>
+            </a>
+        {% endif %}
+        <hr>
+        {% for Item in GroupItems %}
+            {% if Item.id is defined %}
+                <a href="/Item/{{ Item.id }}">
+                    <div style="margin-right: 1px;" class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                        <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ItemThumbnail">
+                        <span class="ItemTitle" style="font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ Item.item_title }}</span>
+                        {% if Item.item_quantity > -1 %}
+                            <span class="ItemSold"><b>was {{ Item.item_tix }}屁<br>lowest {{ Item.lowest_bid|number_format }}屁</b> {{ Item.bought }} sold</span>
+                        {% else %}
+                            <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
+        {% if GroupItems|length == 0 %}
+            <p>This group has no assets yet.</p>
+        {% endif %}
+        <hr>
+        <h2 class="Bold InlineBlock">Members ({{ Group.members }})</h2>
+        <a href="#" onclick="viewMembers()">
+            <button class="SubmitButton Grey Medium Right">
+                View More
+            </button>
+        </a>
+        <div id="MembersMore" class="modal" style="position: relative;bottom: 400px;">
+            <div style="padding: 1px;background-color: #e1e1e1;">
+                <h2 class="Bold Center">All Members</h2>
+            </div>
+            <div style="padding: 14px;">
+                {% for Player in Members %}
+                    {% if Player.id is defined %}
+                        <a href="/User/{{ Player.roblox_username }}">
+                            <div class="ItemPanel Friend" style="    width: 89px;">
+                                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Player.id }}.png" class="ItemThumbnail" style="/* filter:invert(1); */width: 91px;height: 91px;">
+                                <span class="ItemTitle Center Bold" style="filter:invert(0);">{{ Player.roblox_username }}</span>
+                                {% if Player.active == true %}
+                                    <img src="/Images/Silk/bullet_green.png" style="/* filter:invert(1); */" class="Icon">
+                                {% else %}
+                                    <img src="/Images/Silk/bullet_red.png" style="/* filter:invert(1); */" class="Icon">
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        {% set members = 0 %}
+        {% for Member in Members %}
+            {% if Member.id is defined %}
+                {% if members < 10 %}
+                    {% set members = members + 1 %}
+                    <div class="item-panel">
+                        <center>
+                            <a href="/User/{{ Member.roblox_username }}">
+                                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Member.id }}.png" class="item-thumbnail">
+                                <br><span class="asset-title" style="min-height:unset;">{{ Member.roblox_username }}</span><br>
+                            </a>
+                            {% if Session.Roblox == Group.group_owner %}
+                                <a style="margin-top: 0px;margin-bottom: 6px;display: inline-block;" href="/API/Group/Kick/{{ Group.id }}/{{ Member.roblox_username }}">
+                                    <button class="SubmitButton Grey">
+                                        Kick
+                                    </button>
+                                </a>
+                            {% endif %}
+                        </center>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        <hr>
+        <h2 class="Bold">Group Wall ({{ Comments.rows }})</h2>
+        <hr>
+        <form class="FeedForm" action="/API/Comment/Group/{{ Group.id }}" method="POST">
+            <textarea style="width: 87%;height: 45px;" type="text" name="comment" class="InputText InlineBlock"></textarea>
+            <input type="submit" class="SubmitButton Grey" value="Submit">
+        </form><br>
+        {% if PinnedComment.id is defined %}
+            <div class="Comment PinnedComment" id="Comment{{ PinnedComment.id }}">
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ PinnedComment.author_id }}.png" class="CommentAuthor">
+                <div class="CommentContents InlineBlock Top">
+                    <a href="/User/{{ PinnedComment.comment_author }}" class="AuthorLink">{{ PinnedComment.comment_author }} <img src="/Images/Silk/attach.png" class="Icon"></a>
+                    <p>
+                        {{ PinnedComment.comment_text|nl2br }}
+                    </p>
+                    <span class="Caption">{{ PinnedComment.comment_sent|timeago }}</span>
+                </div>
+            </div>
+        {% endif %}
+        {% for Comment in Comments %}
+            {% if Comment.id is defined %}
+                <div class="Comment" id="Comment{{ Comment.id }}">
+                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Comment.author_id }}.png" class="CommentAuthor">
+                    <div class="CommentContents InlineBlock Top">
+                        <a href="/User/{{ Comment.comment_author }}" class="AuthorLink">{{ Comment.comment_author }}</a>
+                        <p>
+                            {{ Comment.comment_text|nl2br }}
+                        </p>
+                        <span class="Caption">{{ Comment.comment_sent|timeago }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("editDropdown").classList.toggle("show");
+        }
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function viewMembers() {
+            $('#MembersMore').modal();
+        }
+        </script>
+        <style>
+            .RecentlyPlayed {
+                margin-right: 12px;
+            }
+        </style>
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

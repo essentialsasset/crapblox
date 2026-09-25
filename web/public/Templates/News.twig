@@ -1,0 +1,60 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="NewsArticle">
+        <img src="/get-asset/Avatars/{{ Article.profile_picture }}.png">
+        <div class="InlineBlock Top NewsDetails">
+            <a href="{{ Article.url }}" class="BlogTitle"><span class="Bold">{{ Article.news_title }}</span></a>
+            <span class="InlineBlock Caption">by {{ Article.news_author }}</span>
+            {% if Article.active == true %}
+                <span class="InlineBlock Middle Right Bold" style="color: darkgreen;">
+                    NEW!
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <p style="font-size: 12px">
+        {{ Article.news_text|raw|nl2br }}
+    </p>
+    <hr>
+    <h2 class="Bold">Replies</h2>
+    <hr>
+    <form class="FeedForm" action="/API/Comment/News/{{ Article.id }}" method="POST">
+        <textarea type="text" name="comment" class="InputText InlineBlock" style="width: 92%;height: 49px;"></textarea>
+        <input type="submit" class="SubmitButton Grey" value="Submit">
+    </form><hr>
+    {% if Comments|length == 0 %}
+        <div class="Center">
+            <h1>&nbsp;</h1>
+            <span class="Caption">There are no replies to this news post. Be the first!</span>
+        </div>
+    {% endif %}
+    {% for Comment in Comments %}
+        {% if Comment.id is defined %}
+            <div class="Comment" id="Comment{{ Comment.id }}">
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Comment.author_id }}.png" class="CommentAuthor">
+                <div class="CommentContents InlineBlock Top">
+                    <a href="/User/{{ Comment.comment_author }}" class="AuthorLink">{{ Comment.comment_author }}</a>
+                    <p>
+                        {{ Comment.comment_text|trim|nl2br }}
+                    </p>
+                    <span class="Caption">{{ Comment.comment_sent|timeago }}</span>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    <style>
+        form.FeedForm input[type="submit"]:hover {
+            height: 55px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

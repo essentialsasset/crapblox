@@ -1,0 +1,34 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <h1><i class="far fa-gavel"></i> Banned</h1>
+    <hr>
+    <pre>{{ Ban.ban_reason }}</pre>
+    <span class="Caption">This ban ends on {{ Ban.ban_til }}</span>
+
+    {% if "now"|date("m/d/Y") > Ban.ban_til|date("m/d/Y") %}
+        <hr>
+        <a href="/Banned/Appeal">
+            <button class="SubmitButton Medium Green">Reactivate Account</button>
+        </a>
+    {% endif %}
+
+    <style>
+        .RobloxContainer {
+            min-height: 100px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

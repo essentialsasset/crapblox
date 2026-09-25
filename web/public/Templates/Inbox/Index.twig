@@ -1,0 +1,157 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="LeftSide">
+        <h2 class="NoMargin">Inbox</h2>
+        <div class="Dividers">
+            <hr>
+            <br>
+            <div class="Center">
+                <a href="/Inbox/Compose">
+                    <button class="SubmitButton Blue Medium">
+                        Compose Message
+                    </button>
+                </a>
+            </div><br>
+            <hr class="NoMargin">
+            <div class="GamesList">
+                <a href="/Inbox/" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">Private Messages</a><br>
+                <a href="/Inbox/Notifications" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">System Notifications</a><br>
+                <a href="/Inbox/Sent" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">Sent Messages</a><br>
+                <a href="/Inbox/Invites" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">Group Invites</a><br>
+            </div>
+        </div>
+    </div>
+    <div class="RightSide">
+        <h2 class="NoMargin">&nbsp;</h2>
+        <hr>
+        {% if Messages|length == 1 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption"><img src="/Images/Shrug.png" style="vertical-align: middle;width: 64px;margin-right: 32px;opacity: 0.6;"> You have received no messages.</span>
+            </div>
+        {% endif %}
+        {% for Message in Messages %}
+            {% if Message.id is defined %}
+                <div class="Message FullWidth">
+                    <div class="InlineBlock">
+                        <a style="width: 73px;overflow: hidden; text-align: center; display: block;" href="/User/{{ Message.log_sender }}">{{ Message.log_sender }}</a>
+                        <img src="/get-asset/Avatars/{{ Message.profile_picture }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ProfilePicture"><br>
+                    </div>
+                    <div class="MessageInfo InlineBlock Top">
+                         <span class="InlineBlock Right">
+                            <a href="/Inbox/Compose/{{ Message.log_sender }}?subject=RE: {{ Message.log_title }}&body=%0A{{ Message.log_message }}%0A--------------------------------%0AReply on {{ "now"|date("m/d/Y") }}%0A%0A">
+                                <button class="SubmitButton Grey Medium">
+                                    Reply
+                                </button>
+                            </a>
+                            <a href="/Inbox/Delete/{{ Message.id }}">
+                                <button class="SubmitButton Grey Medium">
+                                    Delete
+                                </button>
+                            </a>
+                        </span>
+                        <span class="InlineBlock Bold">{{ Message.log_title }}</span><br>
+                        {{ Message.log_message|trim|striptags|markdown_to_html }}
+                        <span class="Caption">sent {{ Message.log_date|timeago }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+            {% apply spaceless %}
+                {% if total > 1 %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="pagination-area">
+                                {% if current > 1 %}
+                                    <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                                {% endif %}
+
+                                {% for i in 1..total %}
+                                    {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                        <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                        {% if 1 != loop.index %}
+                                            <span class="page-numbers">...</span>
+                                        {% endif %}
+                                    {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                        <span class="page-numbers">...</span>
+                                    {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                    {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                    {% else %}
+                                        {% if current == loop.index  %}
+                                            <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                        {% else %}
+                                            <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                                {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                    <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                                {% endif %}
+                                {% if current < total %}
+                                    <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endapply %}
+        {% endmacro %}
+
+        {{ _self.pagination(total, current, url) }}
+    </div>
+    <style>
+        .GamesList a {
+            display: inline-block;
+            border-bottom: 1px solid #ccc;
+            padding: 7px;
+            font-size: 13px;
+            color: #78006f;
+            width: 92%;
+            background-color: #e7e7e721;
+            border: 1px solid #ccc;
+            margin-bottom: -1px;
+            box-shadow: unset;
+        }
+
+        .FormField .Middle {
+            width: 300px;
+        }
+        .Dividers {
+            border-right: 1px solid #ccc;
+            min-height: 1000px;
+        }
+
+        .FormField input {
+            width: 98.18495%;
+        }
+
+        .LeftSide {
+            float: left;
+            width: calc(20% - 20px);
+        }
+
+        .RightSide {
+            float: right;
+            width: calc(83.5% - 20px);
+        }
+
+        .PaddingLeft {
+            padding-left: 10px;
+        }
+
+        .GamesList {
+            box-shadow: unset;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

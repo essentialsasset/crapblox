@@ -1,0 +1,165 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab Primary" style="margin-left: 30px;">
+                <a href="/Develop">Develop</a>
+            </div>
+            <div class="Tab">
+                <a href="/Settings">Settings</a>
+            </div>
+            <div class="Tab">
+                <a href="/Ads">Advertisements</a>
+            </div>
+            <div class="Tab">
+                <a href="/Referral">Referrals</a>
+            </div>
+        </div>
+    </div>
+    <div class="LeftSide Games DevelopSide">
+        <h2 class="Bold">Categories</h2>
+        <div class="GamesList">
+            {% for Category in Categories %}
+                {% if Category == CurrentCategory %}
+                    <a href="/Develop/{{ Category|url_encode }}" class="Active">{{ Category }}</a><br>
+                {% else %}
+                    <a href="/Develop/{{ Category|url_encode }}">{{ Category }}</a><br>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="RightSide Games">
+        <h2 class="Bold PaddingLeft InlineBlock">Develop</h2>
+        <form class="SearchForm InlineBlock" action="/Catalog/Search" method="GET">
+            <input type="text" name="search" class="InputText InlineBlock">
+            <input type="submit" value="Search" style="height: 23px;" class="SubmitButton Grey">
+        </form>
+        <hr class="NoMargin">
+        <div class="FullWidth PaddingLeft">
+        {% for Item in Catalog %}
+            {% if Item.id is defined %}
+                <div class="Group">
+                    {% if CurrentCategory == "Games" %}
+                        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Games/{% if Item.use_thumbnail == 'n' %}Default.png{% else %}{{ Item.id }}.png{% endif %}" class="ProfilePicture">
+                    {% else %}
+                        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ProfilePicture">
+                    {% endif %}
+                    <div class="UserInfo InlineBlock Top">
+                        {% if CurrentCategory == "Games" %}
+                            <a href="/Game/{{ Item.id }}">{{ Item.item_title }}</a>
+                        {% else %}
+                            <a href="/Item/{{ Item.id }}">{{ Item.item_title }}</a>
+                        {% endif %}
+                        <p class="NoMargin">{{ Item.item_description }}</p>
+                        <span class="Caption InlineBlock Bold">
+                            created {{ Item.item_added|timeago }}
+                        </span>
+                    </div>
+
+                    <div class="Right">
+                        {% if CurrentCategory != "Games" %}
+                            <a href="/Edit/Asset/{{ Item.id }}">
+                                <button class="SubmitButton Grey Middle Top" style="width: 50.96px;">
+                                    Edit
+                                </button>
+                            </a><br>
+                            <a href="/API/Asset/Delete/{{ Item.id }}">
+                                <button class="SubmitButton Grey Middle Top">
+                                    Delete
+                                </button>
+                            </a>
+                        {% else %}
+                            <a href="/Edit/Game/{{ Item.id }}">
+                                <button class="SubmitButton Grey Middle Top" style="width: 50.96px;">
+                                    Edit
+                                </button>
+                            </a><br>
+                            <a href="/API/Game/Delete/{{ Item.id }}">
+                                <button class="SubmitButton Grey Middle Top">
+                                    Delete
+                                </button>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if Catalog.rows == 0 %}
+            <div class="Center NoResults">
+                <div class="Caption TextPadding">You do not own any assets of this type.</div>
+                <a href="/Create/Asset">
+                    <button class="SubmitButton Blue Large">
+                        Create Asset
+                    </button>
+                </a>
+            </div>
+        {% endif %}
+        </div>
+        {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+            {% apply spaceless %}
+                {% if total > 1 %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="pagination-area">
+                                {% if current > 1 %}
+                                    <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                                {% endif %}
+
+                                {% for i in 1..total %}
+                                    {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                        <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                        {% if 1 != loop.index %}
+                                            <span class="page-numbers">...</span>
+                                        {% endif %}
+                                    {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                        <span class="page-numbers">...</span>
+                                    {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                    {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                    {% else %}
+                                        {% if current == loop.index  %}
+                                            <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                        {% else %}
+                                            <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                                {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                    <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                                {% endif %}
+                                {% if current < total %}
+                                    <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endapply %}
+        {% endmacro %}
+
+        {% if Catalog.rows != 0 %}
+            {{ _self.pagination(total, current, url) }}
+        {% endif %}
+    </div>
+    <style>
+        .RightSide.Games {
+            float: right;
+            width: calc(81.4% - 20px);
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

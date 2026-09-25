@@ -1,0 +1,227 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+
+    <div class="FullWidth">
+        <a href="#" onclick="ShowReply()" class="Right Top">
+            <button class="SubmitButton Grey">
+                Create Reply
+            </button>
+        </a>
+
+        <h1 class="Bold NoMargin"><img src="/Images/Silk/comments.png"> {{ Thread.thread_title }}</h1>
+        <spah class="Caption InlineBlock TextPadding">
+            <a href="/Feed">Crapblox</a> » <a href="/Forum/">Forum</a> » <a href="/Forum/{{ Thread.thread_target }}">{{ Category.forum_title }}</a> » <a href="/Forum/Thread/{{ Thread.id }}}">{{ Thread.thread_title }}</a>
+        </spah>
+        <hr>
+        <div id="forum_reply_modal">
+            <form action="/API/Create/Reply/{{ Thread.id }}" method="POST">
+                <div class="SignInForm" style="width: 100%;">
+                    <h3 style="padding-left: 10px;">Reply</h3>
+                    <hr>
+                    <div class="FormField">
+                        <span class="Middle">Reply Body: <br><span class="Caption">You can use markdown in these replies. <a href="https://commonmark.org/help/" target="_blank">Markdown Syntax</a></span></span>
+                        <textarea type="text" style="width: 88%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock"></textarea>
+                    </div>
+                    <input type="submit" class="SubmitButton Medium Blue Right" value="Create Reply">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="LeftSide">
+        <h2>Crapblox</h2>
+        {% for Category in Categories %}
+            {% if Category.id is defined and Category.forum_category == "Crapblox" %}
+                <a href="/Forum/{{ Category.id }}">{{ Category.forum_title }}</a><br>
+            {% endif %}
+        {% endfor %}
+        <br>
+
+        <h2>Off Topic</h2>
+        {% for Category in Categories %}
+            {% if Category.id is defined and Category.forum_category == "Off Topic" %}
+                <a href="/Forum/{{ Category.id }}">{{ Category.forum_title }}</a><br>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="RightSide">
+        <table class="Forums">
+            <tr>
+                <th style="width: 130px">&nbsp;</th>
+                <th>{{ Thread.thread_title }}</th>
+            </tr>
+            <tr style="height: 100px;">
+                <td>
+                    <div class="Center Bold">
+                        <a href="/User/{{ Thread.thread_author }}">{{ Thread.thread_author }}</a>
+                        <br>
+                    </div>
+                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" style="width: 100px;margin-top: 10px;" src="/get-asset/Avatars/{{ Thread.author_id }}.png" class="ProfilePicture">
+                    <div class="Center" style="line-height: 15px;">
+                        <span class="InlineBlock Bold" style="font-size: 9px">
+                            {% if Thread.active == true %}
+                                <img src="/Images/Silk/bullet_green.png" class="Icon">
+                            {% else %}
+                                <img src="/Images/Silk/bullet_red.png" class="Icon">
+                            {% endif %}
+                            active {{ Thread.roblox_lastlogin|timeago }}<br>
+                            joined  {{ Thread.roblox_created|timeago }}<br>
+                            {{ Thread.post_count }} posts
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="InlineBlock Top" style="width: 1000px;">
+                        <a href="/Forum/Thread/{{ Thread.id }}"><span class="Caption">replied {{ Thread.thread_created|timeago }}</span></a>
+                        <p class="NoMargin">{{ Thread.thread_text|trim|striptags|markdown_to_html }}</p>
+                    </div>
+                </td>
+            </tr>
+        {% set ThreadID = Thread.id %}
+
+            {% for Thread in Threads %}
+                {% if Thread.id is defined %}
+                    <tr style="height: 100px;">
+                        <td>
+                            <div class="Center Bold">
+                                <a href="/User/{{ Thread.thread_author }}">{{ Thread.thread_author }}</a>
+                                <br>
+                            </div>
+                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  style="width: 100px;margin-top: 10px;" src="/get-asset/Avatars/{{ Thread.author_id }}.png" class="ProfilePicture">
+                            <div class="Center" style="line-height: 15px;">
+                                <span class="InlineBlock  Bold" style="font-size: 9px">
+                                    {% if User.roblox_admin == "y" or User.roblox_admin == "m" %}
+                                        <a href="/Forum/Action/Delete/Reply/{{ Thread.id }}">
+                                            <button class="SubmitButton Medium Grey">
+                                                Delete Reply
+                                            </button>
+                                        </a>
+                                        <hr>
+                                    {% endif %}
+                                    {% if Thread.active == true %}
+                                        <img src="/Images/Silk/bullet_green.png" class="Icon">
+                                    {% else %}
+                                        <img src="/Images/Silk/bullet_red.png" class="Icon">
+                                    {% endif %}
+                                    active {{ Thread.roblox_lastlogin|timeago }}<br>
+                                    joined  {{ Thread.roblox_created|timeago }}<br>
+                                    {{ Thread.post_count }} posts
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="InlineBlock Top" style="width: 1000px;">
+                                <a href="/Forum/Thread/{{ Thread.id }}"><span class="Caption">replied {{ Thread.thread_created|timeago }}</span></a>
+                                <p class="NoMargin">{{ Thread.thread_text|trim|striptags|markdown_to_html }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        <script>
+            function ShowReply() {
+                let replyDOM = $("#forum_reply_modal");
+                if($(replyDOM).is(':visible')) {
+                    replyDOM.fadeOut();
+                } else {
+                    replyDOM.fadeIn();
+                }
+            }
+        </script>
+    </div>
+    <style>
+        .SignInForm {
+            width: 930px;
+        }
+
+        .SignInForm textarea {
+            height: 200px;
+        }
+
+        .FormField .Middle {
+            width: 100px;
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 15px;
+            /* god i am sorry for i have sinned */
+        }
+
+        p {
+            margin: 0px;
+            margin-bottom: 10px;
+        }
+
+        #forum_reply_modal {
+            padding-bottom: 40px;
+            margin-bottom: 25px;
+            background-color: #ededed;
+            border: 1px solid #ccc;
+            padding-right: 8px;
+            display: none;
+        }
+    </style>
+    <style>
+        .pagination-area {
+            margin-top: 5px;
+        }
+
+        .LeftSide h2 {
+            background-color: #933ea3;
+            border: 1px solid #6f2e7b;
+            color: white;
+            padding: 5px;
+            height: 25px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: -1px;
+            margin-right: -1px;
+        }
+
+        td .InlineBlock.Top p {
+            width: 770px;
+            overflow: hidden;
+        }
+        .LeftSide {
+            border-right: 1px solid #ccc;
+            float: left;
+            width: calc(19% - 20px);
+            margin-top: -7px;
+            font-size: 13px;
+            line-height: 26px;
+            height: 400px;
+        }
+
+        .RightSide {
+            float: right;
+            position: relative;
+            width: calc(84% - 14px);
+            top: -8px;
+        }
+
+        .LeftSide a {
+            color: #9d0091;
+            margin-left: 6px;
+        }
+
+        .Forums td {
+            padding-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

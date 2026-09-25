@@ -1,0 +1,227 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="LeftSide Games">
+        <h2 class="Bold">Filters</h2>
+        <hr>
+        <div class="GamesList" style="box-shadow: none">
+            <h3 class="InlineBlock" style="margin-bottom: 0px       ;margin-top: 5px;">Price</h3>
+            <button class="SubmitButton Grey Medium Right" onclick="searchPrice()">
+                Search
+            </button>
+            <div class="price-input">
+                <div class="field">
+                    <span>Min</span>
+                    <input type="number" class="input-min" value="2500">
+                </div>
+                <div class="separator">-</div>
+                <div class="field">
+                    <span>Max</span>
+                    <input type="number" class="input-max" value="7500">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="progress"></div>
+            </div>
+            <div class="range-input">
+                <input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
+                <input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
+            </div>
+            <br>
+            <hr>
+            <br>
+            <span class="Middle Caption">Show off-sale assets:</span> <input style="margin-top: 5px;" type="checkbox" checked name="offsale" value="offsale" class="InputText Right InlineBlock" id="offsale_check"><br>
+            <span class="Middle Caption">Show only limiteds:</span> <input style="margin-top: 5px;position: relative;left: 20px;" type="checkbox" checked name="offsale" value="offsale" class="InputText Right InlineBlock Right" id="limited_check">
+            <br><br>
+            <hr>
+            <br>
+            <h2 style="margin-top: -10px;">Categories</h2>
+            {% for Category in Categories %}
+                <a href="/Catalog/{{ Category|url_encode }}" style="box-shadow: none;border:unset;background-color: unset;border-bottom: 1px solid #ccc;">{{ Category }}</a><br>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="RightSide Games">
+        {% if Category is defined %}
+            <h2 class="Bold InlineBlock">{{ Category }}</h2>
+        {% else %}
+            <h2 class="Bold InlineBlock">Catalog</h2>
+        {% endif %}
+        <form class="SearchForm InlineBlock" style="margin-left: 125px;" action="/Catalog/Search" method="GET">
+            <input style="width: 260px" type="text" name="search" class="InputText InlineBlock">
+            <input type="submit" style="height: 23px;" value="Search" class="SubmitButton Grey">
+        </form>
+        <a href="/Create/Asset" class="Right" style="margin-top: 10px;">
+            <button class="SubmitButton Blue Medium">
+                Create Asset
+            </button>
+        </a>
+        <hr class="NoMargin">
+        <div class="Items">
+            {% for Item in Catalog %}
+                {% if Item.id is defined %}
+                    <a href="/Item/{{ Item.id }}">
+                        <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                            <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ItemThumbnail">
+                            <span class="ItemTitle" style="    font-size: 14px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ Item.item_title }}</span>
+                            {% if Item.item_quantity > -1 %}
+                                <span class="ItemSold"><b><s>was {{ Item.item_tix }}屁</s>, {% if Item.item_quantity > 0 %} {{ Item.item_quantity }} left {% else %} <b style="color: grey;">out of stock</b> {% endif %}<br>lowest {{ Item.lowest_bid|number_format }}屁</b> <span class="Right" style="font-size: 8px;">{{ Item.bought }} sold</span> </span>
+                            {% else %}
+                                {% if Item.item_onsale == "y" %}
+                                    <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                                {% else %}
+                                    <span class="ItemSold"><b><s>{{ Item.item_tix }}屁</s></b>, {{ Item.bought }} sold<br><span class="ItemOffSale" style="color: grey;">off-sale</span></span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="LoadingContainer Center">
+            <h1>&nbsp;</h1>
+            <span class="Caption">
+                <img src="/Images/loading.gif" class="Middle">
+                Loading...
+            </span>
+        </div>
+        {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+            {% apply spaceless %}
+                {% if total > 1 %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="pagination-area" style="margin-top: 0px;">
+                                {% if current > 1 %}
+                                    <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                                {% endif %}
+
+                                {% for i in 1..total %}
+                                    {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                        <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                        {% if 1 != loop.index %}
+                                            <span class="page-numbers">...</span>
+                                        {% endif %}
+                                    {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                        <span class="page-numbers">...</span>
+                                    {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                    {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                    {% else %}
+                                        {% if current == loop.index  %}
+                                            <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                        {% else %}
+                                            <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                                {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                    <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                                {% endif %}
+                                {% if current < total %}
+                                    <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endapply %}
+        {% endmacro %}
+
+        {{ _self.pagination(total, current, url) }}
+    </div>
+    <script>
+        // For price range
+        const rangeInput = document.querySelectorAll(".range-input input"),
+            priceInput = document.querySelectorAll(".price-input input"),
+            range = document.querySelector(".slider .progress");
+        let priceGap = 1000;
+
+        priceInput.forEach((input) => {
+            input.addEventListener("input", (e) => {
+                let minPrice = parseInt(priceInput[0].value),
+                    maxPrice = parseInt(priceInput[1].value);
+
+                if (maxPrice - minPrice >= priceGap && maxPrice <= rangeInput[1].max) {
+                    if (e.target.className === "input-min") {
+                        rangeInput[0].value = minPrice;
+                        range.style.left = (minPrice / rangeInput[0].max) * 100 + "%";
+                    } else {
+                        rangeInput[1].value = maxPrice;
+                        range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
+                    }
+                }
+            });
+        });
+
+        rangeInput.forEach((input) => {
+            input.addEventListener("input", (e) => {
+                let minVal = parseInt(rangeInput[0].value),
+                    maxVal = parseInt(rangeInput[1].value);
+
+                if (maxVal - minVal < priceGap) {
+                    if (e.target.className === "range-min") {
+                        rangeInput[0].value = maxVal - priceGap;
+                    } else {
+                        rangeInput[1].value = minVal + priceGap;
+                    }
+                } else {
+                    priceInput[0].value = minVal;
+                    priceInput[1].value = maxVal;
+                    range.style.left = (minVal / rangeInput[0].max) * 100 + "%";
+                    range.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + "%";
+                }
+            });
+        });
+
+        // For price search
+
+        function searchPrice() {
+            console.log(parseInt(priceInput[0].value));
+            console.log(parseInt(priceInput[1].value));
+
+            let Items = $(".Items");
+            let Loading = $(".LoadingContainer");
+            let Pagination = $(".pagination-area");
+            let Args = "?min=" + priceInput[0].value + "&max=" + priceInput[1].value
+
+            if(document.getElementById('offsale_check').checked) {
+                Args += "&offsale=true"
+            } else {
+                Args += "&offsale=false"
+            }
+
+            if(document.getElementById('limited_check').checked) {
+                Args += "&limiteds=true"
+            } else {
+                Args += "&limiteds=false"
+            }
+
+            $(Pagination).fadeOut();
+            $(Items).fadeOut('fast', function() {
+                $(Loading).fadeIn('fast');
+
+                // Get result
+                $.get("/API/Responsive/Catalog" + Args, function(data, status){
+                    $(Items).html(data);
+                    $(Loading).fadeOut('fast', function() {
+                        $(Items).fadeIn('fast');
+                    });
+                });
+            });
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

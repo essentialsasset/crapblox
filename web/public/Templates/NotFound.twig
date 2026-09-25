@@ -1,0 +1,31 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="Center ErrorPage">
+        <img src="/Images/Error/404.gif">
+        <h1 class="Bold">Unexpected error with your request</h1>
+        <b>Please try again after a few moments.</b>
+        <p>
+            If you continue to receive this page, please contact our Discord.
+        </p>
+        <hr>
+        <a href="{{ RefURL }}">
+            <button class="SubmitButton Blue">
+                Go to Previous Page
+            </button>
+        </a>
+        <a href="/">
+            <button class="SubmitButton Blue">
+                Return Home
+            </button>
+        </a>
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

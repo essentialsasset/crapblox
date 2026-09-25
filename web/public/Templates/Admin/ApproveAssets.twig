@@ -1,0 +1,144 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <h2 class="Bold InlineBlock" style="margin-bottom: 6px;"><i class="far fa-thumbs-up"></i> Asset Approval</h2><br>
+    <a href="/Admin/" class="Caption" style="display: inline-block;"><i class="far fa-backward"></i> Go Back</a><br><br>
+    <hr>
+    <div class="Items">
+        {% if Catalog|length == 0 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption">There are no assets to approve. :D</span>
+            </div>
+        {% endif %}
+        {% for Item in Catalog %}
+            {% if Item.id is defined %}
+                <a href="/Item/{{ Item.id }}">
+                    <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                        <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ItemThumbnail">
+                        <a href="/Admin/Catalog/Approve?id={{ Item.id }}">
+                            <button class="SubmitButton Grey Medium Right Middle">Approve</button>
+                        </a>
+                        <a href="/Admin/Catalog/Deny?id={{ Item.id }}">
+                            <button class="SubmitButton Grey Medium Right Middle" style="width: 57px;margin-right: 5px;">Deny</button>
+                        </a>
+                        <a href="/Asset/?id={{ Item.id }}" target="_blank">
+                            <button class="SubmitButton Grey Medium Right Middle" style="width: 100%;">View Raw</button>
+                        </a>
+                        <div style="    margin-top: 55px;">
+                        <span class="ItemTitle" style="font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            {{ Item.item_title }}</span>
+                        {% if Item.item_quantity > -1 %}
+                            <span class="ItemSold"><b>was {{ Item.item_tix }}屁<br>lowest {{ Item.lowest_bid|number_format }}屁</b> <span class="Right" style="font-size: 8px;">{{ Item.bought }} sold</span> </span>
+                        {% else %}
+                            <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                        {% endif %}
+                        </div>
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="Ads">
+        <h2>Ad Approval</h2>
+        <hr>
+        <table width="100%">
+            <tr>
+                <th width=30>Ad ID</th>
+                <th width=50>Actions</th>
+                <th>Ad Uploader</th>
+                <th width=550>Ad Image</th>
+                <th>Ad Target</th>
+            </tr>
+            {% for Ad in Ads %}
+                <tr>
+                    <td>{{Ad.id}}</td>
+                    <td>
+                        <a href="/Admin/Ads/Approve?id={{Ad.id}}">Approve</a><br>
+                        <a href="/Admin/Ads/Deny?id={{Ad.id}}">Deny</a>
+                    </td>
+                    <td>{{Ad.ad_author}}</td>
+                    <td><img width=550 height=50 src="/get-asset/Ads/{{Ad.ad_file}}"></td>
+                    <td>{{Ad.ad_target}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="Ads">
+        <h2>Group Approval</h2>
+        <hr>
+        <table width="100%">
+            <tr>
+                <th width=30>Group ID</th>
+                <th width=50>Actions</th>
+                <th>Group Creator</th>
+                <th width=550>Group Image</th>
+            </tr>
+            {% for Group in Groups %}
+                <tr>
+                    <td>{{Group.id}}</td>
+                    <td>
+                        <a href="/Admin/Groups/Approve?id={{Group.id}}">Approve</a><br>
+                        <a href="/Admin/Groups/Deny?id={{Group.id}}">Deny</a>
+                    </td>
+                    <td>{{Group.group_owner}}</td>
+                    <td><img width=50 height=50 src="/get-asset/Groups/{{Group.id}}.png"></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="Ads">
+        <h2>Game Thumbnail Approval</h2>
+        <hr>
+        <table width="100%">
+            <tr>
+                <th width=30>Game ID</th>
+                <th width=50>Actions</th>
+                <th>Game Creator</th>
+                <th width=550>Game Image</th>
+            </tr>
+            {% for Game in Games %}
+                <tr>
+                    <td>{{Game.id}}</td>
+                    <td>
+                        <a href="/Admin/Games/Approve?id={{Game.id}}">Approve</a><br>
+                        <a href="/Admin/Games/Deny?id={{Game.id}}">Deny</a>
+                    </td>
+                    <td>{{Game.server_owner}}</td>
+                    <td style="overflow-x: scroll;"><img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" width=150 height=80 src="/get-asset/Games/{{Game.id}}.png">
+                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" width=150 height=80 src="/get-asset/Games/{{Game.id}}_1.png">
+                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" width=150 height=80 src="/get-asset/Games/{{Game.id}}_2.png">
+                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" width=150 height=80 src="/get-asset/Games/{{Game.id}}_3.png"></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <style>
+        .RobloxContainer {
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+
+        .ItemPanel {
+            height: 220px;
+        }
+
+        .ItemPanel:hover {
+            height: 220px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

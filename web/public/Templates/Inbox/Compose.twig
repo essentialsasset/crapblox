@@ -1,0 +1,99 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="LeftSide">
+        <h2 class="NoMargin">Inbox</h2>
+        <div class="Dividers">
+            <hr>
+            <br>
+            <div class="Center">
+                <a href="/Inbox/Compose">
+                    <button class="SubmitButton Blue Medium">
+                        Compose Message
+                    </button>
+                </a>
+            </div><br>
+            <hr class="NoMargin">
+            <div class="GamesList">
+                <a href="/Inbox/" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">Private Messages</a><br>
+                <a href="/Inbox/Notifications" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">System Notifications</a><br>
+                <a href="/Inbox/Sent" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">Sent Messages</a><br>
+                <a href="/Inbox/Invites" style="box-shadow: none;border: unset;background-color: unset;border-bottom: 1px solid #ccc;">Group Invites</a><br>
+            </div>
+        </div>
+    </div>
+    <div class="RightSide">
+        <form action="/API/Inbox/Send" method="POST" enctype="multipart/form-data">
+            <h2 class="NoMargin">Compose Message</h2>
+            <hr>
+            <div class="SignInForm" style="width: 50%;">
+                <div class="FormField">
+                    <span class="Middle TextPadding">Message Title</span>
+                    <input type="text" name="title" value="{{ Args.subject }}" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle TextPadding">Message Recipient</span>
+                    <input type="text" name="recipient" value="{{ Recipient }}" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle TextPadding">Message <br></span>
+                    <textarea type="text" style="width: 98.18495%;height: 150px;" autocomplete="off" name="description" class="NoResize InputText InlineBlock">{{ Args.body }}</textarea>
+                </div>
+                <span class="Caption InlineBlock PaddingLeft">Your message cannot be longer than 2048 characters.<br>You can use markdown in messages. <a href="https://commonmark.org/help/" target="_blank">Markdown Syntax</a></span>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Send Message">
+            </div>
+        </form>
+    </div>
+    <style>
+        .GamesList a {
+            display: inline-block;
+            border-bottom: 1px solid #ccc;
+            padding: 7px;
+            font-size: 13px;
+            color: #78006f;
+            width: 92%;
+            background-color: #e7e7e721;
+            border: 1px solid #ccc;
+            margin-bottom: -1px;
+            box-shadow: unset;
+        }
+
+        .FormField .Middle {
+            width: 300px;
+        }
+        .Dividers {
+            border-right: 1px solid #ccc;
+            min-height: 1000px;
+        }
+
+        .FormField input {
+            width: 98.18495%;
+        }
+
+        .LeftSide {
+            float: left;
+            width: calc(20% - 20px);
+        }
+
+        .RightSide {
+            float: right;
+            width: calc(83.5% - 20px);
+        }
+
+        .PaddingLeft {
+            padding-left: 10px;
+        }
+
+        .GamesList {
+            box-shadow: unset;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

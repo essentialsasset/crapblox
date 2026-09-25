@@ -1,0 +1,105 @@
+    {% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="LeftSide">
+        <h2 class="Bold">Log in</h2>
+        <hr>
+        <form action="API/Auth/Signin" class="SignInForm" method="POST">
+            <div class="FormField">
+                <span class="Middle">Username: </span>
+                <input type="text" placeholder="john_doe" autocomplete="off" name="username" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Password: </span>
+                <input type="password" placeholder="***********" name="password" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Remember me (for 90 days): </span>
+                <input type="checkbox" name="rememberme" class="InlineBlock">
+            </div>
+            <span class="Caption"><a href="/SignUp">...or sign up</a></span>
+            <input type="submit" class="SubmitButton Medium Blue Right" value="Sign In">
+        </form>
+    </div>
+    <div class="RightSide">
+        <h2 class="Bold">What is Crapblox?</h2>
+        <hr>
+        <p>
+            Crapblox is an Old Roblox Revival that provides players with access to the 2016 client, along with a vast catalog of items and features. Our community is very active and we strive to provide a fun and engaging experience for all players.<br>
+
+            <br>
+
+            What can you expect from Crapblox?<br>
+            - Access to the 2016 client, allowing you to experience Roblox as it was back in the day.<br>
+            - A huge catalog of items and features to explore.<br>
+            - An active community of players who love the nostalgia of Old Roblox.<br>
+            - Exciting events and activities, designed to keep you engaged and entertained.<br>
+            - A safe and friendly environment, where players can connect with each other and have fun.<br>
+            <br>
+
+            Join the Crapblox community today and experience the best of Old Roblox!<br>
+            <hr>
+            <div class="Showcase">
+                <img src="/Images/Showcase2.png">
+                <span class="Caption">screenshot by sudoapt</span>
+            </div>
+            <div class="Showcase">
+                <img src="/Images/showcase3.png">
+                <span class="Caption">screenshot by spiffy</span>
+            </div>
+        </p>
+    </div>
+    <style>
+        .Showcase img {
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .Showcase .Caption {
+            position: relative;
+            bottom: 8px;
+        }
+
+        .Showcase {
+            width: 300px;
+            float: left;
+            margin-right: 10px;
+        }
+
+        .LeftSide {
+            float: left;
+            width: calc(34% - 20px);
+        }
+
+        .RightSide {
+            float: right;
+            width: calc(69% - 20px);
+        }
+
+        .RobloxContainer {
+            min-height: 100px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+
+        .LandingPage {
+            filter: sepia(1) hue-rotate(238deg);
+        }
+
+        .u-non-blurred {
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="FullWidth">
+        <h1 class="Bold">{{ Item.item_title }}</h1>
+        <hr>
+    </div>
+    <div class="LeftSide ItemPage">
+        {% if Item.item_type != "Audio" %}
+            <img src="/get-asset/Assets/{{ Item.id }}.png">
+        {% else %}
+            <center>
+                <audio controls>
+                    <source src="/Asset/?id={{ Item.id }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </center>
+        {% endif %}
+    </div>
+    <div class="RightSide ItemPage">
+        <div class="GameInfo">
+            <img src="/get-asset/Avatars/{{ Author.id }}.png">
+            {% if Session.Roblox == Item.item_author %}
+                <div class="dropdown">
+                    <img src="/Images/Menu.png" style="filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+                    <div id="editDropdown" class="dropdown-content">
+                        <a href="/Edit/Asset/{{ Item.id }}">Edit Asset</a>
+                        <a href="/API/Asset/Delete/{{ Item.id }}">Delete Asset</a>
+                    </div>
+                </div>
+            {% endif %}
+            <span class="BuilderInfo InlineBlock Bold Top">
+                <span class="Bold">Creator:</span>
+                <span class="AuthorLink"><a href="/User/{{ Author.roblox_username }}">{{ Author.roblox_username }}</a></span>
+                <span class="Caption">Joined:  {{ Author.roblox_created|date('m/d/Y') }}</span>
+            </span>
+        </div>
+        <hr>
+        <div class="GameMetrics">
+            <span class="CreationDate"><b>Created: </b> {{ Item.item_added|date('m/d/Y') }}</span>
+            <span class="CreationDate"><b>Favorited: </b> 0</span>
+            <span class="CreationDate"><b>Bought: </b> {{ Item.bought }}</span>
+        </div>
+        <hr>
+        <p class="GameDescription">
+            {{ Item.item_description|nl2br }}
+        </p>
+        <hr>
+        <div class="ItemActions">
+            {% if Item.item_onsale == "y" %}
+                <span class="Caption">{{ Item.bought }} sold</span>
+                {% if Item.item_quantity > -1 %}
+                    <span class="Caption" {% if Item.item_quantity < 4 %}style="color:darkred;font-weight:bold;"{% endif %}><br>{{ Item.item_quantity }} left</span>
+                {% endif %}
+                <a href="#" onclick="buyAsset()">
+                    <button class="SubmitButton Blue Large">
+                        Buy Item
+                    </button>
+                </a>
+                <span class="Caption Bold Price Big">{{ Item.item_tix }}屁</span>
+            {% else %}
+                <span class="Caption">{{ Item.bought }} sold</span><br>
+                {% if Item.item_quantity > -1 %}
+                    <span class="Caption" {% if Item.item_quantity < 4 %}style="color:darkred;font-weight:bold;"{% endif %}>><br>{{ Item.item_quantity }} left</span>
+                {% endif %}
+                <span class="Caption">Off-Sale</span>
+                <a href="#">
+                    <button class="SubmitButton Blue Large" disabled>
+                        Buy Item
+                    </button>
+                </a>
+                <span class="Caption Bold Price Big">{{ Item.item_tix }}屁</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="FullWidth">
+        {% if Item.item_quantity > -1 %}
+            <hr>
+            <h2 class="Bold InlineBlock">Sell</h2>
+            <hr>
+            <form action="API/Auth/Signin" class="SignInForm" method="POST">
+                <div class="FormField">
+                    <span class="Middle">Resell Price: </span>
+                    <input type="number" name="resell_price" class="InputText InlineBlock">
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Resell">
+            </form>
+        {% endif %}
+    </div>
+    <style>
+        .ItemPanel {
+            width: 139px;
+        }
+
+        .ItemThumbnail {
+            width: 139px;
+            height: 139px;
+        }
+    </style>
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("editDropdown").classList.toggle("show");
+        }
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function buyAsset() {
+            $('#BuyAsset').modal();
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

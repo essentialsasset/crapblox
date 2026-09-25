@@ -1,0 +1,12 @@
+data
+.env
+web/public/volumes/Ads/*
+web/public/volumes/AssetFiles/*
+web/public/volumes/Assets/*
+web/public/volumes/Avatars/*
+web/public/volumes/Games/*
+web/public/volumes/Headshots/*
+web/public/volumes/Groups/*
+web/public/volumes/PlaceFiles/*
+web/public/Assets/*
+crapblox_18.sql

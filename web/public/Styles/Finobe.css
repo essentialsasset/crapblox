@@ -1,0 +1,970 @@
+/* ==UserStyle==
+@name         crapobe
+@version      20230331.18.40
+@namespace    userstyles.world/user/player1
+@description  a finobe theme for crapblox. not exact, but more of a v2
+@author       player1
+@license      Apache License 2.0
+==/UserStyle== */
+
+/* ==UserStyle==
+@name         crapobe
+@version      20230221.16.02
+@namespace    userstyles.world/user/player1
+@description  a finobe theme for crapblox. not exact, but more of a v2.
+@author       player1
+@license      Apache License 2.0
+==/UserStyle== */
+
+    /* ==crapobe==
+    @version    1.2.0a
+    @author     Player1
+    @license    Apache License 2.0
+    ==crapobe== */
+    :root {
+        --co-red: #e3342f; --co-red2: #ae1c17; --co-green: #00b857; --co-green2: #009245; --co-blue: #039be5; --co-blue2: #0279b3; --co-purple: #ba68c8; --co-grey: #5a6268; --co-grey2: #545b62;
+        /* for light mode users or browsers that dont support color schemes */
+        --co-body: #eceef2; --co-body2: #fefefe; --co-body3: white; --co-fb: #e6e6e6; --co-fh: #dee2e6;
+        --co-text: black; --co-text2: #000a; --co-text3: #0001; --co-db: #00000026; --co-dh: #f8f9fa;
+        --co-gradient: #3e8bc7; --co-gradient2: #7375be; --co-gradient3: #3572a2; --co-gradient4: #6262a3;
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --co-red2: #e85c58;
+            --co-body: #242424; --co-body2: #303437; --co-body3: #32363a; --co-fb: #3a3e42; --co-fh: #474a4d;
+            --co-text: white; --co-text2: #fffa; --co-text3: #fff1; --co-db: #ffffff26; --co-dh: #38393a;
+            --co-gradient: #205880; --co-gradient2: #52578a; --co-gradient3: #18415e; --co-gradient4: #404267;
+        }
+        .GamesLeft img, .GamesRight img {
+            filter: invert(1) contrast(69) !important;
+        }
+    }
+    html, body, footer, .RobloxContainer, .pagination-area, .InputText[type=file], .SidebarItems a, .Sidebar .GameInfo, .GamesList a, .modal, .pagination-area, .GroupPageSide, .GroupSearch, .SearchForm, .LeftSide.GroupPage, pre {
+        background: var(--co-body) !important;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .RobloxFooter, .RobloxFooter .RobloxContainer {
+        background: var(--co-body3) !important;
+    }
+    *, body, button, html, input, select, textarea {
+        font-family: "Source Sans Pro", "Helvetica Neue", Roboto, "Chiron Sans HK WS", "Microsoft JhengHei", "PingFang HK", "MingLiU", Arial, sans-serif;
+        font-size: .95rem !important;
+        color: var(--co-text);
+    }
+    .ItemPanel span, .GamePanel span, .asset-title, .BlogTitle {
+        color: var(--co-text) !important;
+    }
+    .GameTitle, .UserInfo a, b, .Bold, h1, h2, h3, h4, h5, h6 {
+        font-weight: 600 !important;
+    }
+    .Comment, .pagination-area, .LeftSide, .Game, .HomepageProfilePicture, .item-thumbnail, .GamesList a, div[class^="Roblox"], .GamesInfo, .GameInfo, .User, .AvatarItems, .SearchForm, .LeftSide.GamesPage img, .InputText[type=file], .Tab, .UserGamesContainer, .video-extras-sparkbars, .TabGroup, div.RightSide div, .ImagePreview img, .stock-owned-container, .CenterSide .Dividers, .CardBig, .RightSide.GamesPage, .RightSide.ItemPage, .dropbtn, th, td, table, .Friend .ItemThumbnail, #forum_reply_modal, a.InlineBlock, .Thumbnail, .Showcase img, .ErrorPage img, pre, .Dividers, #TransactionsHover, .CenterSide.GroupPage, .FeedForm, #userDropdown a, .ProfilePicture, .Ad {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .CenterSide .Dividers {
+        padding: 0;
+    }
+    hr {
+        visibility: hidden;
+        margin: 0;
+    }
+    .RobloxHeader .HeaderMargin > a {
+        margin-right: 1rem;
+    }
+    .RobloxHeader .HeaderMargin > a .Logo {
+        width: 30.6667px !important; height: 30px;
+        box-sizing: border-box;
+        padding-left: 30.6667px;
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/finlogo.png&w=30&h=30&fit=fill);
+        margin-bottom: -5px;
+        margin-left: -5px;
+        transform: translate(-0.5px, -1.51px); /* man this feels like a sin to the css community */
+    }
+    .RobloxHeader .HeaderMargin > a::after {
+        content: "Finobe";
+        font-size: 1.05rem !important;
+        margin: 0 -.65rem 0 .63rem !important;
+        position: relative; top: -6px; left: -1px;
+        font-weight: 500;
+    }
+    .Actions.Middle {
+        top: -8px; left: -3px; right: 0 !important;
+    }
+    .Actions.Right {
+        top: -3px !important; left: 1rem;
+    }
+    .Padding.Center .Logo {
+        width: 75px !important; height: 73px !important;
+        box-sizing: border-box;
+        padding-left: 75px;
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/finlogo.png&w=75);
+    }
+    img.Middle, .Caption .InlineBlock.Right img {
+        width: 16px !important; height: 16px;
+        box-sizing: border-box;
+        padding-left: 16px;
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/diu.png);
+    }
+    img.Middle {
+        margin-right: -4px;
+        top: .5px !important;
+    }
+    .Caption .InlineBlock.Right img {
+        margin-right: 4px;
+    }
+    .SubmitButton, #ColorStopButton {
+        text-transform: lowercase;
+        border-radius: .3rem;
+        color: white !important;
+        transition: all .2s linear !important;
+        padding: .25rem 1rem 1.5rem !important;
+    }
+    #ColorStopButton {
+        padding: .25rem 1rem !important;
+        margin-bottom: .25rem;
+        outline-style: none !important;
+    }
+    .SubmitButton.Large {
+        padding: 0 1rem 0 !important;
+        height: 30px !important;
+    }
+    span.InlineBlock a.InlineBlock {
+        padding: .2rem 1rem 0 !important;
+        height: 22px !important;
+    }
+    button:not(:disabled):not(.disabled), input.SubmitButton:not(:disabled):not(.disabled), .AvatarPart, .BrickColor {
+        cursor: pointer !important;
+    }
+    .SubmitButton.Blue {
+        background: var(--co-blue) !important;
+        border: 1px solid var(--co-blue) !important;
+        text-decoration: none !important;
+    }
+    .SubmitButton.Blue:focus, .SubmitButton.Blue:hover {
+        color: white;
+        background-color: var(--co-blue2) !important;
+        border: 1px solid var(--co-blue2) !important;
+        box-shadow: 0 1px 2px 0 rgba(3,155,229,.1),0 1px 4px 2px rgba(3,155,229,.3) !important;
+    }
+    .SubmitButton.Grey, #ColorStopButton {
+        background: var(--co-grey) !important;
+        border-color: var(--co-grey) !important;
+        box-shadow: none;
+        transition: all .2s linear !important;
+    }
+    .SubmitButton.Grey:focus, .SubmitButton.Grey:hover, #ColorStopButton:focus, #ColorStopButton:hover {
+        background: var(--co-grey2) !important;
+        border-color: var(--co-grey2) !important;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.1),0 1px 4px 2px rgba(0,0,0,.1) !important;
+    }
+    a.Right {
+        margin-top: 6.5px !important;
+    }
+    .SubmitButton.Green {
+        padding: .25rem 1rem .25rem !important;
+        background: var(--co-green) !important;
+        border: 1px solid var(--co-green) !important;
+        transition: all .2s linear !important;
+    }
+    .SubmitButton.Green:focus, .SubmitButton.Green:hover {
+        box-shadow: 0 1px 2px 0 rgba(0,184,87,.1),0 1px 4px 2px rgba(0,184,87,.3) !important;
+        background: var(--co-green2) !important;
+        border: 1px solid var(--co-green2) !important;
+    }
+    .RobloxHeader {
+        background-image: linear-gradient(90deg,var(--co-gradient),var(--co-gradient2)) !important;
+        padding: 1.053rem 1rem;
+        border: 0;
+        border-bottom: 1px solid hsla(0,0%,100%,.1);
+        animation: none; background-size: 100% 100%;
+        height: 28.5px !important;
+        z-index: -999;
+    }
+    .SecondHeader {
+        background: linear-gradient(90deg,var(--co-gradient3),var(--co-gradient4));
+        box-shadow: none;
+        border: 0;
+        padding: .855rem 1rem;
+    }
+    .SecondHeader a {
+        margin: 0;
+        padding: .75rem 1rem;
+        position: relative; top: -1px; left: -2px;
+    }
+    .HeaderMargin > a i, .Actions > a i {
+        opacity: .75;
+        margin-right: .1rem;
+        color: white;
+    }
+    .dropbtn img {
+        opacity: .75;
+    }
+    .HeaderMargin > a:hover i, .Actions > a:hover i, .dropbtn:hover img {
+        opacity: .85;
+    }
+    .FeedForm {
+        padding: 0 !important;
+        margin-right: 7px;
+        background: transparent !important;
+    }
+    .FeedForm textarea {
+        width: 100% !important;
+    }
+    .FeedForm input {
+        width: 100% !important;
+        margin: 0;
+        height: 25px !important;
+    }
+    .ItemPanel, .Game, .GamePanel, .Comment, .Group, .ItemActions, .InputText:not([type=file]):not([name*="Color"]), input:not(.SubmitButton):not([class*="range"]):not([type=file]), .slider, #BuyAsset, .GamesList a, .CardBig.InlineBlock {
+        border: 1px solid var(--co-fb) !important;
+        background: var(--co-body2) !important;
+        border-radius: .3rem !important;
+    }
+    .InputText[name*="Color"], .Tab, .modal {
+        border: 0 !important;
+        border-radius: .3rem !important;
+        box-shadow: none;
+    }
+    .User:hover, .GameInfo:hover {
+        background: var(--co-body) !important;
+    }
+    .ItemPanel:hover, .GamePanel:hover, .Group:hover, .Comment:hover {
+        background: var(--co-body2) !important;
+    }
+    .ItemPanel {
+        transition: all .2s ease-in-out;
+    }
+    .Items a .ItemPanel, .Center a .ItemPanel:not(.Friend), .AvatarItems a .ItemPanel {
+        height: 208px; margin-bottom: 34px; margin-right: 8.4px !important;
+    }
+    .Items a .ItemPanel:hover , .Center a .ItemPanel:not(.Friend):hover, .AvatarItems a .ItemPanel:hover {
+        height: 238px; margin-bottom: 4px; margin-right: 8.4px !important;
+    }
+    .ItemPanel.Friend {
+        width: 8rem;
+    }
+    .ItemPanel.Friend:not(:last-child) {
+        margin-right: 1rem !important;
+    }
+    .ItemPanel.Friend:hover {
+        height: 130px; margin-bottom: 5px;
+    }
+    .Items a:nth-child(5n) .ItemPanel {
+        margin-right: 0;
+    }
+    #RecommendedGames a .ItemPanel {
+        height: 216px; margin-right: .52rem;
+    }
+    #RecommendedGames a:nth-child(8) .ItemPanel {
+        margin-right: 0;
+    }
+    .GameThumbnail {
+        width: 100%; height: auto;
+        aspect-ratio: 16/9;
+    }
+    *:not(#RecommendedGames) > a .GamePanel {
+        width: 10.5rem; margin-right: 0 !important;
+    }
+    #RecommenedGames > a .GamePanel {
+        width: 12rem !important;
+    }
+    .GamePanel {
+        height: 134px; margin-bottom: 1.5rem;
+    }
+    .modal a .ItemPanel {
+        height: 190px; margin-bottom: 34px; margin-right: 1.4rem !important;
+    }
+    .modal a .ItemPanel:hover {
+        height: 220px; margin-bottom: 4px; margin-right: 1.4rem !important;
+    }
+    .modal a:nth-child(4n) .ItemPanel, .modal a:last-child .ItemPanel {
+        margin-right: 0 !important;
+    }
+    .Comment, .Group, .GamesList a, .GamesList a.Active, .CardBig.InlineBlock {
+        margin-top: .5rem;
+    }
+    .CardBig.InlineBlock {
+        width: 21.18%;
+        margin-right: 1.5rem;
+        position: relative; left: .75rem;
+    }
+    .CardBig .InlineBlock.Top, .CardBig .InlineBlock.Top p {
+        width: 10.8rem;
+    }
+    .CardBig img {
+        position: relative; left: -2px;
+    }
+    .CardBig .InlineBlock .Bold img {
+        margin-left: 3px;
+        position: relative; top: -1px;
+    }
+    .slider .progress {
+        background: var(--co-blue2) !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .Game .InlineBlock.Top {
+        margin-left: .5rem;
+    }
+    .GameInfo {
+        box-shadow: none;
+        border-radius: 0;
+        width: auto;
+    }
+    .Card {
+        width: 570px; height: auto;
+        white-space: pre-line;
+    }
+    .GamesInfo {
+        margin-bottom: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .Thumbnail {
+        height: 71px;
+        width: auto;
+        margin: 0;
+    }
+    .ItemThumbnail {
+        background-image: none !important;
+    }
+    .ItemTitle {
+        white-space: pre-line !important;
+    }
+    .ItemPanel.Limited::after {
+        content: "limited";
+        color: white;
+        position: absolute;
+        top: 112px;
+        background: var(--co-green);
+        padding: .2rem .5rem;
+        border-radius: .3rem;
+    }
+    .ItemSold span.Right {
+        position: absolute;
+        top: 112px;
+        left: 67px;
+        background: var(--co-blue);
+        color: white !important;
+        padding: .2rem .5rem;
+        border-radius: .3rem;
+    }
+    .SerialNumber {
+        color: white !important;
+        background: var(--co-purple);
+        border: 0;
+        padding: .2rem .4rem;
+        border-radius: .3rem;
+    }
+    .RobloxAlert {
+        text-align: center;
+        color: white !important;
+        margin: 0;
+        position: relative; top: -.65rem;
+        left: calc(-50vw + 560px);
+        width: calc(100vw - 10.5px);
+    }
+    @media only screen and (max-width: 1160px) {
+        .RobloxAlert {
+            left: -10px;
+            width: calc(100vw - 10px);
+        } }
+    .TypeError {
+        background: var(--co-red) !important;
+    }
+    .TypeSuccess {
+        background: var(--co-green) !important;
+    }
+    .Right .SubmitButton {
+        margin-top: 0 !important;
+    }
+    a .BlogTitle, .AuthorLink, .BuilderInfo a, .ItemPanel, .UserInfo a, .Caption a, .GamePanel, .GameMetadata, .TransactionDetails a, .recent-place-container b:not(:hover), .GameTitle, .CardBig a, .Center.Bold a {
+        color: var(--co-blue) !important;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    a:hover:not(.page-numbers), .recent-place-container b:hover {
+        color: var(--co-blue2) !important;
+        text-decoration: underline;
+    }
+    .RobloxFooter a {
+        filter: none;
+    }
+    .Items a:hover {
+        color: var(--co-body) !important;
+    }
+    .Actions a, .HeaderMargin a .InlineBlock.Right.Caption, #TransactionsHover span, .SecondHeader a {
+        color: hsla(0,0%,100%,.75) !important;
+    }
+    .SidebarItems a:hover, header .Actions a:hover, .HeaderMargin a:hover, div[style="padding: 1px;background-color: #e1e1e1;"], #TransactionsHover:hover span, .HeaderMargin > a:first-child {
+        background: transparent !important;
+        color: hsla(0,0%,100%,.85) !important;
+        text-decoration: none;
+    }
+    .current:not(.blocker) {
+        background: var(--co-blue) !important;
+        color: white !important;
+    }
+    .page-numbers {
+        text-transform: lowercase;
+        background: var(--co-body2);
+        border: .5px solid var(--co-text3);
+        padding: .4rem .8rem;
+        margin: 0 0 0 -1px !important;
+        line-height: 1.25;
+    }
+    a.page-numbers {
+        color: var(--co-blue2);
+    }
+    a.page-numbers:hover {
+        z-index: 2;
+        color: var(--co-blue);
+        background-color: var(--co-fh);
+    }
+    a.page-numbers:focus {
+        z-index: 3;
+        outline: 0;
+        box-shadow: 0 0 0 1px rgba(3,155,229,.25);
+    }
+    .page-numbers:first-child {
+        border-radius: .25rem 0 0 .25rem;
+    }
+    .page-numbers:last-child {
+        border-radius: 0 .25rem .25rem 0;
+    }
+    *:not(.SearchForm) > input.SubmitButton {
+        width: 101.25% !important;
+        filter: none !important;
+    }
+    .SearchForm .SubmitButton {
+        padding: .15rem 1rem 1.35rem !important;
+        margin-left: 4px;
+    }
+    div.Top.InlineBlock:not(.NewsDetails) span:nth-child(1), .Caption, .LeftSide a, .LeftSide a:hover, span.page-numbers, td .Center span, pre {
+        color: var(--co-text2) !important;
+    }
+    .RobloxFooter .RobloxContainer span:first-child, .RobloxFooter .RobloxContainer span:first-child i, spah.Caption a:first-child {
+        font-size: 0 !important;
+    }
+    .AvatarItems {
+        padding: 0;
+    }
+    .LeftSide:not(:has(div[style="padding-right: 8px;"])) {
+        width: calc(20% - 30px) !important;
+    }
+    .RightSide:not(:has(.Showcase)) {
+        width: calc(84% - 30px) !important;
+    }
+    .LeftSide, .RightSide, .Dividers {
+        height: auto !important;
+        min-height: auto !important;
+    }
+    .LeftSide.Avatar {
+        width: 33%;
+    }
+    .RightSide.Avatar {
+        width: 65%;
+    }
+    .LeftSide.Games {
+        width: 20% !important;
+    }
+    .RightSide.Games {
+        width: 79% !important;
+    }
+    .LeftSide.GamesPage {
+        margin-bottom: 1rem;
+    }
+    .Avatar h2.Bold.InlineBlock {
+        margin-left: 4px;
+    }
+    .RightSide.GroupPage h2:nth-child(2) {
+        margin-top: 7px;
+    }
+    .GameDescription {
+        word-break: keep-all;
+    }
+    select.BodyColorsUpdate {
+        width: 200%;
+        right: 100px;
+    }
+    .Tab {
+        margin-right: .3rem;
+        background: var(--co-grey) !important;
+        text-transform: lowercase;
+    }
+    .Tab:hover {
+        background: var(--co-grey2) !important;
+    }
+    .Tab.Primary {
+        background: var(--co-blue) !important;
+    }
+    .Tab.Primary:hover {
+        background: var(--co-blue2) !important;
+    }
+    .Tab a {
+        color: white !important;
+    }
+    .Tab a:hover, a.BlogTitle:hover, center a:hover {
+        color: white !important;
+        text-decoration: none;
+    }
+    .UserGamesContainer {
+        padding-left: 0 !important;
+    }
+    .GamesList a {
+        background: var(--co-body2) !important;
+        color: var(--co-text2) !important;
+    }
+    .GamesList a:hover, span.TransactionDetails b a:hover, span.TransactionDetails a:hover, .LeftSide a:hover {
+        color: var(--co-text) !important;
+        text-decoration: none;
+    }
+    .GamesList a.Active {
+        background: var(--co-grey) !important;
+        width: 92%;
+    }
+    .FormField .Middle *:not(select) {
+        width: auto;
+        margin-right: 8px !important;
+    }
+    .FullWidth .Group {
+        height: 4.2rem;
+    }
+    .SubmitButton.Grey.Middle.Top {
+        width: 100% !important;
+        margin: 0 0 4px 0;
+    }
+    input[style="position: relative;right: 55px;"] {
+        right: 0 !important;
+    }
+    header .Actions a {
+        margin: 0;
+        padding: .5rem;
+    }
+    header .Actions {
+        margin-left: 10px;
+    }
+    a[style="position: relative;right: 15px;border-right: 1px solid #cccccc14;padding-right: 20px;font-weight: bold"] {
+        font-size: 0 !important;
+        font-weight: normal !important;
+        right: 0 !important;
+        padding-right: 0 !important;
+    }
+    a[style="margin-left: -35px;"] {
+        margin-left: -1rem !important;
+    }
+    header .Search form input[type="text"] {
+        margin: 2px 0 0 6.5rem;
+    }
+    img.Middle {
+        margin-top: 6px;
+    }
+    span.InlineBlock.Middle {
+        margin-top: 5px;
+        color: white;
+    }
+    div:not(.GamesPage) > .GameBar .Right {
+        margin-top: -1rem;
+    }
+    .video-extras-sparkbars {
+        width: 100%;
+    }
+    .video-extras-sparkbar-likes {
+        background: var(--co-green) !important;
+    }
+    .video-extras-sparkbar-dislikes {
+        background: var(--co-red) !important;
+        margin-right: 0 !important;
+    }
+    .ItemActions {
+        margin-top: 2rem;
+    }
+    .CardBig div span {
+        font-weight: normal !important;
+    }
+    span[style="color: darkgreen;"] {
+        color: var(--co-green) !important;
+        text-transform: lowercase;
+        margin-top: 0 !important;
+    }
+    .BlogTitle {
+        margin-top: -.2rem;
+    }
+    .RobloxContainer .LeftSide h2.Bold {
+        margin: .8rem 0 1rem 0;
+    }
+    .recent-place-thumbnail, .Thumbnail {
+        aspect-ratio: 16/9;
+    }
+    .ProfilePicture:not([style="margin-top: 76.75px; margin-bottom: 76.75px;"]) {
+        aspect-ratio: 1/1;
+    }
+    .FormField {
+        margin-left: 4px;
+    }
+    .FormField input:not([type="checkbox"]), textarea[style="width: 64%;"] {
+        width: 98% !important;
+    }
+    .FormField input[type="checkbox"] {
+        width: 5% !important;
+    }
+    textarea[style="width: 74.9%;height: 150px;vertical-align: top;"] {
+        width: 99% !important;
+    }
+    span.InlineBlock a.InlineBlock {
+        margin: -3px 0 0 1rem;
+    }
+    .RobloxContainer {
+        overflow: visible;
+        flex: 1 0 auto;
+        min-height: min-content;
+        width: 1120px !important;
+    }
+    .RobloxFooter {
+        box-shadow: none;
+        border: 1px solid var(--co-fb);
+        width: 1120px !important;
+        height: 50px !important;
+        margin: 20px auto 0;
+        padding: 20px 0 20px 10px !important;
+        overflow: hidden;
+    }
+    .RobloxFooter .RobloxContainer {
+        width: 98%;
+        line-height: 1.4rem;
+        margin: 0; padding: 0;
+    }
+    .RobloxFooter .RobloxContainer span:first-child::before {
+        font-size: .95rem !important;
+        content: "Copyright © Finobe 2023 | Lucky number: 42069/69420";
+        color: var(--co-text);
+        display: block;
+        margin: -2px 0 -1.3rem 0;
+        font-weight: 600;
+    }
+    .RobloxFooter .RobloxContainer span:nth-child(3)::before {
+        content: "🌐 ˄";
+        filter: grayscale(1) contrast(1.5);
+        background-color: var(--co-text3);
+        cursor: pointer;
+        padding: .25rem .5rem;
+        border-radius: .2rem;
+        margin-right: .5rem;
+    }
+    .RobloxFooter .RobloxContainer span:last-child {
+        text-align: right;
+        width: 71.7rem !important;
+        position: relative; top: -2.42rem;
+    }
+    .pagination-area, .Showcase img {
+        margin-bottom: 1rem;
+    }
+    .col .pagination-area {
+        margin-top: 2rem !important;
+    }
+    .GamesLeft, .GamesRight {
+        cursor: pointer;
+        background-image: none !important;
+        background-color: var(--co-body2);
+        backdrop-filter: none !important;
+    }
+    .GamesLeft img, .GamesRight img {
+        filter: contrast(69);
+        opacity: 1;
+    }
+    #OutfitMore {
+        max-width: fit-content;
+    }
+    #OutfitMore div[style="padding: 14px;"] {
+        max-width: 40.6rem !important;
+    }
+    .LeftSide.Feed h3:nth-child(4) {
+        font-size: 0 !important;
+    }
+    .LeftSide.Feed h3:nth-child(4)::after {
+        content: "Finobe News";
+        font-size: .95rem !important;
+    }
+    a[style="position: relative;left: 20px;font-size: 19px;vertical-align: middle;"] {
+        position: relative;
+        top: 6px;
+        left: .5rem !important;
+    }
+    a[style="position: relative;left: 20px;font-size: 19px;vertical-align: middle;"]::after, .dropbtn::after {
+        display: inline-block;
+        vertical-align: .2em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-left: .3em solid transparent;
+        margin-left: .355em;
+        position: relative; right: .05em;
+    }
+    #TransactionsHover {
+        margin: 0 .5rem 0 .5rem;
+        position: relative; top: 4px;
+    }
+    .dropbtn::after {
+        margin-left: .4em;
+    }
+    .dropbtn {
+        position: relative; top: 7px; margin-left: 1rem;
+    }
+    .dropbtn img {
+        width: 14px; border-radius: 0; margin-right: .1rem !important;
+        box-sizing: border-box;
+        padding-left: 14px;
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/user.png&w=14);
+    }
+    input[type="checkbox"]:checked {
+        accent-color: auto;
+    }
+    .SearchForm {
+        margin-left: 14.8rem !important;
+    }
+    img[src^="/Images/Silk/bullet_"] {
+        width: 10px !important;
+        height: 10px;
+        box-sizing: border-box;
+        padding-left: 10px;
+        display: inline-block;
+        border-radius: 100%;
+        vertical-align: middle;
+    }
+    img[src="/Images/Silk/bullet_red.png"] {
+        background-color: var(--co-red);
+    }
+    img[src="/Images/Silk/bullet_green.png"] {
+        background-color: var(--co-green);
+    }
+    img[style="vertical-align: middle;width: 64px;margin-right: 32px;opacity: 0.6;"], img[style="vertical-align: middle;width: 64px;margin-right: 16px;opacity: 0.6;"] {
+        opacity: 1 !important; margin-right: 1rem !important;
+        width: 80px !important; height: 80px;
+        box-sizing: border-box;
+        padding-left: 80px;
+    }
+    img[src="/Images/Shrug.png"] {
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/blobs/thinking.svg&w=80);
+    }
+    img[src="/Images/Gaming.png"] {
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/blobs/openmouth.svg&w=80);
+    }
+    img[src="/Images/Error/404.gif"] {
+        width: 128px !important; height: 128px;
+        box-sizing: border-box;
+        padding-left: 128px;
+        background-image: url(https://wsrv.nl/?url=https://playervalley.neocities.org/blobs/loudlycrying.svg&w=128);
+    }
+    #userDropdown {
+        padding: .5rem 0 .5rem 0 !important;
+        margin: .8rem 0 0 -4rem !important;
+        background-color: var(--co-body2);
+        background-clip: padding-box;
+        border: 1px solid var(--co-db);
+        border-radius: .25rem;
+        min-width: 10.395rem !important;
+    }
+    #userDropdown a:not(:last-child) {
+        margin-bottom: 5px;
+    }
+    #userDropdown a:last-child {
+        margin-bottom: -2px;
+    }
+    #userDropdown a {
+        color: var(--co-text) !important;
+        text-align: left;
+        padding: 5px 10px;
+        margin-left: 8px;
+        border-radius: 4px;
+        width: 8rem;
+        clear: both;
+    }
+    #userDropdown a i {
+        color: var(--co-text) !important;
+    }
+    #userDropdown a:hover {
+        background-color: var(--co-dh) !important;
+    }
+    #userDropdown a:last-child, #userDropdown a:last-child i {
+        color: var(--co-red) !important;
+    }
+    #userDropdown a:last-child:hover, #userDropdown a:last-child:hover i {
+        color: var(--co-red2) !important;
+    }
+    .far {
+        position: relative; top: 2px;
+    }
+    .CardBig .InlineBlock.Top p {
+        margin: 3px 0;
+    }
+    .InlineBlock.Bold {
+        line-height: 1.3;
+    }
+    .RobloxContainer > .RightSide > .Center {
+        margin-top: -3rem;
+    }
+    .NotificationCount {
+        font-weight: 700;
+        color: white;
+        background-color: #e53e3e;
+        border-color: #e53e3e;
+        height: 17px;
+        width: 15px;
+    }
+    .RobloxHeader .NotificationCount {
+        position: relative;
+        top: 1px; left: 1px;
+        margin: 0 .1rem;
+    }
+    #divSmallGalleryScrollContainer {
+        background: transparent;
+        position: relative; top: -1rem; left: 1.75rem;
+    }
+    .divSmallGalleryItem {
+        opacity: 1;
+        width: 25%;
+        margin: 0 auto !important;
+    }
+    .divSmallGalleryItem:not(.SelectedYouTubeGalleryIcon):hover {
+        filter: invert(0.5);
+    }
+    .SelectedYouTubeGalleryIcon {
+        top: 0 !important;
+        filter: none !important;
+        opacity: .5;
+    }
+    .QrCode {
+        filter: blur(1.69rem) opacity(0.69) invert(0.85);
+        margin-top: 1rem;
+        cursor: zoom-in !important;
+        transition: .1s filter linear !important;
+    }
+    /* forums!!! ! ! !11 1 */
+    .Forums td {
+        background-color: var(--co-body2);
+    }
+    .RobloxContainer .LeftSide h2:not(.Bold), th {
+        visibility: hidden;
+        border: 0; margin: 0;
+        height: 1.4rem !important;
+        margin-bottom: 1.5rem;
+    }
+    .RobloxContainer .LeftSide h2:first-child:not(.Bold)::after {
+        visibility: visible;
+        content: "Section";
+        display: block;
+        font-weight: 600;
+        margin-left: -6px;
+        color: var(--co-text);
+    }
+    .LeftSide h2:nth-child(11), .LeftSide br:nth-child(10), p[style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"], td div:first-child a .Caption, h3[style="padding-left: 10px;"], .Actions.Middle.InlineBlock:nth-child(2) > a:first-child::after, .LogoLink, .RobloxContainer .LeftSide h2.NoMargin {
+        display: none;
+    }
+    td .Center.Bold, td .Center {
+        text-align: left;
+        margin-left: .5rem;
+    }
+    td .Center span {
+        font-weight: normal !important;
+    }
+    table a, .Forums p {
+        color: var(--co-text);
+    }
+    td div .Caption {
+        display: block;
+    }
+    tr td:first-child {
+        width: auto !important;
+    }
+    /* fixed yo dom jackd */ spah { display: inline; }
+    spah.Caption a:first-child::after {
+        content: "Finobe";
+        font-size: .95rem;
+    }
+    spah.Caption a:first-child:hover {
+        text-underline-offset: 1px;
+    }
+    .FullWidth h1 img {
+        margin: 0 4px -3px 0;
+    }
+    .LeftSide > a::before {
+        content: "";
+        width: 10px; height: 10px;
+        display: inline-block;
+        margin: 0 6px 2px -6px;
+        border-radius: 100%;
+        vertical-align: middle;
+    }
+    /* that moment when wsrv.nl doesn't allow for no caching */
+    .LeftSide > a:nth-child(2)::before { background-color: rgb(190, 69, 69); }
+    .LeftSide > a:nth-child(4)::before { background-color: rgb(166, 34, 101); }
+    .LeftSide > a:nth-child(6)::before { background-color: rgb(26, 172, 118); }
+    .LeftSide > a:nth-child(8)::before { background-color: rgb(166, 64, 153); }
+    .LeftSide > a:nth-child(12)::before { background-color: rgb(51, 145, 227); }
+    .LeftSide > a:nth-child(14)::before { background-color: rgb(81, 56, 141); }
+    .FormField .Middle {
+        width: auto;
+        display: inline-block;
+        vertical-align: top;
+        margin: 0;
+    }
+    .SignInForm .SubmitButton.Medium.Green.Right {
+        right: 0 !important;
+        width: 100% !important;
+        padding: .33rem 0 1.55rem !important;
+    }
+    .SignInForm h1:first-child {
+        margin-left: .25rem;
+    }
+    textarea[style="width: 88%;"] {
+        width: 99.5% !important;
+    }
+    .SignInForm .FormField .Middle {
+        width: 99% !important;
+    }
+    .SignInForm .SubmitButton.Medium.Blue.Right {
+        width: 99.6% !important; /* precise stuff man */
+        margin-top: 1rem;
+    }
+    .SubmitButton.Medium.Blue.Right[value="Create Thread"] {
+        left: -.7rem;
+        width: 98.4% !important;
+    }
+    #forum_reply_modal {
+        background-color: var(--co-body);
+        margin: 1rem 0 0 0;
+    }
+    tr[style="height: 1px;"] {
+        height: 4rem !important;
+    }
+    td[style="height: inherit"] div {
+        margin-left: 0;
+    }
+    td[style="height: inherit"] div img {
+        position: relative;
+    }
+    td .InlineBlock.Top p {
+        width: 700px;
+    }
+    .ProfilePicture[style="width: 100px;margin-top: 10px;"] {
+        margin: 0 !important;
+    }
+    .ProfilePicture[style="margin: 0; max-width: 50px; max-height: 50px;"] {
+        position: relative; top: .3rem;
+    }
+    div[style="width: 100px;line-height: 15px;"], td .Center {
+        width: auto !important;
+    }
+    tr:first-child th[style="width: 150px"], tr th:first-child[style="width: 130px"] {
+        width: 12rem !important;
+    }
+    img[style="margin: 0; max-width: 50px; max-height: 50px;"], .Center[style="width: 100px;line-height: 17px;"] {
+        position: relative; right: 1rem;
+    }
+    .Forums .InlineBlock.Bold img {
+        margin-right: 3px;
+        margin-top: -1px;
+    }

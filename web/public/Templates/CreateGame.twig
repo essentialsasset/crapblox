@@ -1,0 +1,77 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <form action="/API/Create/Game" method="POST" enctype="multipart/form-data">
+        <div class="LeftSide">
+            <h1>Create Game</h1>
+            <hr>
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Place File: </span>
+                    <input type="file" class="InputText" name="place">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Chat Type: </span>
+                    <select name="chatstyle" style="width: 66%;" class="InputText InlineBlock">
+                        {% for Enum in ChatEnum %}
+                            <option value="{{ Enum }}" name="chatstyle" id="category">{{ Enum }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Game Category: </span>
+                    <select name="category" style="width: 66%;" class="InputText InlineBlock">
+                        {% for Category in Categories %}
+                            <option value="{{ Category }}" name="category" id="category">{{ Category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Access Level: </span>
+                    <select name="accesslevel" style="width: 66%;" class="InputText InlineBlock">
+                        {% for Enum in AccessLevel %}
+                            {% if Game.server_allowed == Enum %}
+                                <option value="{{ Enum }}" selected name="chatstyle" id="category">{{ Enum }}</option>
+                            {% else %}
+                                <option value="{{ Enum }}" name="chatstyle" id="category">{{ Enum }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {% if Args.GroupID is defined %}
+                    <input type="hidden" name="groupid" value="{{ Args.GroupID }}">
+                {% endif %}
+
+                <span class="Caption">Make sure your ports are forwarded correctly!</span>
+            </div>
+        </div>
+        <div class="RightSide">
+            <h1>&nbsp;</h1>
+            <hr>
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Game Title:</span>
+                    <input type="text" name="title" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Game Description: <br><span class="Caption">Make sure you describe your game well!</span></span>
+                    <textarea type="text" style="width: 64%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock"></textarea>
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Max Players:</span>
+                    <input type="number" name="maxplayers" value="20" required class="InputText InlineBlock">
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Create Game">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

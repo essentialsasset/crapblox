@@ -1,0 +1,150 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab" style="margin-left: 30px;">
+                <a href="/Trades/Incoming">Incoming Trades</a>
+            </div>
+            <div class="Tab Primary">
+                <a href="/Trades/Outgoing">Outgoing Trades</a>
+            </div>
+            <div class="Tab">
+                <a href="/Transactions">Transactions</a>
+            </div>
+
+            <div class="InputGroup">
+                <!--
+                <a href="/Trades/Create">
+                    <button class="SubmitButton Grey Medium">
+                        Create Trade
+                    </button>
+                </a>
+                -->
+            </div>
+        </div>
+
+        {% if Trades|length == 0 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption">You have no outgoing trades.</span>
+            </div>
+        {% endif %}
+    </div>
+
+    {% for Trade in Trades %}
+        <div class="Trade">
+            <div class="TradeInfo">
+                <h3 class="Bold">{{ Trade[0].trade_receiving }}</h3>
+                <hr>
+                <img src="/get-asset/Avatars/{{ Trade[0].trade_receiving_user_id }}.png" style="width: 100%;" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';">
+                <hr style="margin-bottom:10px;">
+                {% if Trade[0].trade_status == "" %}
+                    <a href="/Trades/Remove/{{ Trade[0].id }}">
+                        <button class="SubmitButton Medium Blue" style="width: 100%;">
+                            Remove Offer
+                        </button>
+                    </a>
+                    <a href="/Trades/Edit/{{ Trade[0].id }}" style="margin-top: 6px;display: inline-block;width: 100%;">
+                        <button class="SubmitButton Medium Grey" style="width: 100%;">
+                            Edit Offer
+                        </button>
+                    </a>
+                {% elseif Trade[0].trade_status == "a" %}
+                    <div class="Center">
+                        <span class="Caption">This trade has been accepted.</span>
+                    </div>
+                {% else %}
+                    <div class="Center">
+                        <span class="Caption">This trade has been declined.</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="TradeItems">
+                <h3 class="Bold">Items you're giving</h3>
+                <hr>
+                {% if Trade[1]|length == 0 %}
+                        <div class="Center" style="margin-bottom: 110px;">
+                            <h1>&nbsp;</h1>
+                            <span class="Caption">You are not giving any items.</span>
+                        </div>
+                {% endif %}
+                {% for Item in Trade[1] %}
+                    <a href="/Item/{{ Item.id }}">
+                        <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                            <span class="SerialNumber">
+                                                                        {% if Item.serial == 0 %}
+                                            N/A
+                                        {% else %}
+                                            #{{ Item.serial }}
+                                        {% endif %}
+                            </span>
+                            <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ItemThumbnail">
+                            <span class="ItemTitle" style="font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ Item.item_title }}</span>
+                            {% if Item.item_quantity > -1 %}
+                                <span class="ItemSold"><b>was {{ Item.item_tix }}屁<br>lowest {{ Item.lowest_bid|number_format }}屁</b> {{ Item.bought }} sold</span>
+                            {% else %}
+                                <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+
+                <h3 class="Bold">Items you're receiving</h3>
+                <hr>
+                {% if Trade[2]|length == 0 %}
+                    <div class="Center" style="margin-bottom: 110px;">
+                        <h1>&nbsp;</h1>
+                        <span class="Caption">You are not receiving any items.</span>
+                    </div>
+                {% endif %}
+                {% for Item in Trade[2] %}
+                    <a href="/Item/{{ Item.id }}">
+                        <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                            <span class="SerialNumber">
+                                                                        {% if Item.serial == 0 %}
+                                            N/A
+                                        {% else %}
+                                            #{{ Item.serial }}
+                                        {% endif %}
+                            </span>
+                            <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ItemThumbnail">
+                            <span class="ItemTitle" style="font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ Item.item_title }}</span>
+                            {% if Item.item_quantity > -1 %}
+                                <span class="ItemSold"><b>was {{ Item.item_tix }}屁<br>lowest {{ Item.lowest_bid|number_format }}屁</b> {{ Item.bought }} sold</span>
+                            {% else %}
+                                <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+    <style>
+        .ItemPanel {
+            width: 114px;
+        }
+
+        .ItemThumbnail {
+            width: 115px;
+            height: 115px;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

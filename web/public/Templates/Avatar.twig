@@ -1,0 +1,1569 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="LeftSide Avatar">
+        <h2 class="Bold">Avatar</h2>
+        <hr>
+        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ User.id }}.png" id="AvatarProfilePic" class="ProfilePicture">
+        <hr>
+        <center>
+            <!--
+            <a href="/API/Update/UserThumb">
+                <button class="SubmitButton Grey Medium">
+                    Redraw Avatar
+                </button>
+            </a><br><br>
+            -->
+            <span class="Caption">
+                <span class="Bold">NOTE: If this does not work, wait a few hours for your avatar to update.</span>
+            </span>
+        </center>
+        <hr>
+        {# <form method="POST" action="/API/Update/BodyColors" class="BodyColorsUpdate">
+            <div class="FormField">
+                Head:
+                <span class="Middle InlineBlock Right">
+                        <select name="HeadColor" class="InputText Medium" onchange="changeBodyColorDropdown(this);" style="/* filter: invert(1); */background-color: {% for BodyColor in BodyColors %}{% if BodyColor.brickColorId == Colors.HeadColor %}{{ BodyColor.hexColor }}{% endif %}{% endfor %}">
+                        {% for BodyColor in BodyColors %}
+                            <option {% if Colors.HeadColor == BodyColor.brickColorId %}selected="selected"{% endif%} style="background-color: {{ BodyColor.hexColor }}!important;" value="{{ BodyColor.name }}" name="category" id="category">{{ BodyColor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <div class="FormField">
+                Left Arm:
+                <span class="Middle InlineBlock Right">
+                    <select name="LeftArmColor" class="InputText Medium" onchange="changeBodyColorDropdown(this);" style="/* filter: invert(1); */background-color: {% for BodyColor in BodyColors %}{% if BodyColor.brickColorId == Colors.LeftArmColor %}{{ BodyColor.hexColor }}{% endif %}{% endfor %}">
+                        {% for BodyColor in BodyColors %}
+                            <option {% if Colors.LeftArmColor == BodyColor.brickColorId %}selected="selected"{% endif%} style="background-color: {{ BodyColor.hexColor }}!important;" value="{{ BodyColor.name }}" name="category" id="category">{{ BodyColor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <div class="FormField">
+                Left Leg:
+                <span class="Middle InlineBlock Right">
+                    <select name="LeftLegColor" class="InputText Medium" onchange="changeBodyColorDropdown(this);" style="/* filter: invert(1); */background-color: {% for BodyColor in BodyColors %}{% if BodyColor.brickColorId == Colors.LeftLegColor %}{{ BodyColor.hexColor }}{% endif %}{% endfor %}">
+                        {% for BodyColor in BodyColors %}
+                            <option {% if Colors.LeftLegColor == BodyColor.brickColorId %}selected="selected"{% endif%} style="background-color: {{ BodyColor.hexColor }}!important;" value="{{ BodyColor.name }}" name="category" id="category">{{ BodyColor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <div class="FormField">
+                Right Arm:
+                <span class="Middle InlineBlock Right">
+                    <select name="RightArmColor" class="InputText Medium" onchange="changeBodyColorDropdown(this);" style="/* filter: invert(1); */background-color: {% for BodyColor in BodyColors %}{% if BodyColor.brickColorId == Colors.RightArmColor %}{{ BodyColor.hexColor }}{% endif %}{% endfor %}">
+                        {% for BodyColor in BodyColors %}
+                            <option {% if Colors.RightArmColor == BodyColor.brickColorId %}selected="selected"{% endif%} style="background-color: {{ BodyColor.hexColor }}!important;" value="{{ BodyColor.name }}" name="category" id="category">{{ BodyColor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <div class="FormField">
+                Right Leg:
+                <span class="Middle InlineBlock Right">
+                    <select name="RightLegColor" class="InputText Medium" onchange="changeBodyColorDropdown(this);" style="/* filter: invert(1); */background-color: {% for BodyColor in BodyColors %}{% if BodyColor.brickColorId == Colors.RightLegColor %}{{ BodyColor.hexColor }}{% endif %}{% endfor %}">
+                        {% for BodyColor in BodyColors %}
+                            <option {% if Colors.RightLegColor == BodyColor.brickColorId %}selected="selected"{% endif%} style="background-color: {{ BodyColor.hexColor }}!important;" value="{{ BodyColor.name }}" name="category" id="category">{{ BodyColor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <div class="FormField">
+                Torso:
+                <span class="Middle InlineBlock Right">
+                    <select name="TorsoColor" class="InputText Medium" onchange="changeBodyColorDropdown(this);" style="/* filter: invert(1); */background-color: {% for BodyColor in BodyColors %}{% if BodyColor.brickColorId == Colors.TorsoColor %}{{ BodyColor.hexColor }}{% endif %}{% endfor %}">
+                        {% for BodyColor in BodyColors %}
+                            <option {% if Colors.TorsoColor == BodyColor.brickColorId %}selected="selected"{% endif%} style="background-color: {{ BodyColor.hexColor }}!important;" value="{{ BodyColor.name }}" name="category" id="category">{{ BodyColor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <hr>
+            <div class="Center">
+                <input style="filter: /* invert(1); */hue-rotate(162deg);" type="button" onclick="UpdateColors()" value="Set Color" class="SubmitButton Medium Green">
+            </div>
+        </form>#}
+    </div> 
+    <div class="RightSide Avatar">
+        <h2 class="Bold InlineBlock">&nbsp;</h2>
+        <form class="SearchForm InlineBlock" style="margin-left: 150px;" onkeydown="return event.key != 'Enter';">
+            <input type="text" name="Search" class="InputText InlineBlock" id="searchInventory" placeholder="Search your inventory..." style="width: 230px;">
+        </form>
+        <hr class="NoMargin">
+        <div class="AvatarItems">
+            <div class="FullWidth">
+                <div class="TabGroup">
+                    <div onclick="showmetheitems()" class="Tab">
+                        <a href="#">Items</a>
+                    </div>
+                    <div onclick="showmethecolors()" class="Tab">
+                        <a href="#">Body Colors</a>
+                    </div>
+                </div>
+            </div>
+            <div id="Items">
+                {% set Count = 1 %}
+                {% for Item in Items %}
+                    {% if Item.id is defined %}
+                        {% if Item.wearing == false %}
+                            {% if Count < 9 %}
+                                {% set Count = Count + 1 %}
+                                <a href="#" onclick="WearAsset({{ Item.id }});" id="Link{{ Item.id }}">
+                                    <div class="ItemPanel {% if Item.wearing == false %}Wearing{% endif %} {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                                        {% if Item.item_quantity > -1 %}
+                                            <span class="SerialNumber">
+                                                {% if Item.serial == 0 %}
+                                                    N/A
+                                                {% else %}
+                                                    #{{ Item.serial }}
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail">
+                                        <span class="ItemTitle">
+                                            {{ Item.item_title }}
+                                            <!--
+                                            <a href="#" onclick="WearAsset({{ Item.id }});" id="Link{{ Item.id }}">
+                                                {% if Item.wearing == false %}
+                                                    <button id="Button{{ Item.id }}" class="SubmitButton Grey Medium Right Middle">Wear</button>
+                                                {% else %}
+                                                    <button id="Button{{ Item.id }}" class="SubmitButton Grey Medium Right Middle">Unwear</button>
+                                                {% endif %}
+                                            </a>
+                                            -->
+                                        </span>
+                                        <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, by {{ Item.item_author }}</span>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+                    {% apply spaceless %}
+                        {% if total > 1 %}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="pagination-area" style="margin-top: 0px;">
+                                        {% if current > 1 %}
+                                            <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                                        {% endif %}
+
+                                        {% for i in 1..total %}
+                                            {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                                <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                                {% if 1 != loop.index %}
+                                                    <span class="page-numbers">...</span>
+                                                {% endif %}
+                                            {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                                <span class="page-numbers">...</span>
+                                            {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                            {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                            {% else %}
+                                                {% if current == loop.index  %}
+                                                    <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                                {% else %}
+                                                    <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                                {% endif %}
+
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                            <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                                        {% endif %}
+                                        {% if current < total %}
+                                            <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endapply %}
+                {% endmacro %}
+
+                {{ _self.pagination(total, current, url) }}
+                <hr>
+                <h2 class="Bold InlineBlock" style="margin-top: 0px;margin-bottom: 0px;">Wearing</h2>
+                <hr>
+                {% for Item in WornItems %}
+                    {% if Item.id is defined %}
+                        {% if Item.wearing == true %}
+                            <a href="#" onclick="WearAsset({{ Item.id }});" id="Link{{ Item.id }}">
+                                <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                                    <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail">
+                                    <span class="ItemTitle">
+                                        {{ Item.item_title }}
+                                        <!--
+                                        <a href="#" onclick="WearAsset({{ Item.id }});" id="Link{{ Item.id }}">
+                                            {% if Item.wearing == false %}
+                                                <button class="SubmitButton Grey Medium Right Middle">Wear</button>
+                                            {% else %}
+                                                <button style="left: 77px;" class="SubmitButton Grey Medium Right Middle">Unwear</button>
+                                            {% endif %}
+                                        </a>
+                                        -->
+                                    </span>
+                                    <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, by {{ Item.item_author }}</span>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div id="BodyColors" style="display: none;">
+                <p style="text-align: center;"><button style="display: none;" id="ColorStopButton" onclick="cancelBodyPicker()">Cancel Selection</button><br><b id="SelectedColor" style="display: none;">Really black</b></p>
+                <div class="ColorSelector" style="display: none; position: relative; margin: auto; margin-top: 10px; position: relative; aspect-ratio: 1/1;">
+                    {% for BodyColor in BodyColors %}
+                        <div onmouseover="colorPickerHover({{BodyColor.brickColorId}})" onclick="colorPickerPicked({{BodyColor.brickColorId}})" class="BrickColor" alt="{{BodyColor.name}}" style="background-color:{{BodyColor.hexColor}}" id="{{BodyColor.brickColorId}}"></div>
+                    {% endfor %}
+                </div>
+                <div class="AvatarColors" style="position: relative; margin: auto; margin-top: 10px; position: relative; height: 250px; aspect-ratio: 1/1;">
+                    <div style="background-color: {{Colors2.HeadColor.hexColor}}" onclick="bodyPartPicked('Head')" class="AvatarPart HeadAvatar" id="Head"></div>
+                    <div style="background-color: {{Colors2.TorsoColor.hexColor}}" onclick="bodyPartPicked('Torso')" class="AvatarPart BodyAvatar" id="Torso"></div>
+                    <div style="background-color: {{Colors2.LeftArmColor.hexColor}}" onclick="bodyPartPicked('LeftArm')" class="AvatarPart LimbAvatar" id="LeftArm"></div>
+                    <div style="background-color: {{Colors2.LeftLegColor.hexColor}}" onclick="bodyPartPicked('LeftLeg')" class="AvatarPart LimbAvatar" id="LeftLeg"></div>
+                    <div style="background-color: {{Colors2.RightArmColor.hexColor}}" onclick="bodyPartPicked('RightArm')" class="AvatarPart LimbAvatar" id="RightArm"></div>
+                    <div style="background-color: {{Colors2.RightLegColor.hexColor}}" onclick="bodyPartPicked('RightLeg')" class="AvatarPart LimbAvatar" id="RightLeg"></div>
+                </div>
+            </div>
+        </div>
+        <div class="LoadingContainer Center">
+            <h1>&nbsp;</h1>
+            <span class="Caption">
+                <img src="/Images/loading.gif" class="Middle">
+                Loading...
+            </span>
+        </div>
+    </div>
+    <style>
+        a .SubmitButton.Grey {
+            margin-top: 0px;
+        }
+
+        .ItemPanel:hover {
+            background-color: rgba(211, 211, 211, 0.39);
+        }
+
+        .InputText, .ItemActions {
+            background: unset;
+            color: unset!important;
+        }
+
+        .RightSide.Avatar {
+            float: right;
+            width: calc(69% - 20px);
+        }
+
+        .AvatarPart {
+            position: absolute;
+            display: fixed;
+            border-style: solid;
+            border-width: 1px;
+            border-color: grey;
+        }
+
+        .BrickColor {
+            position: absolute;
+            width: 3%;
+            height: 3%;
+        }
+
+        .HeadAvatar {
+            height: 23%;
+            width: 23%;
+        }
+
+        .BodyAvatar {
+            height: 48%;
+            width: 48%;
+        }
+
+        .LimbAvatar {
+            height: 48%;
+            width: 23%;
+        }
+
+        #Head {
+            left: 37.5%;
+        }
+
+        #Torso {
+            left: 25%;
+            top: 25%;
+        }
+
+        #LeftArm {
+            left: 0%;
+            top: 25%;
+        }
+
+        #RightArm {
+            left: 75%;
+            top: 25%;
+        }
+
+        #LeftLeg {
+            left: 25%;
+            top: 75%;
+        }
+
+        #RightLeg {
+            left: 50%;
+            top: 75%;
+        }
+    </style>
+    <script>
+        const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
+        const bodyColors = [
+            {
+                "name": "White",
+                "number": 1,
+                "rgb": "242, 243, 243"
+            },
+            {
+                "name": "Grey",
+                "number": 2,
+                "rgb": "161, 165, 162"
+            },
+            {
+                "name": "Light yellow",
+                "number": 3,
+                "rgb": "249, 233, 153"
+            },
+            {
+                "name": "Brick yellow",
+                "number": 5,
+                "rgb": "215, 197, 154"
+            },
+            {
+                "name": "Light green (Mint)",
+                "number": 6,
+                "rgb": "194, 218, 184"
+            },
+            {
+                "name": "Light reddish violet",
+                "number": 9,
+                "rgb": "232, 186, 200"
+            },
+            {
+                "name": "Pastel Blue",
+                "number": 11,
+                "rgb": "128, 187, 219"
+            },
+            {
+                "name": "Light orange brown",
+                "number": 12,
+                "rgb": "203, 132, 66"
+            },
+            {
+                "name": "Nougat",
+                "number": 18,
+                "rgb": "204, 142, 105"
+            },
+            {
+                "name": "Bright red",
+                "number": 21,
+                "rgb": "196, 40, 28"
+            },
+            {
+                "name": "Med. reddish violet",
+                "number": 22,
+                "rgb": "196, 112, 160"
+            },
+            {
+                "name": "Bright blue",
+                "number": 23,
+                "rgb": "13, 105, 172"
+            },
+            {
+                "name": "Bright yellow",
+                "number": 24,
+                "rgb": "245, 205, 48"
+            },
+            {
+                "name": "Earth orange",
+                "number": 25,
+                "rgb": "98, 71, 50"
+            },
+            {
+                "name": "Black",
+                "number": 26,
+                "rgb": "27, 42, 53"
+            },
+            {
+                "name": "Dark grey",
+                "number": 27,
+                "rgb": "109, 110, 108"
+            },
+            {
+                "name": "Dark green",
+                "number": 28,
+                "rgb": "40, 127, 71"
+            },
+            {
+                "name": "Medium green",
+                "number": 29,
+                "rgb": "161, 196, 140"
+            },
+            {
+                "name": "Lig. Yellowich orange",
+                "number": 36,
+                "rgb": "243, 207, 155"
+            },
+            {
+                "name": "Bright green",
+                "number": 37,
+                "rgb": "75, 151, 75"
+            },
+            {
+                "name": "Dark orange",
+                "number": 38,
+                "rgb": "160, 95, 53"
+            },
+            {
+                "name": "Light bluish violet",
+                "number": 39,
+                "rgb": "193, 202, 222"
+            },
+            {
+                "name": "Transparent",
+                "number": 40,
+                "rgb": "236, 236, 236"
+            },
+            {
+                "name": "Tr. Red",
+                "number": 41,
+                "rgb": "205, 84, 75"
+            },
+            {
+                "name": "Tr. Lg blue",
+                "number": 42,
+                "rgb": "193, 223, 240"
+            },
+            {
+                "name": "Tr. Blue",
+                "number": 43,
+                "rgb": "123, 182, 232"
+            },
+            {
+                "name": "Tr. Yellow",
+                "number": 44,
+                "rgb": "247, 241, 141"
+            },
+            {
+                "name": "Light blue",
+                "number": 45,
+                "rgb": "180, 210, 228"
+            },
+            {
+                "name": "Tr. Flu. Reddish orange",
+                "number": 47,
+                "rgb": "217, 133, 108"
+            },
+            {
+                "name": "Tr. Green",
+                "number": 48,
+                "rgb": "132, 182, 141"
+            },
+            {
+                "name": "Tr. Flu. Green",
+                "number": 49,
+                "rgb": "248, 241, 132"
+            },
+            {
+                "name": "Phosph. White",
+                "number": 50,
+                "rgb": "236, 232, 222"
+            },
+            {
+                "name": "Light red",
+                "number": 100,
+                "rgb": "238, 196, 182"
+            },
+            {
+                "name": "Medium red",
+                "number": 101,
+                "rgb": "218, 134, 122"
+            },
+            {
+                "name": "Medium blue",
+                "number": 102,
+                "rgb": "110, 153, 202"
+            },
+            {
+                "name": "Light grey",
+                "number": 103,
+                "rgb": "199, 193, 183"
+            },
+            {
+                "name": "Bright violet",
+                "number": 104,
+                "rgb": "107, 50, 124"
+            },
+            {
+                "name": "Br. yellowish orange",
+                "number": 105,
+                "rgb": "226, 155, 64"
+            },
+            {
+                "name": "Bright orange",
+                "number": 106,
+                "rgb": "218, 133, 65"
+            },
+            {
+                "name": "Bright bluish green",
+                "number": 107,
+                "rgb": "0, 143, 156"
+            },
+            {
+                "name": "Earth yellow",
+                "number": 108,
+                "rgb": "104, 92, 67"
+            },
+            {
+                "name": "Bright bluish violet",
+                "number": 110,
+                "rgb": "67, 84, 147"
+            },
+            {
+                "name": "Tr. Brown",
+                "number": 111,
+                "rgb": "191, 183, 177"
+            },
+            {
+                "name": "Medium bluish violet",
+                "number": 112,
+                "rgb": "104, 116, 172"
+            },
+            {
+                "name": "Tr. Medi. reddish violet",
+                "number": 113,
+                "rgb": "229, 173, 200"
+            },
+            {
+                "name": "Med. yellowish green",
+                "number": 115,
+                "rgb": "199, 210, 60"
+            },
+            {
+                "name": "Med. bluish green",
+                "number": 116,
+                "rgb": "85, 165, 175"
+            },
+            {
+                "name": "Light bluish green",
+                "number": 118,
+                "rgb": "183, 215, 213"
+            },
+            {
+                "name": "Br. yellowish green",
+                "number": 119,
+                "rgb": "164, 189, 71"
+            },
+            {
+                "name": "Lig. yellowish green",
+                "number": 120,
+                "rgb": "217, 228, 167"
+            },
+            {
+                "name": "Med. yellowish orange",
+                "number": 121,
+                "rgb": "231, 172, 88"
+            },
+            {
+                "name": "Br. reddish orange",
+                "number": 123,
+                "rgb": "211, 111, 76"
+            },
+            {
+                "name": "Bright reddish violet",
+                "number": 124,
+                "rgb": "146, 57, 120"
+            },
+            {
+                "name": "Light orange",
+                "number": 125,
+                "rgb": "234, 184, 146"
+            },
+            {
+                "name": "Tr. Bright bluish violet",
+                "number": 126,
+                "rgb": "165, 165, 203"
+            },
+            {
+                "name": "Gold",
+                "number": 127,
+                "rgb": "220, 188, 129"
+            },
+            {
+                "name": "Dark nougat",
+                "number": 128,
+                "rgb": "174, 122, 89"
+            },
+            {
+                "name": "Silver",
+                "number": 131,
+                "rgb": "156, 163, 168"
+            },
+            {
+                "name": "Neon orange",
+                "number": 133,
+                "rgb": "213, 115, 61"
+            },
+            {
+                "name": "Neon green",
+                "number": 134,
+                "rgb": "216, 221, 86"
+            },
+            {
+                "name": "Sand blue",
+                "number": 135,
+                "rgb": "116, 134, 157"
+            },
+            {
+                "name": "Sand violet",
+                "number": 136,
+                "rgb": "135, 124, 144"
+            },
+            {
+                "name": "Medium orange",
+                "number": 137,
+                "rgb": "224, 152, 100"
+            },
+            {
+                "name": "Sand yellow",
+                "number": 138,
+                "rgb": "149, 138, 115"
+            },
+            {
+                "name": "Earth blue",
+                "number": 140,
+                "rgb": "32, 58, 86"
+            },
+            {
+                "name": "Earth green",
+                "number": 141,
+                "rgb": "39, 70, 45"
+            },
+            {
+                "name": "Tr. Flu. Blue",
+                "number": 143,
+                "rgb": "207, 226, 247"
+            },
+            {
+                "name": "Sand blue metallic",
+                "number": 145,
+                "rgb": "121, 136, 161"
+            },
+            {
+                "name": "Sand violet metallic",
+                "number": 146,
+                "rgb": "149, 142, 163"
+            },
+            {
+                "name": "Sand yellow metallic",
+                "number": 147,
+                "rgb": "147, 135, 103"
+            },
+            {
+                "name": "Dark grey metallic",
+                "number": 148,
+                "rgb": "87, 88, 87"
+            },
+            {
+                "name": "Black metallic",
+                "number": 149,
+                "rgb": "22, 29, 50"
+            },
+            {
+                "name": "Light grey metallic",
+                "number": 150,
+                "rgb": "171, 173, 172"
+            },
+            {
+                "name": "Sand green",
+                "number": 151,
+                "rgb": "120, 144, 130"
+            },
+            {
+                "name": "Sand red",
+                "number": 153,
+                "rgb": "149, 121, 119"
+            },
+            {
+                "name": "Dark red",
+                "number": 154,
+                "rgb": "123, 46, 47"
+            },
+            {
+                "name": "Tr. Flu. Yellow",
+                "number": 157,
+                "rgb": "255, 246, 123"
+            },
+            {
+                "name": "Tr. Flu. Red",
+                "number": 158,
+                "rgb": "225, 164, 194"
+            },
+            {
+                "name": "Gun metallic",
+                "number": 168,
+                "rgb": "117, 108, 98"
+            },
+            {
+                "name": "Red flip/flop",
+                "number": 176,
+                "rgb": "151, 105, 91"
+            },
+            {
+                "name": "Yellow flip/flop",
+                "number": 178,
+                "rgb": "180, 132, 85"
+            },
+            {
+                "name": "Silver flip/flop",
+                "number": 179,
+                "rgb": "137, 135, 136"
+            },
+            {
+                "name": "Curry",
+                "number": 180,
+                "rgb": "215, 169, 75"
+            },
+            {
+                "name": "Fire Yellow",
+                "number": 190,
+                "rgb": "249, 214, 46"
+            },
+            {
+                "name": "Flame yellowish orange",
+                "number": 191,
+                "rgb": "232, 171, 45"
+            },
+            {
+                "name": "Reddish brown",
+                "number": 192,
+                "rgb": "105, 64, 40"
+            },
+            {
+                "name": "Flame reddish orange",
+                "number": 193,
+                "rgb": "207, 96, 36"
+            },
+            {
+                "name": "Medium stone grey",
+                "number": 194,
+                "rgb": "163, 162, 165"
+            },
+            {
+                "name": "Royal blue",
+                "number": 195,
+                "rgb": "70, 103, 164"
+            },
+            {
+                "name": "Dark Royal blue",
+                "number": 196,
+                "rgb": "35, 71, 139"
+            },
+            {
+                "name": "Bright reddish lilac",
+                "number": 198,
+                "rgb": "142, 66, 133"
+            },
+            {
+                "name": "Dark stone grey",
+                "number": 199,
+                "rgb": "99, 95, 98"
+            },
+            {
+                "name": "Lemon metalic",
+                "number": 200,
+                "rgb": "130, 138, 93"
+            },
+            {
+                "name": "Light stone grey",
+                "number": 208,
+                "rgb": "229, 228, 223"
+            },
+            {
+                "name": "Dark Curry",
+                "number": 209,
+                "rgb": "176, 142, 68"
+            },
+            {
+                "name": "Faded green",
+                "number": 210,
+                "rgb": "112, 149, 120"
+            },
+            {
+                "name": "Turquoise",
+                "number": 211,
+                "rgb": "121, 181, 181"
+            },
+            {
+                "name": "Light Royal blue",
+                "number": 212,
+                "rgb": "159, 195, 233"
+            },
+            {
+                "name": "Medium Royal blue",
+                "number": 213,
+                "rgb": "108, 129, 183"
+            },
+            {
+                "name": "Rust",
+                "number": 216,
+                "rgb": "144, 76, 42"
+            },
+            {
+                "name": "Brown",
+                "number": 217,
+                "rgb": "124, 92, 70"
+            },
+            {
+                "name": "Reddish lilac",
+                "number": 218,
+                "rgb": "150, 112, 159"
+            },
+            {
+                "name": "Lilac",
+                "number": 219,
+                "rgb": "107, 98, 155"
+            },
+            {
+                "name": "Light lilac",
+                "number": 220,
+                "rgb": "167, 169, 206"
+            },
+            {
+                "name": "Bright purple",
+                "number": 221,
+                "rgb": "205, 98, 152"
+            },
+            {
+                "name": "Light purple",
+                "number": 222,
+                "rgb": "228, 173, 200"
+            },
+            {
+                "name": "Light pink",
+                "number": 223,
+                "rgb": "220, 144, 149"
+            },
+            {
+                "name": "Light brick yellow",
+                "number": 224,
+                "rgb": "240, 213, 160"
+            },
+            {
+                "name": "Warm yellowish orange",
+                "number": 225,
+                "rgb": "235, 184, 127"
+            },
+            {
+                "name": "Cool yellow",
+                "number": 226,
+                "rgb": "253, 234, 141"
+            },
+            {
+                "name": "Dove blue",
+                "number": 232,
+                "rgb": "125, 187, 221"
+            },
+            {
+                "name": "Medium lilac",
+                "number": 268,
+                "rgb": "52, 43, 117"
+            },
+            {
+                "name": "Slime green",
+                "number": 301,
+                "rgb": "80, 109, 84"
+            },
+            {
+                "name": "Smoky grey",
+                "number": 302,
+                "rgb": "91, 93, 105"
+            },
+            {
+                "name": "Dark blue",
+                "number": 303,
+                "rgb": "0, 16, 176"
+            },
+            {
+                "name": "Parsley green",
+                "number": 304,
+                "rgb": "44, 101, 29"
+            },
+            {
+                "name": "Steel blue",
+                "number": 305,
+                "rgb": "82, 124, 174"
+            },
+            {
+                "name": "Storm blue",
+                "number": 306,
+                "rgb": "51, 88, 130"
+            },
+            {
+                "name": "Lapis",
+                "number": 307,
+                "rgb": "16, 42, 220"
+            },
+            {
+                "name": "Dark indigo",
+                "number": 308,
+                "rgb": "61, 21, 133"
+            },
+            {
+                "name": "Sea green",
+                "number": 309,
+                "rgb": "52, 142, 64"
+            },
+            {
+                "name": "Shamrock",
+                "number": 310,
+                "rgb": "91, 154, 76"
+            },
+            {
+                "name": "Fossil",
+                "number": 311,
+                "rgb": "159, 161, 172"
+            },
+            {
+                "name": "Mulberry",
+                "number": 312,
+                "rgb": "89, 34, 89"
+            },
+            {
+                "name": "Forest green",
+                "number": 313,
+                "rgb": "31, 128, 29"
+            },
+            {
+                "name": "Cadet blue",
+                "number": 314,
+                "rgb": "159, 173, 192"
+            },
+            {
+                "name": "Electric blue",
+                "number": 315,
+                "rgb": "9, 137, 207"
+            },
+            {
+                "name": "Eggplant",
+                "number": 316,
+                "rgb": "123, 0, 123"
+            },
+            {
+                "name": "Moss",
+                "number": 317,
+                "rgb": "124, 156, 107"
+            },
+            {
+                "name": "Artichoke",
+                "number": 318,
+                "rgb": "138, 171, 133"
+            },
+            {
+                "name": "Sage green",
+                "number": 319,
+                "rgb": "185, 196, 177"
+            },
+            {
+                "name": "Ghost grey",
+                "number": 320,
+                "rgb": "202, 203, 209"
+            },
+            {
+                "name": "Lilac",
+                "number": 321,
+                "rgb": "167, 94, 155"
+            },
+            {
+                "name": "Plum",
+                "number": 322,
+                "rgb": "123, 47, 123"
+            },
+            {
+                "name": "Olivine",
+                "number": 323,
+                "rgb": "148, 190, 129"
+            },
+            {
+                "name": "Laurel green",
+                "number": 324,
+                "rgb": "168, 189, 153"
+            },
+            {
+                "name": "Quill grey",
+                "number": 325,
+                "rgb": "223, 223, 222"
+            },
+            {
+                "name": "Crimson",
+                "number": 327,
+                "rgb": "151, 0, 0"
+            },
+            {
+                "name": "Mint",
+                "number": 328,
+                "rgb": "177, 229, 166"
+            },
+            {
+                "name": "Baby blue",
+                "number": 329,
+                "rgb": "152, 194, 219"
+            },
+            {
+                "name": "Carnation pink",
+                "number": 330,
+                "rgb": "255, 152, 220"
+            },
+            {
+                "name": "Persimmon",
+                "number": 331,
+                "rgb": "255, 89, 89"
+            },
+            {
+                "name": "Maroon",
+                "number": 332,
+                "rgb": "117, 0, 0"
+            },
+            {
+                "name": "Gold",
+                "number": 333,
+                "rgb": "239, 184, 56"
+            },
+            {
+                "name": "Daisy orange",
+                "number": 334,
+                "rgb": "248, 217, 109"
+            },
+            {
+                "name": "Pearl",
+                "number": 335,
+                "rgb": "231, 231, 236"
+            },
+            {
+                "name": "Fog",
+                "number": 336,
+                "rgb": "199, 212, 228"
+            },
+            {
+                "name": "Salmon",
+                "number": 337,
+                "rgb": "255, 148, 148"
+            },
+            {
+                "name": "Terra Cotta",
+                "number": 338,
+                "rgb": "190, 104, 98"
+            },
+            {
+                "name": "Cocoa",
+                "number": 339,
+                "rgb": "86, 36, 36"
+            },
+            {
+                "name": "Wheat",
+                "number": 340,
+                "rgb": "241, 231, 199"
+            },
+            {
+                "name": "Buttermilk",
+                "number": 341,
+                "rgb": "254, 243, 187"
+            },
+            {
+                "name": "Mauve",
+                "number": 342,
+                "rgb": "224, 178, 208"
+            },
+            {
+                "name": "Sunrise",
+                "number": 343,
+                "rgb": "212, 144, 189"
+            },
+            {
+                "name": "Tawny",
+                "number": 344,
+                "rgb": "150, 85, 85"
+            },
+            {
+                "name": "Rust",
+                "number": 345,
+                "rgb": "143, 76, 42"
+            },
+            {
+                "name": "Cashmere",
+                "number": 346,
+                "rgb": "211, 190, 150"
+            },
+            {
+                "name": "Khaki",
+                "number": 347,
+                "rgb": "226, 220, 188"
+            },
+            {
+                "name": "Lily white",
+                "number": 348,
+                "rgb": "237, 234, 234"
+            },
+            {
+                "name": "Seashell",
+                "number": 349,
+                "rgb": "233, 218, 218"
+            },
+            {
+                "name": "Burgundy",
+                "number": 350,
+                "rgb": "136, 62, 62"
+            },
+            {
+                "name": "Cork",
+                "number": 351,
+                "rgb": "188, 155, 93"
+            },
+            {
+                "name": "Burlap",
+                "number": 352,
+                "rgb": "199, 172, 120"
+            },
+            {
+                "name": "Beige",
+                "number": 353,
+                "rgb": "202, 191, 163"
+            },
+            {
+                "name": "Oyster",
+                "number": 354,
+                "rgb": "187, 179, 178"
+            },
+            {
+                "name": "Pine Cone",
+                "number": 355,
+                "rgb": "108, 88, 75"
+            },
+            {
+                "name": "Fawn brown",
+                "number": 356,
+                "rgb": "160, 132, 79"
+            },
+            {
+                "name": "Hurricane grey",
+                "number": 357,
+                "rgb": "149, 137, 136"
+            },
+            {
+                "name": "Cloudy grey",
+                "number": 358,
+                "rgb": "171, 168, 158"
+            },
+            {
+                "name": "Linen",
+                "number": 359,
+                "rgb": "175, 148, 131"
+            },
+            {
+                "name": "Copper",
+                "number": 360,
+                "rgb": "150, 103, 102"
+            },
+            {
+                "name": "Dirt brown",
+                "number": 361,
+                "rgb": "86, 66, 54"
+            },
+            {
+                "name": "Bronze",
+                "number": 362,
+                "rgb": "126, 104, 63"
+            },
+            {
+                "name": "Flint",
+                "number": 363,
+                "rgb": "105, 102, 92"
+            },
+            {
+                "name": "Dark taupe",
+                "number": 364,
+                "rgb": "90, 76, 66"
+            },
+            {
+                "name": "Burnt Sienna",
+                "number": 365,
+                "rgb": "106, 57, 9"
+            },
+            {
+                "name": "Institutional white",
+                "number": 1001,
+                "rgb": "248, 248, 248"
+            },
+            {
+                "name": "Mid gray",
+                "number": 1002,
+                "rgb": "205, 205, 205"
+            },
+            {
+                "name": "Really black",
+                "number": 1003,
+                "rgb": "17, 17, 17"
+            },
+            {
+                "name": "Really red",
+                "number": 1004,
+                "rgb": "255, 0, 0"
+            },
+            {
+                "name": "Deep orange",
+                "number": 1005,
+                "rgb": "255, 176, 0"
+            },
+            {
+                "name": "Alder",
+                "number": 1006,
+                "rgb": "180, 128, 255"
+            },
+            {
+                "name": "Dusty Rose",
+                "number": 1007,
+                "rgb": "163, 75, 75"
+            },
+            {
+                "name": "Olive",
+                "number": 1008,
+                "rgb": "193, 190, 66"
+            },
+            {
+                "name": "New Yeller",
+                "number": 1009,
+                "rgb": "255, 255, 0"
+            },
+            {
+                "name": "Really blue",
+                "number": 1010,
+                "rgb": "0, 0, 255"
+            },
+            {
+                "name": "Navy blue",
+                "number": 1011,
+                "rgb": "0, 32, 96"
+            },
+            {
+                "name": "Deep blue",
+                "number": 1012,
+                "rgb": "33, 84, 185"
+            },
+            {
+                "name": "Cyan",
+                "number": 1013,
+                "rgb": "4, 175, 236"
+            },
+            {
+                "name": "CGA brown",
+                "number": 1014,
+                "rgb": "170, 85, 0"
+            },
+            {
+                "name": "Magenta",
+                "number": 1015,
+                "rgb": "170, 0, 170"
+            },
+            {
+                "name": "Pink",
+                "number": 1016,
+                "rgb": "255, 102, 204"
+            },
+            {
+                "name": "Deep orange",
+                "number": 1017,
+                "rgb": "255, 175, 0"
+            },
+            {
+                "name": "Teal",
+                "number": 1018,
+                "rgb": "18, 238, 212"
+            },
+            {
+                "name": "Toothpaste",
+                "number": 1019,
+                "rgb": "0, 255, 255"
+            },
+            {
+                "name": "Lime green",
+                "number": 1020,
+                "rgb": "0, 255, 0"
+            },
+            {
+                "name": "Camo",
+                "number": 1021,
+                "rgb": "58, 125, 21"
+            },
+            {
+                "name": "Grime",
+                "number": 1022,
+                "rgb": "127, 142, 100"
+            },
+            {
+                "name": "Lavender",
+                "number": 1023,
+                "rgb": "140, 91, 159"
+            },
+            {
+                "name": "Pastel light blue",
+                "number": 1024,
+                "rgb": "175, 221, 255"
+            },
+            {
+                "name": "Pastel orange",
+                "number": 1025,
+                "rgb": "255, 201, 201"
+            },
+            {
+                "name": "Pastel violet",
+                "number": 1026,
+                "rgb": "177, 167, 255"
+            },
+            {
+                "name": "Pastel blue-green",
+                "number": 1027,
+                "rgb": "159, 243, 233"
+            },
+            {
+                "name": "Pastel green",
+                "number": 1028,
+                "rgb": "204, 255, 204"
+            },
+            {
+                "name": "Pastel yellow",
+                "number": 1029,
+                "rgb": "255, 255, 204"
+            },
+            {
+                "name": "Pastel brown",
+                "number": 1030,
+                "rgb": "255, 204, 153"
+            },
+            {
+                "name": "Royal purple",
+                "number": 1031,
+                "rgb": "98, 37, 209"
+            },
+            {
+                "name": "Hot pink",
+                "number": 1032,
+                "rgb": "255, 0, 191"
+            }
+        ]
+        $("#searchInventory").on("input", function() {
+            let search = $("#searchInventory").val();
+            let Items = $(".AvatarItems");
+            let Loading = $(".LoadingContainer");
+            let Pagination = $(".pagination-area");
+
+            $(Pagination).fadeOut();
+            $(Items).fadeOut('fast', function() {
+                $(Loading).fadeIn('fast');
+
+                // Get result
+                $.get("/API/Responsive/Avatar?Search=" + search, function(data, status){
+                    $(Items).html(data);
+                    $(Loading).fadeOut('fast', function() {
+                        $(Items).fadeIn('fast');
+                    });
+                });
+            });
+        });
+
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+        }
+
+        function trimString(s) {
+            var l=0, r=s.length -1;
+            while(l < s.length && s[l] == ' ') l++;
+            while(r > l && s[r] == ' ') r-=1;
+            return s.substring(l, r+1);
+        }
+
+        function compareObjects(o1, o2) {
+            var k = '';
+            for(k in o1) if(o1[k] != o2[k]) return false;
+            for(k in o2) if(o1[k] != o2[k]) return false;
+            return true;
+        }
+
+        function itemExists(haystack, needle) {
+            for(var i=0; i<haystack.length; i++) if(compareObjects(haystack[i], needle)) return true;
+            return false;
+        }
+
+        function searchObj (obj, query) {
+            for (var key in obj) {
+                var value = obj[key];
+
+                if (typeof value === 'object') {
+                    return searchObj(value, query);
+                }
+                if (value === query) {
+                    return obj;
+                }
+            }
+
+            return false;
+        }
+
+        function WearAsset(asset) {
+            $("#AvatarProfilePic").attr('src', '/Images/blockLoading.gif');
+            $("#AvatarProfilePic").css({"margin-top": "76.75px", "margin-bottom": "76.75px"});
+
+            $.ajax({
+                url: "/API/Wear/Asset/" + asset,
+                type: 'GET',
+                success: function (res) {
+                    console.log($("#Link" + asset));
+
+                    if($("#Button" + asset).text() == "Wear") {
+                        $("#Link" + asset).addClass("Enabled");
+                        $("#AvatarProfilePic").attr('src', 'data:image/png;base64,' + res);
+                    } else if($("#Button" + asset).text() == "Unwear") {
+                        $("#Link" + asset).removeClass("Enabled");
+                        $("#AvatarProfilePic").attr('src', 'data:image/png;base64,' + res);
+                    }
+
+                    $("#AvatarProfilePic").css({"margin-top": "0px", "margin-bottom": "0px"});
+                    $("#AvatarProfilePic").attr('src', 'data:image/png;base64,' + res);
+                    console.log(res);
+                }
+            });
+        }
+
+        let limb_parts = ["Head","Torso","LeftArm","RightArm","LeftLeg","RightLeg"];
+        let sel_limb_part = "";
+
+        function UpdateColors() {
+            $("#AvatarProfilePic").attr('src', '/Images/blockLoading.gif');
+
+            $.post("/API/Update/BodyColors", $(".BodyColorsUpdate").serialize(), function(data) {
+                console.log(data)
+                $("#AvatarProfilePic").attr('src', 'data:image/png;base64,' + data);
+            });
+        }
+
+        function bodyPartPicked(part) {
+            if(limb_parts.includes(part))
+            {
+                console.log("selecting part " + part);
+                $(".AvatarColors").css("display", "none");
+                $(".ColorSelector").css("display", "block");
+                $("#ColorStopButton").css("display", "inline");
+                $("#ColorStopButton").html("Cancel change on " + part);
+                sel_limb_part = part;
+            }
+        }
+
+        function cancelBodyPicker() {
+            sel_limb_part = "";
+            
+            $(".AvatarColors").css("display", "block");
+            $(".ColorSelector").css("display", "none");
+            $("#ColorStopButton").css("display", "none");
+            $("#SelectedColor").css("display", "none");
+        }
+
+        function colorPickerHover(color) {
+            let b = searchArr(bodyColors, "number", color);
+            if(b)
+            {
+                $("#SelectedColor").css("display", "inline");
+                $("#SelectedColor").css("color", "rgb("+b.rgb+")");
+                $("#SelectedColor").html(b.name);
+            }
+        }
+
+        function colorPickerPicked(color) {
+            $(".AvatarColors").css("display", "block");
+            $(".ColorSelector").css("display", "none");
+
+            let b = searchArr(bodyColors, "number", color);
+            if(b)
+            {
+                let p_name = sel_limb_part + "Color";
+                console.log("setting " + sel_limb_part + " to " + b.name);
+                let color_data = {};
+                color_data[p_name] = b.name;
+                let limb = $("#" + sel_limb_part)
+                limb.css("background-color","rgb("+b.rgb+")");
+                cancelBodyPicker();
+                $.post("/API/Update/BodyColors", color_data);
+                UpdateColors();
+            }
+        }
+
+        function filterIt(arr, searchKey) {
+            return arr.filter(function(obj) {
+                return Object.keys(obj).some(function(key) {
+                    return obj[key].includes(searchKey);
+                })
+            });
+        }
+
+        function searchArr(arr, key, value) {
+            return arr.find(_ => {
+                if (_[key] === value) return true
+            })
+        }
+
+        function updateBrickColors() {
+            let i = 0;
+            let f = 9;
+            $(".BrickColor").each(function(i, obj) {
+                let id = parseInt(obj.id);
+                obj.style.position = "absolute";
+                obj.style.display = "block";
+                obj.style.left = ((1/f*100) * Math.floor(i%f)) + "%";
+                obj.style.top = ((1/f*100) * Math.floor(i/f)) + "%";       
+                obj.style.height = (1/f*100) + "%";
+                obj.style.width = (1/f*100) + "%";         
+                obj.innerHTML = " ";
+                i = i + 1;
+            });
+        }
+
+        function changeBodyColorDropdown(DOM) {
+            // let bodyColors = htmlDecode(`{{ BodyColors|json_encode() }}`);
+
+            let newColor = $(DOM).val();
+            let newHex = searchArr(bodyColors, "name", newColor);
+            newColor = rgba2hex("rgb(" + newHex.rgb + ")"); // Why the fuck do I have to add rgb()
+
+
+        }
+
+        function showmethecolors() {
+            $("#BodyColors").css("display", "block");
+            $("#Items").css("display", "none");
+        }
+
+        function showmetheitems() {
+            $("#BodyColors").css("display", "none");
+            $("#Items").css("display", "block");
+        }
+
+        updateBrickColors();
+        updateBodyColors();
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

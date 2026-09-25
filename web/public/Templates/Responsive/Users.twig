@@ -1,0 +1,19 @@
+{% for User in Users %}
+    {% if User.id is defined %}
+        <div class="CardBig InlineBlock">
+            <img src="/get-asset/Avatars/{{ User.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ProfilePicture">
+            <div class="InlineBlock Top">
+                <a href="/User/{{ User.roblox_username }}">{{ User.roblox_username }}</a>
+                <p class="NoMargin" style="margin-top: 3px;">{{ User.roblox_description }}</p>
+                <span class="Caption InlineBlock Bold">
+                    {% if User.active == true %}
+                        <img src="/Images/Silk/bullet_green.png" class="Icon">
+                    {% else %}
+                        <img src="/Images/Silk/bullet_red.png" class="Icon">
+                    {% endif %}
+                    active {{ User.roblox_lastlogin|timeago }}
+                </span>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

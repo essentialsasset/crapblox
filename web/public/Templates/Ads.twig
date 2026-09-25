@@ -1,0 +1,68 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab" style="margin-left: 30px;">
+                <a href="/Develop">Develop</a>
+            </div>
+            <div class="Tab">
+                <a href="/Settings">Settings</a>
+            </div>
+            <div class="Tab Primary">
+                <a href="/Ads">Advertisements</a>
+            </div>
+            <div class="Tab">
+                <a href="/Referral">Referrals</a>
+            </div>
+        </div>
+    </div>
+    <div class="LeftSide">
+        <h2 class="Bold">Create Advertisement</h2>
+        <hr><br>
+        <form method="POST" action="/API/Create/Ad" enctype="multipart/form-data">
+            <div class="FormField">
+                <span class="Middle">Ad Link: </span>
+                <input type="text" name="link" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Ad File: </span>
+                <input type="file" name="ad" class="InputText InlineBlock">
+            </div>
+            <span class="Caption">Avertisements have to be manually approved by an <br>administrator. The recommended size for ads is 1000x100.</span>
+            <input type="submit" style="position: relative;right: 55px;" class="SubmitButton Medium Blue Right" value="Create Ad">
+        </form>
+    </div>
+    <div class="RightSide">
+        <h2 class="Bold">Advertisements</h2>
+        <hr>
+        {% for Ad in Ads %}
+            {% if Ad.id is defined %}
+                <div class="ad-preview-container">
+                    <span class="Caption Right">Advertisement ({{ Ad.ad_added|timeago }})</span>
+                    <img src="/get-asset/Ads/{{ Ad.id }}.png" class="AdPreview">
+                    {% if Ad.ad_status == 'd' %}
+                        <img class="Icon" src="/Images/Silk/flag_yellow.png"> <span class="Caption">Pending</span>
+                    {% else %}
+                        <img class="Icon" src="/Images/Silk/flag_green.png"> <span class="Caption">Approved</span>
+                    {% endif %}
+                </div>
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

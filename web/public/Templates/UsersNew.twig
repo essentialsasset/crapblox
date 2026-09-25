@@ -1,0 +1,144 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+
+    {% if Category is defined %}
+        <h2 class="Bold InlineBlock">{{ Category }}</h2>
+    {% else %}
+        <h2 class="Bold InlineBlock">Users ({{ Users.rows }})</h2>
+    {% endif %}
+    <form class="SearchForm InlineBlock Center" onkeydown="return event.key != 'Enter';">
+        <input type="text" name="Search" class="InputText InlineBlock" id="searchInventory" placeholder="Search users..." style="width: 230px;">
+    </form>
+    <hr>
+    <div class="Users">
+        {% if Users|length == 1 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption">There were no users found in your query.</span>
+            </div>
+        {% endif %}
+        {% for User in Users %}
+            {% if User.id is defined %}
+                <div class="CardBig InlineBlock">
+                    <img src="/get-asset/Avatars/{{ User.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ProfilePicture">
+                    <div class="InlineBlock Top">
+                        <a href="/User/{{ User.roblox_username }}">{{ User.roblox_username }}</a>
+                        <p class="NoMargin" style="margin-top: 3px;">{{ User.roblox_description }}</p>
+                        <span class="Caption InlineBlock Bold">
+                            {% if User.active == true %}
+                                <img src="/Images/Silk/bullet_green.png" class="Icon">
+                            {% else %}
+                                <img src="/Images/Silk/bullet_red.png" class="Icon">
+                            {% endif %}
+                            active {{ User.roblox_lastlogin|timeago }}
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="LoadingContainer Center">
+        <h1>&nbsp;</h1>
+        <span class="Caption">
+            <img src="/Images/loading.gif" class="Middle">
+            Loading...
+        </span>
+    </div>
+    <script>
+        $("#searchInventory").on("input", function() {
+            let search = $("#searchInventory").val();
+            let Items = $(".Users");
+            let Loading = $(".LoadingContainer");
+            $(Items).fadeOut('fast', function() {
+                $(Loading).fadeIn('fast');
+
+                // Get result
+                $.get("/API/Responsive/Users?Search=" + search, function(data, status){
+                    $(Items).html(data);
+                    $(Loading).fadeOut('fast', function() {
+                        $(Items).fadeIn('fast');
+                    });
+                });
+            });
+        });
+    </script>
+    {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+        {% apply spaceless %}
+            {% if total > 1 %}
+                <div class="row">
+                    <div class="col">
+                        <div class="pagination-area">
+                            {% if current > 1 %}
+                                <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                            {% endif %}
+
+                            {% for i in 1..total %}
+                                {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                    <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                    {% if 1 != loop.index %}
+                                        <span class="page-numbers">...</span>
+                                    {% endif %}
+                                {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                    <span class="page-numbers">...</span>
+                                {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                {% else %}
+                                    {% if current == loop.index  %}
+                                        <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                    {% else %}
+                                        <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                    {% endif %}
+
+                                {% endif %}
+                            {% endfor %}
+                            {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                            {% endif %}
+                            {% if current < total %}
+                                <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endapply %}
+    {% endmacro %}
+
+    {{ _self.pagination(total, current, url) }}
+    <style>
+        .CardBig {
+            width: 30.57%;
+            padding-left: 5px;
+            margin-bottom: 5px;
+            height: 60px;
+            margin-right: 5px;
+        }
+
+        .CardBig a {
+            color: #9d0091;
+        }
+
+        .ProfilePicture {
+            margin: unset;
+            width: 64px;
+            display: inline-block;
+        }
+
+        .CardBig p {
+            width: 265px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

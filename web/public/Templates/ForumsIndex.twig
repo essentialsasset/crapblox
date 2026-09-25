@@ -1,0 +1,167 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+
+    <div class="FullWidth">
+        <h1 class="Bold NoMargin"><img src="/Images/Silk/world.png"> Forums</h1>
+        <spah class="Caption InlineBlock TextPadding">
+            <a href="/Feed">Crapblox</a> » <a href="/Forum/">Forum</a> » Home
+        </spah>
+        <hr>
+    </div>
+    <div class="LeftSide">
+        <h2>Crapblox</h2>
+        {% for Category in Categories %}
+            {% if Category.id is defined and Category.forum_category == "Crapblox" %}
+                 <a href="/Forum/{{ Category.id }}">{{ Category.forum_title }}</a><br>
+            {% endif %}
+        {% endfor %}
+        <br>
+
+        <h2>Off Topic</h2>
+        {% for Category in Categories %}
+            {% if Category.id is defined and Category.forum_category == "Off Topic" %}
+                <a href="/Forum/{{ Category.id }}">{{ Category.forum_title }}</a><br>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="RightSide">
+        <table class="Forums">
+            <tr>
+                <th style="width: 150px">Author</th>
+                <th>Title</th>
+            </tr>
+            {% for Thread in Threads %}
+                {% if Thread.id is defined %}
+                    <tr style="height: 1px;">
+                        <td style="height: inherit">
+                            <div class="Center Bold" style="height: 100%; margin: auto; display: flex;  align-items: center; justify-content: center;">
+                                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" style="margin: 0; max-width: 50px; max-height: 50px;" src="/get-asset/Avatars/{{ Thread.author_id }}.png" class="ProfilePicture">
+                                <div class="Center" style="width: 100px;line-height: 17px;">
+                                    <a href="/User/{{ Thread.thread_author }}">{{ Thread.thread_author }}</a>
+                                    <br>
+                                    <span class="InlineBlock Bold" style="font-size: 9px">
+                                        {{ Thread.post_count }} posts<br>
+                                        joined  {{ Thread.roblox_created|timeago }}<br>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="InlineBlock Top" style="max-width: 550px;overflow: hidden;">
+                                <a href="/Forum/Thread/{{ Thread.id }}"> <h4 class="InlineBlock NoMargin Bold"> {{ Thread.thread_title }}</h4></a>
+                                <p class="NoMargin" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ Thread.thread_text }}</p>
+                                <span class="Caption">{{ Thread.replies }} replies &bull; last reply {{ Thread.thread_last_updated|timeago }}</span>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+            {% apply spaceless %}
+                {% if total > 1 %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="pagination-area">
+                                {% if current > 1 %}
+                                    <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                                {% endif %}
+
+                                {% for i in 1..total %}
+                                    {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                        <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                        {% if 1 != loop.index %}
+                                            <span class="page-numbers">...</span>
+                                        {% endif %}
+                                    {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                        <span class="page-numbers">...</span>
+                                    {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                    {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                    {% else %}
+                                        {% if current == loop.index  %}
+                                            <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                        {% else %}
+                                            <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                                {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                    <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                                {% endif %}
+                                {% if current < total %}
+                                    <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endapply %}
+        {% endmacro %}
+        <style>
+            .Forums td {
+                padding-top: 10px;
+            }
+        </style>
+
+        {{ _self.pagination(total, current, url) }}
+    </div>
+    <style>
+        .pagination-area {
+            margin-top: 5px;
+        }
+
+        .LeftSide h2 {
+            background-color: #933ea3;
+            border: 1px solid #6f2e7b;
+            color: white;
+            padding: 5px;
+            height: 25px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: -1px;
+            margin-right: -1px;
+        }
+
+        .LeftSide {
+            border-right: 1px solid #ccc;
+            float: left;
+            width: calc(19% - 20px);
+            margin-top: -7px;
+            font-size: 13px;
+            line-height: 26px;
+            height: 400px;
+        }
+
+        .RightSide {
+            float: right;
+            position: relative;
+            width: calc(84% - 14px);
+            top: -8px;
+        }
+
+        .LeftSide a {
+            color: #9d0091;
+            margin-left: 6px;
+        }
+
+        .Forums td {
+            padding-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

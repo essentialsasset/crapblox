@@ -1,0 +1,88 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab" style="margin-left: 30px;">
+                <a href="/Trades/Incoming">Incoming Trades</a>
+            </div>
+            <div class="Tab">
+                <a href="/Trades/Outgoing">Outgoing Trades</a>
+            </div>
+            <div class="Tab Primary">
+                <a href="/Transactions">Transactions</a>
+            </div>
+        </div>
+    </div>
+    <div class="LeftSide">
+        <h2 class="Bold">Assets Bought</h2>
+        <hr>
+        {% for Asset in Bought %}
+            {% if Asset.id is defined %}
+                <div style="padding-right: 8px;">
+                    <div class="stock-owned-container">
+                        <img class="TransactionThumb" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Asset.item_id }}.png">
+                        <span class="inline-block InheritDisplay TransactionDetails">
+                            <b><a href="/Item/{{ Asset.item_id }}">{{ Asset.item_title }}</a></b> by <a href="/User/{{ Asset.item_author }}">{{ Asset.item_author }}</a><br>
+                            <span class="Caption TransactionDescription">{{ Asset.item_description }}</span><br>
+                            <span class="Caption">
+                                <i class="far fa-money-bill"></i> {{ Asset.item_tix }}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if Bought|length == 0 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption">You have bought no assets.</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="RightSide">
+        <h2 class="Bold">Assets Sold</h2>
+        <hr>
+        {% for Asset in Sold %}
+            {% if Asset.id is defined %}
+                <div style="padding-right: 8px;">
+                    <div class="stock-owned-container">
+                        <img class="TransactionThumb" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Asset.item_id }}.png">
+                        <span class="inline-block InheritDisplay TransactionDetails">
+                            <b><a href="/Item/{{ Asset.item_id }}">{{ Asset.item_title }}</a></b> was bought by <a href="/User/{{ Asset.sale_by }}">{{ Asset.sale_by }}</a><br>
+                            <span class="Caption TransactionDescription">{{ Asset.item_description }}</span><br>
+                            <span class="Caption">
+                                <i class="far fa-money-bill"></i> {{ Asset.item_tix }}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if Sold|length == 0 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption">You have sold no assets.</span>
+            </div>
+        {% endif %}
+    </div>
+    <style>
+        .stock-owned-container {
+            width: 98%;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

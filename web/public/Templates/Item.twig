@@ -1,0 +1,425 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    {% if Item.item_approved == "n" %}
+        <div class="RobloxAlert TypeError">
+            This asset is not approved yet. It will be approved by an admin within a few hours.
+        </div>
+    {% endif %}
+    {% if Item.item_approved == "d" %}
+        <div class="RobloxAlert TypeError">
+            This asset has been denied. If you think this is an error, contact a staff member.
+        </div>
+    {% endif %}
+    <div class="FullWidth">
+        <h1 class="Bold">{{ Item.item_title }}</h1>
+        <hr>
+    </div>
+    <div class="LeftSide ItemPage">
+        {% if Item.item_type != "Audio" %}
+            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png">
+        {% else %}
+            <center>
+                <audio controls>
+                    <source src="/Asset/?id={{ Item.id }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </center>
+        {% endif %}
+    </div>
+    <div class="RightSide ItemPage">
+        <div class="GameInfo">
+            {% if Item.item_group == 0 %}
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Author.id }}.png">
+            {% else %}
+                <img src="/get-asset/Groups/{{ Item.group_id }}.png">
+            {% endif %}
+
+            {% if Session.Roblox == Item.item_author or IsAdmin %}
+                <div class="dropdown">
+                    <img src="/Images/Menu.png" style="height:unset;width:unset;filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+                    <div id="editDropdown" class="dropdown-content">
+                        <a href="/Edit/Asset/{{ Item.id }}">Edit Asset</a>
+                        <a href="/API/Asset/Delete/{{ Item.id }}">Delete Asset</a>
+                        {% if IsAdmin %}
+                            <a href="/API/Update/AssetRender/{{ Item.id }}">Rerender Asset</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if Item.item_group == 0 %}
+                <span class="BuilderInfo InlineBlock Bold Top">
+                    <span class="Bold">Creator:</span>
+                    <span class="AuthorLink"><a href="/User/{{ Author.roblox_username }}">{{ Author.roblox_username }}</a></span>
+                    <span class="Caption">Joined:  {{ Author.roblox_created|date('m/d/Y') }}</span>
+                </span>
+            {% else %}
+                <span class="BuilderInfo InlineBlock Bold Top">
+                    <span class="Bold">Group:</span>
+                    <span class="AuthorLink"><a href="/Groups/{{ Item.group_id }}">{{ Item.group_title }}</a></span>
+                    <span class="Caption">Created:  {{ Item.group_created|date('m/d/Y') }}</span>
+                </span>
+            {% endif %}
+        </div>
+        <hr>
+        <div class="GameMetrics">
+            <span class="CreationDate"><b>Created: </b> {{ Item.item_added|date('m/d/Y') }}</span>
+            <span class="CreationDate"><b>Favorited: </b> 0</span>
+            <span class="CreationDate"><b>Bought: </b> {{ Item.bought }}</span>
+        </div>
+        <hr>
+        <div class="GameBar">
+            <div class="video-extras-sparkbars">
+                <div class="video-extras-sparkbar-likes" style="    float: left;
+                        height: 10px;
+                        border-right: 1px solid #fff;
+                        background: #0066009c;width:{{ Item.rating_likes_width }}%"></div>
+                <div class="video-extras-sparkbar-dislikes" style="    float: right;
+                        height: 10px;
+                        margin-right: -1px;
+                        background: #c009;width:{{ Item.rating_dislikes_width }}%"></div>
+            </div>
+
+            <span class="video-extras-likes-dislikes Caption" style="margin-left: 45px;">
+                <span class="likes" >{{ Item.rating_likes }}</span> likes, <span class="dislikes">{{ Item.rating_dislikes }}</span> dislikes
+            </span>
+
+            <div class="InlineBlock Right">
+                {% if Favorite.id is not defined %}
+                    <a href="/API/Item/Favorite/{{ Item.id }}" class="FavoriteButton">
+                        <img src="/Images/Silk/star.png" class="Icon">
+                        <span class="label">
+                                Favorite
+                            </span>
+                    </a>
+                {% else %}
+                    <a href="/API/Item/Favorite/{{ Item.id }}" class="FavoriteButton">
+                        <img src="/Images/Silk/star.png" class="Icon Active">
+                        <span class="label">
+                                Unfavorite
+                            </span>
+                    </a>
+                {% endif %}
+                <a href="/API/Item/Like/{{ Item.id }}">
+                    <img src="/Images/Silk/thumb_up.png" class="Icon" title="Like">
+                </a>
+                <a href="/API/Item/Dislike/{{ Item.id }}">
+                    <img src="/Images/Silk/thumb_down.png" class="Icon" title="Like">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <div class="ItemActions">
+            {% if Item.item_onsale == "y" %}
+                <span class="Caption">{{ Item.bought }} sold</span>
+                {% if Item.item_quantity > -1 %}
+                    <span class="Caption" {% if Item.item_quantity < 4 %}style="color:darkred;font-weight:bold;"{% endif %}>{{ Item.item_quantity }} left</span>
+                {% endif %}
+                <a href="#" onclick="buyAsset()">
+                    <button class="SubmitButton Blue Large">
+                        Buy Item
+                    </button>
+                </a>
+                <span class="Caption Bold Price Big">{{ Item.item_tix }}屁</span>
+            {% else %}
+                <span class="Caption">{{ Item.bought }} sold</span><br>
+                {% if Item.item_quantity > -1 %}
+                    <span class="Caption" {% if Item.item_quantity < 4 %}style="color:darkred;font-weight:bold;"{% endif %}>{{ Item.item_quantity }} left</span>
+                {% endif %}
+                <span class="Caption">Off-Sale</span>
+                <a href="#">
+                    <button class="SubmitButton Blue Large" disabled>
+                        Buy Item
+                    </button>
+                </a>
+                <span class="Caption Bold Price Big">{{ Item.item_tix }}屁</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab Primary" id="About" style="margin-left: 30px;">
+                <a href="#" onclick="DisplayAbout()">About</a>
+            </div>
+            <div class="Tab" id="Comments">
+                <a href="#" onclick="DisplayComments()">Comments</a>
+            </div>
+            {% if Item.item_quantity > -1 %}
+                <div class="Tab" id="Servers">
+                    <a href="#" onclick="DisplayServers()">Resells</a>
+                </div>
+            {% endif %}
+            <div class="Tab" id="Recommended">
+                <a href="#" onclick="DisplayRecommendeds()">Recommendations</a>
+            </div>
+        </div>
+        <div id="AboutGame" class="CardBig">
+            <h2 class="NoMargin Bold">Description</h2><hr>
+            <p class="NoMargin">{{ Item.item_description|nl2br }}</p>
+        </div>
+
+        <div id="CommentGame" class="CardBig" style="display: none;">
+            <h2 class="Bold NoMargin">Comments</h2>
+            <hr>
+            <form class="FeedForm" action="/API/Comment/Item/{{ Item.id }}" method="POST">
+                <textarea style="width: 91.5%;height: 50px;" type="text" name="comment" class="InputText InlineBlock"></textarea>
+                <input type="submit" class="SubmitButton Grey">
+            </form><br>
+            {% for Comment in Comments %}
+                {% if Comment.id is defined %}
+                    <div class="Comment" id="Comment{{ Comment.id }}">
+                        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Comment.author_id }}.png" class="CommentAuthor">
+                        <div class="CommentContents InlineBlock Top">
+                            <a href="/User/{{ Comment.comment_author }}" class="AuthorLink">{{ Comment.comment_author }}</a>
+                            <p>
+                                {{ Comment.comment_text|nl2br }}
+                            </p>
+                            <span class="Caption">{{ Comment.comment_sent|timeago }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div id="RecommendedGames" class="CardBig" style="display: none;">
+            <h2 class="NoMargin Bold">Recommended Items</h2>
+            <hr>
+            {% for Item in Catalog %}
+                {% if Item.id is defined %}
+                    <a href="/Item/{{ Item.id }}">
+                        <div class="ItemPanel">
+                            <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  class="ItemThumbnail">
+                            <span class="ItemTitle">{{ Item.item_title }}</span>
+                            <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div id="PlayerlistGame" class="CardBig" style="display: none;">
+            {% if Item.item_quantity > -1 %}
+                <h2 class="Bold InlineBlock NoMargin">Resellers</h2>
+                <a href="#" onclick="sellAsset()">
+                    <button class="SubmitButton Grey Medium Right" style="margin-top: 13px;">
+                        Sell
+                    </button>
+                </a>
+                <hr>
+                {% for Resell in Resellers %}
+                    {% if Resell.id is defined %}
+                        <div class="Reseller">
+                            <a href="/User/{{ Resell.reseller }}">
+                                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  src="/get-asset/Avatars/{{ Resell.user_id }}.png" style="width: 70px;height: 70px;" class="ItemThumbnail">
+                            </a>
+                            <div class="InlineBlock Top">
+                                <b>{{ Resell.reseller }}</b>
+                                <br>
+                                <span class="InlineBlock">Reselling <b style="color:darkgreen;">{{ Item.item_title }}</b> for <b style="color:darkgreen;">{{ Resell.item_price|number_format }}屁</b></span><br>
+                                <a href="/API/BuyLimited/Deal/{{ Resell.id }}">
+                                    <button class="SubmitButton Grey Medium">
+                                        Buy
+                                    </button>
+                                </a>
+                                {% if Resell.item_owned == Session.Roblox %}
+                                    <a href="/API/BuyLimited/Remove/{{ Resell.id }}">
+                                        <button class="SubmitButton Grey Medium">
+                                            Remove Listing
+                                        </button>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div><br>
+                    {% endif %}
+                {% endfor %}
+                {% if Resellers|length == 0 %}
+                    <div class="Center">
+                        <h1>&nbsp;</h1>
+                        <span class="Caption">There are no resells available for this item.</span>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div id="BuyAsset" class="modal">
+            <div style="padding: 1px;background-color: #e1e1e1;">
+                <h2 class="Bold Center">Buy Item</h2>
+            </div>
+            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" style="/* filter:invert(1); */width: 100px;margin-top: 20px;margin-left: 37px;">
+            <b class="InlineBlock Middle" style="position: relative;width: 300px;bottom: 65px;left: 25px;">Would you like to buy "{{ Item.item_title }}" from {{ Item.item_author }} for <span style="color: #759C42">C$ {{ Item.item_tix }}</span>?</b>
+
+            <br>
+            <div class="Center" style="position: relative;bottom: 45px;">
+                <a href="#" onclick="window.location = '/API/Buy/Asset/{{ Item.id }}'">
+                    <button class="SubmitButton Green Large">
+                        Buy Now
+                    </button>
+                </a>
+                <a href="#" rel="modal:close">
+                    <button class="SubmitButton Blue Large">
+                        Close
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div id="SellAsset" class="modal">
+            {% if Item.item_quantity > -1 %}
+                <div style="padding: 1px;background-color: #e1e1e1;">
+                    <h2 class="Bold Center">Sell Item</h2>
+                </div>
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" style="/* filter:invert(1); */width: 100px;margin-top: 20px;margin-left: 37px;">
+                <b class="InlineBlock Middle" style="position: relative;width: 300px;bottom: 65px;left: 25px;">How much <b style="color: darkgreen;">C$</b> would you like to sell <b style="color: darkgreen;">{{ Item.item_title }}</b> for?</b>
+
+                <br>
+                <div class="Center" style="position: relative;bottom: 45px;margin-left: 144px;margin-top: -16px;">
+                    <form action="/API/Sell/Asset/{{ Item.id }}" class="SignInForm" method="POST">
+                        <div class="FormField">
+                            <span class="Middle">Resell Price: </span>
+                            <input type="number" name="resell_price" class="InputText InlineBlock">
+                        </div>
+                        <input type="submit" class="SubmitButton Medium Blue Right" value="Resell">
+                    </form>
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        // Consider suicide V2
+        // Please stop writing code like this
+        let aboutGame = $("#AboutGame");
+        let recommendedGames = $("#RecommendedGames");
+        let playerList = $("#PlayerlistGame");
+        let commentsList = $("#CommentGame");
+
+        let aboutTab = $("#About");
+        let commentsTab = $("#Comments");
+        let serverTab = $("#Servers");
+        let recommendationsTab = $("#Recommended");
+
+        function DisplayAbout() {
+            aboutGame.fadeIn();
+            playerList.fadeOut();
+            commentsList.fadeOut();
+            recommendedGames.fadeOut();
+
+            aboutTab.addClass("Primary");
+            serverTab.removeClass("Primary");
+            commentsTab.removeClass("Primary");
+            recommendationsTab.removeClass("Primary");
+        }
+
+        function DisplayServers() {
+            aboutGame.fadeOut();
+            playerList.fadeIn();
+            commentsList.fadeOut();
+            recommendedGames.fadeOut();
+
+            aboutTab.removeClass("Primary");
+            serverTab.addClass("Primary");
+            commentsTab.removeClass("Primary");
+            recommendationsTab.removeClass("Primary");
+        }
+
+        function DisplayComments() {
+            aboutGame.fadeOut();
+            playerList.fadeOut();
+            commentsList.fadeIn();
+            recommendedGames.fadeOut();
+
+            aboutTab.removeClass("Primary");
+            serverTab.removeClass("Primary");
+            commentsTab.addClass("Primary");
+            recommendationsTab.removeClass("Primary");
+        }
+
+        function DisplayRecommendeds() {
+            aboutGame.fadeOut();
+            playerList.fadeOut();
+            commentsList.fadeOut();
+            recommendedGames.fadeIn();
+
+            aboutTab.removeClass("Primary");
+            serverTab.removeClass("Primary");
+            commentsTab.removeClass("Primary");
+            recommendationsTab.addClass("Primary");
+        }
+    </script>
+    <style>
+        .ItemPanel {
+            width: 159px;
+            height: 196px;
+        }
+
+        .ItemPanel:hover {
+            background-color: whitesmoke;
+            height: 225px;
+        }
+
+        .ItemThumbnail {
+            width: 159px;
+            height: 159px;
+        }
+    </style>
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("editDropdown").classList.toggle("show");
+        }
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function buyAsset() {
+            $('#BuyAsset').modal();
+        }
+
+        function sellAsset() {
+            $('#SellAsset').modal();
+        }
+    </script>
+    <style>
+        .CardBig {
+            min-height: 150px;
+        }
+
+        .item-panel {
+            display: inline-block;
+            width: 136px;
+            vertical-align: middle;
+            min-height: 150px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

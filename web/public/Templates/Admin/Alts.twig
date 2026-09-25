@@ -1,0 +1,66 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <h2 class="Bold InlineBlock" style="margin-bottom: 6px;"><i class="far fa-gavel"></i> View Possible Alts</h2><br>
+    <a href="/Admin/" class="Caption" style="display: inline-block;"><i class="far fa-backward"></i> Go Back</a><br><br>
+    <hr><br>
+    <form class="SearchForm InlineBlock Center" onkeydown="return event.key != 'Enter';">
+        <input type="text" name="Search" class="InputText InlineBlock" id="searchInventory" placeholder="Search users..." style="width: 230px;">
+    </form>
+    <div class="Users">
+        <div class="Center">
+            <h1>&nbsp;</h1>
+            <span class="Caption">
+                Type to begin finding user's alts.
+            </span>
+        </div>
+    </div>
+    <style>
+        .SearchForm {
+            margin-left: unset !important;
+            width: 100%;
+        }
+        .RobloxContainer {
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+
+        .CardBig {
+            width: 30.57%;
+            padding-left: 5px;
+            margin-bottom: 5px;
+            height: 60px;
+            margin-right: 5px;
+        }
+
+        .CardBig a {
+            color: #9d0091;
+        }
+
+        .ProfilePicture {
+            margin: unset;
+            width: 64px;
+            display: inline-block;
+        }
+
+        .CardBig p {
+            width: 265px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

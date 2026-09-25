@@ -1,0 +1,86 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="FullWidth">
+        <h2 class="Bold">Friends ({{ FriendIncoming.rows + Friends.rows }})</h2>
+        <hr>
+        {% for IncomingFriend in FriendIncoming %}
+            {% if IncomingFriend.id is defined %}
+                <div class="item-panel">
+                    <center>
+                        <a href="/User/{{ IncomingFriend.roblox_username }}">
+                            <img src="/get-asset/Avatars/{{ IncomingFriend.friend_by }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="item-thumbnail">
+                            <br><span class="Bold" style="min-height:unset;">{{ IncomingFriend.roblox_username }}</span><br>
+                            <span class="Caption"><b>{{ IncomingFriend.friend_sent|timeago }}</b></span>
+                        </a>
+                        <div class="item-metadata">
+                            <a href="/API/Friend/Accept/{{ IncomingFriend.id }}">
+                                <button class="SubmitButton Medium Grey">Accept</button>
+                            </a><br>
+                            <a href="/API/Friend/Revoke/{{ IncomingFriend.id }}">
+                                <button class="SubmitButton Medium Grey">Decline</button>
+                            </a>
+                        </div>
+                    </center>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% for Friend in Friends %}
+            {% if Friend.id is defined %}
+                <div class="item-panel">
+                    <center>
+                        <a href="/User/{{ Friend.roblox_username }}">
+                            <img src="/get-asset/Avatars/{{ Friend.profile_picture }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="item-thumbnail">
+                            <br><span class="Bold" style="min-height:unset;">{{ Friend.roblox_username }}</span><br>
+                            <span class="Caption"><b>{{ Friend.friend_sent|timeago }}</b></span>
+                        </a>
+                        <div class="item-metadata">
+                            <a href="/API/Friend/Revoke/{{ Friend.id }}">
+                                <button class="SubmitButton Medium Grey">Remove</button>
+                            </a>
+                        </div>
+                    </center>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if FriendIncoming.rows + Friends.rows == 0 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <img src="/Images/Shrug.png" style="vertical-align: middle;width: 64px;margin-right: 16px;opacity: 0.6;">
+                <div class="InlineBlock Middle">
+                    <span class="Caption InlineBlock" style="margin-bottom: 6px;">You have no friends.</span>
+                    <br>
+                    <a href="/Users">
+                        <button class="SubmitButton Blue Medium">
+                            Find Friends
+                        </button>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <style>
+        .item-panel {
+            display: inline-block;
+            width: 136px;
+            vertical-align: middle;
+            min-height: 200px;
+            width: 106px;
+        }
+
+        .item-thumbnail {
+            width: 90px;
+            height: 90px;
+            border: 1px solid #ccc;
+            box-shadow: inset 0px 0px 0px rgb(255 255 255 / 50%), 0px 0px 3px 0px rgb(0 0 0 / 10%);
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

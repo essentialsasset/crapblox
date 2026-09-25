@@ -1,0 +1,37 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <h2 class="Bold InlineBlock" style="margin-bottom: 6px;"><i class="far fa-gavel"></i> Unban User</h2><br>
+    <a href="/Admin/" class="Caption" style="display: inline-block;"><i class="far fa-backward"></i> Go Back</a><br><br>
+    <hr><br>
+    <form action="/Admin/User/Unban" method="POST" enctype="multipart/form-data">
+        <div class="LeftSide">
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Username:</span>
+                    <input type="text" name="username" placeholder="jackd" class="InputText InlineBlock">
+                </div>
+                <span class="Caption">All actions are logged.</span>
+                <input type="submit" class="SubmitButton Medium Green Right" value="Unban User">
+            </div>
+        </div>
+    </form>
+    <style>
+        .RobloxContainer {
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

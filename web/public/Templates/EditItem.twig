@@ -1,0 +1,152 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="FullWidth">
+        <h1 class="Bold">{{ Item.item_title }} (PREVIEW)</h1>
+        <hr>
+    </div>
+    <div class="LeftSide ItemPage">
+        {% if Item.item_type != "Audio" %}
+            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  src="/get-asset/Assets/{{ Item.id }}.png">
+        {% else %}
+            <center>
+                <audio controls>
+                    <source src="/Asset/?id={{ Item.id }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </center>
+        {% endif %}
+    </div>
+    <div class="RightSide ItemPage">
+        <div class="GameInfo">
+            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  src="/get-asset/Avatars/{{ Author.id }}.png">
+            {% if Session.Roblox == Item.item_author %}
+                <div class="dropdown">
+                    <img src="/Images/Menu.png" style="height:unset;width:unset;filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+                    <div id="editDropdown" class="dropdown-content">
+                        <a href="/Edit/Asset/{{ Item.id }}">Edit Asset</a>
+                        <a href="/API/Asset/Delete/{{ Item.id }}">Delete Asset</a>
+                    </div>
+                </div>
+            {% endif %}
+            <span class="BuilderInfo InlineBlock Bold Top">
+                <span class="Bold">Creator:</span>
+                <span class="AuthorLink"><a href="/User/{{ Author.roblox_username }}">{{ Author.roblox_username }}</a></span>
+                <span class="Caption">Joined:  {{ Author.roblox_created|date('m/d/Y') }}</span>
+            </span>
+        </div>
+        <hr>
+        <div class="GameMetrics">
+            <span class="CreationDate"><b>Created: </b> {{ Item.item_added|date('m/d/Y') }}</span>
+            <span class="CreationDate"><b>Favorited: </b> 0</span>
+            <span class="CreationDate"><b>Bought: </b> {{ Item.bought }}</span>
+        </div>
+        <hr>
+        <p class="GameDescription">
+            {{ Item.item_description|nl2br }}
+        </p>
+        <hr>
+        <div class="ItemActions">
+            {% if Item.item_onsale == "y" %}
+                <span class="Caption">{{ Item.bought }} sold</span>
+                <a href="/API/Buy/Asset/{{ Item.id }}">
+                    <button class="SubmitButton Blue Large">
+                        Buy Item
+                    </button>
+                </a>
+                <span class="Caption Bold Price Big">{{ Item.item_tix }}屁</span>
+            {% else %}
+                <span class="Caption">{{ Item.bought }} sold</span><br>
+                <span class="Caption">Off-Sale</span>
+                <a href="#">
+                    <button class="SubmitButton Blue Large" disabled>
+                        Buy Item
+                    </button>
+                </a>
+                <span class="Caption Bold Price Big">{{ Item.item_tix }}屁</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="FullWidth">
+        <form action="/API/Edit/Asset/{{ Asset.id }}" method="POST" enctype="multipart/form-data">
+            <div class="LeftSide">
+                <hr>
+                <h1 class="Bold">Edit Asset</h1>
+                <hr>
+                <div class="SignInForm">
+                    <div class="FormField">
+                        <span class="Middle">Asset Title:</span>
+                        <input type="text" name="title" value="{{ Asset.item_title }}" class="InputText InlineBlock">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Asset Description: <br><span class="Caption">Make sure you describe your item well!</span></span>
+                        <textarea type="text" style="width: 64%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock">{{ Asset.item_description }}</textarea>
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Asset Price: </span>
+                        <input type="number" name="price" value="{{ Asset.item_tix }}" class="InputText InlineBlock">
+                    </div>
+                    {% if IsAdmin == true %}
+                        <div class="FormField">
+                            <span class="Middle">Limited: <br><span class="Caption">Toggled.</span></span>
+                            <input type="checkbox" {% if Asset.item_quantity > -1 %}checked{% endif%} name="limited" id="js_limited" value="limited" class="InputText InlineBlock">
+                        </div>
+                        <div id="js_quantity" style="visibility: hidden">
+                            <div class="FormField">
+                                <span class="Middle">Item Quantity: </span>
+                                <input type="number" name="quantity" value="{{ Asset.item_quantity }}" class="InputText InlineBlock">
+                            </div>
+                        </div>
+                    {% endif %}
+                    <span class="Caption">Make sure you describe your asset well!</span>
+                </div>
+            </div>
+            <div class="RightSide">
+                <hr>
+                <h1>&nbsp;</h1>
+                <hr>
+                <div class="SignInForm">
+                    {% if IsAdmin == true or IsCatalogManager == true %}
+                    <div class="FormField">
+                        <span class="Middle">Asset Replacement: </span>
+                        <input type="file" class="InputText" name="asset">
+                    </div>
+                    {% endif %}
+                    <div class="FormField">
+                        <span class="Middle">Asset Visibility: <br><span class="Caption">Toggled.</span></span>
+                        <input type="checkbox" {% if Item.item_visibile == "y" %}checked{% endif %} name="visibility" value="visible" class="InputText InlineBlock">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Asset Availability: <br><span class="Caption">Determines if your asset is on-sale.</span></span>
+                        <input type="checkbox" {% if Item.item_onsale == "y" %}checked{% endif %} name="onsale" value="true" class="InputText InlineBlock">
+                    </div>
+
+                    <input type="submit" class="SubmitButton Medium Green Right" value="Update Asset">
+                </div>
+            </div>
+            <script>
+                const checkbox = document.getElementById('js_limited')
+
+                if (checkbox.checked) {
+                    document.getElementById('js_quantity').style.visibility = "visible";
+                }
+
+                checkbox.addEventListener('change', (event) => {
+                    if (event.currentTarget.checked) {
+                        document.getElementById('js_quantity').style.visibility = "visible";
+                    } else {
+                        document.getElementById('js_quantity').style.visibility = "hidden";
+                    }
+                })
+            </script>
+        </form>
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

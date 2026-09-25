@@ -1,0 +1,12 @@
+{
+
+    "require": {
+        "bramus/router": "^1.6",
+        "twig/twig": "^3.3",
+        "php-ffmpeg/php-ffmpeg": "^1.0.1",
+        "rakit/validation": "^1.0.0",
+        "robthree/twofactorauth": "^1.8",
+        "twig/markdown-extra": "^3.5",
+        "league/commonmark": "^2.3"
+    }
+}

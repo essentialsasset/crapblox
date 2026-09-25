@@ -1,0 +1,48 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+
+    {% if Category is defined %}
+        <h2 class="Bold InlineBlock">{{ Category }}</h2>
+    {% else %}
+        <h2 class="Bold InlineBlock">Users ({{ Users.rows }})</h2>
+    {% endif %}
+    <form class="SearchForm InlineBlock" action="/Users/Search" method="GET">
+        <input type="text" name="search" class="InputText InlineBlock">
+        <input type="submit" value="Search" class="SubmitButton Grey">
+    </form>
+    <hr>
+    {% if Users|length == 1 %}
+        <div class="Center">
+            <h1>&nbsp;</h1>
+            <span class="Caption">There were no users found in your query.</span>
+        </div>
+    {% endif %}
+    {% for User in Users %}
+        {% if User.id is defined %}
+            <div class="User">
+                <img src="/get-asset/Avatars/{{ User.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ProfilePicture">
+                <div class="UserInfo InlineBlock Top">
+                    <a href="/User/{{ User.roblox_username }}">{{ User.roblox_username }}</a>
+                    <p class="NoMargin" style="margin-top: 3px;">{{ User.roblox_description }}</p>
+                    <span class="Caption InlineBlock Bold">
+                        {% if User.active == true %}
+                            <img src="/Images/Silk/bullet_green.png" class="Icon">
+                        {% else %}
+                            <img src="/Images/Silk/bullet_red.png" class="Icon">
+                        {% endif %}
+                        active {{ User.roblox_lastlogin|timeago }}
+                    </span>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

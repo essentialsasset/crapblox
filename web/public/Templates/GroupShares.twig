@@ -1,0 +1,154 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="CenterSide GroupPage">
+        <img src="/get-asset/Groups/{{ Group.id }}.png" class="ProfilePicture" style="width: 100%;height: 180px;"><br>
+        <h1>{{ Group.group_title }}</h1>
+        <h3>Group Worth: {{ Group.group_funds }} zuos</h2>
+        <hr>
+        {% if Group.group_stocks %}
+            <span class="Caption">Shares (<a href="/API/Group/Feed/{{ Group.id }}">Feed</a>):  <span class="InlineBlock Right">{{ Group.group_stocks|number_format }}</span></span><br>
+            <span class="Caption">Shares Available:  <span class="InlineBlock Right">{{ (Group.group_stocks_available-Group.group_stocks_forsale)|number_format }} ({{ Group.group_stocks_available|number_format }})</span></span><br>
+            <span class="Caption">Shares Reserved:  <span class="InlineBlock Right">{{ Group.group_stocks_forsale|number_format }}</span></span><br>
+            <span class="Caption">Share Price:  <span class="InlineBlock Right">{{ Group.share_price|number_format }} zuos/share</span></span><br>
+        {% else %}
+            <span class="Caption"><i>Group NOT publically traded</i></span><br>
+        {% endif %}
+    </div>
+    <div class="RightSide Games">
+        {% if not Group.group_stocks %}
+            <h1>Your group is <i>NOT</i> publically traded!</h1>
+        {% else %}
+            {% if Group.group_stocks == Group.group_stocks_available %}
+                <p>No man has invested into this group.</p>
+            {% else %}
+                <p class="no-margin Caption">
+                    The market share will be displayed below. Use a Javascript enabled browser.
+                </p>
+                <hr>
+                <div id="piechart" style="width: 100%; height: 500px;"></div>
+                <table class="StocksTable" style="width: 100%; text-align: center;">            
+                    <tr>
+                        <th>Username</th>
+                        <th>Percentage</th>
+                        <th>Shares</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for Shareholder in Shareholders %}
+                        <tr>
+                            <td>{{ Shareholder.roblox_username }}</td>
+                            <td>{{ Shareholder.stocks_owned / Group.group_stocks * 100.0 }}%</td>
+                            <td>{{ Shareholder.stocks_owned }} shares</td>
+                            <td>{{ Shareholder.stocks_owned * Group.share_price }} zuos</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+            {% if StocksOwned %}
+                <p>You own {{ StocksOwned / Group.group_stocks * 100.0 }}% ({{ StocksOwned }} stocks) of the group. If you sold everything you had, you would get {{ StocksOwned * Group.share_price }} zuos, pre tax.</p>
+
+            {% else %}
+                <p>You own nothing of the group. Why not buy some stock?</p>
+            {% endif %}
+            <form action="/API/Group/BuyShares/{{ Group.id }}" method="POST" enctype="multipart/form-data">
+                <div class="LeftSide">
+                    <div class="SignInForm">
+                        <div class="FormField">
+                            <span class="Middle">Shares:</span>
+                            <input type="number" name="shares" class="InputText InlineBlock">
+                        </div>
+                    <input type="submit" class="SubmitButton Medium Green Right" value="Buy Shares">
+                    </div>
+                </div>
+            </form>
+            {% if StocksOwned %}
+                <form action="/API/Group/SellShares/{{ Group.id }}" method="POST" enctype="multipart/form-data">
+                    <div class="LeftSide">
+                        <div class="SignInForm">
+                            <div class="FormField">
+                                <span class="Middle">Shares:</span>
+                                <input type="number" name="shares" class="InputText InlineBlock">
+                            </div>
+                        <input type="submit" class="SubmitButton Medium Green Right" value="Sell Shares">
+                        <small>20% of the value gained from selling the stock will be deducted upon sale</small>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+            
+            <br><br><br><br><br>
+        {% endif %}
+        {% if Group.group_owner == Session.Roblox %}
+            <hr>
+            <h1>Group Stocks Admin Panel</h1>            
+            {% if Group.group_stocks != Group.group_stocks_available %}
+            <div>
+                <h2>You cannot change the amount of stocks, since you do not own every stock.</h2>
+                <div class="RobloxAlert TypeError">Rebuying every stock also removes all the funds of the group! The tax on rebuying all stocks is 20%.</div>
+                <p><a href="/API/Group/RebuyStocks/{{ Group.id }}">Rebuy all stocks</a> ({{ Group.rebuy_price }} zuos)</p>
+            </div>
+            {% endif %}
+            <form action="/API/Group/ShareCount/{{ Group.id }}" method="POST" enctype="multipart/form-data">
+                <div class="LeftSide">
+                    <div class="SignInForm">
+                        <div class="FormField">
+                            <span class="Middle">Shares:</span>
+                            <input type="number" name="shares" placeholder="1000" class="InputText InlineBlock">
+                        </div>
+                    <input type="submit" class="SubmitButton Medium Green Right" value="Set Group Shares">
+                    </div>
+                </div>
+            </form>
+            <form action="/API/Group/ShareForSale/{{ Group.id }}" method="POST" enctype="multipart/form-data">
+                <div class="LeftSide">
+                    <div class="SignInForm">
+                        <div class="FormField">
+                            <span class="Middle">Shares:</span>
+                            <input type="number" name="shares" placeholder="501" class="InputText InlineBlock">
+                        </div>
+                    <input type="submit" class="SubmitButton Medium Green Right" value="Set Shares In Reserve">
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Shareholder', 'Share'],
+                ['{{ Group.group_title }}', {{ Group.group_stocks_available }}],
+                {% for Shareholder in Shareholders %}
+                ['{{ Shareholder.roblox_username }}', {{ Shareholder.stocks_owned }}],
+                {% endfor %}
+                ['',     0]
+            ]);
+            var options = {
+                title: 'Share Distribution'
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
+    </script>
+{% endblock %}

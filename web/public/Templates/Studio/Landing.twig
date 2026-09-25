@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Crapblox - Start Page</title>
+        <link href="/Styles/Base.css" rel="stylesheet">
+    </head>
+    <body>
+        <div style="padding-left: 10px;">
+            <h2 class="Bold">
+                <img src="/Images/Logo.png" style="width: 85px;vertical-align: middle;margin-right: 15px;"> Welcome to Crapblox Studio <img src="/Images/Silk/controller.png" class="Icon">
+            </h2>
+            <hr>
+            <p>
+                Create a new game by clicking <code style="display: inline;width: unset;margin: 0px;">File > New</code> in the top left menu.<br>
+                Open an existing game by clicking <code style="display: inline;width: unset;margin: 0px;">File > Open</code> in the top left menu.
+            </p>
+            <hr>
+            {% if Session.Roblox is not defined %}
+            <h2 class="Bold">Login to Crapblox</h2>
+            <form action="/API/Auth/Signin" class="SignInForm" method="POST">
+                <div class="FormField">
+                    <span class="Middle">Username: </span>
+                    <input type="text" autocomplete="off" name="username" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Password: </span>
+                    <input type="password" name="password" class="InputText InlineBlock">
+                </div>
+                <span class="Caption">Forgot your password?</span>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Sign In">
+            </form><br>
+            {% else %}
+                Logged in as <span class="Bold">{{ Session.Roblox }}</span>
+            {% endif %}
+            <hr>
+            <a href="https://discord.gg/crapblox">
+                Discord
+            </a>
+        </div>
+    </body>
+</html>

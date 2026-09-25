@@ -1,0 +1,233 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab" style="margin-left: 30px;">
+                <a href="/Trades/Incoming">Incoming Trades</a>
+            </div>
+            <div class="Tab Primary">
+                <a href="/Trades/Outgoing">Outgoing Trades</a>
+            </div>
+            <div class="Tab">
+                <a href="/Transactions">Transactions</a>
+            </div>
+
+            <div class="InputGroup">
+                <!--
+                <a href="/Trades/Create">
+                    <button class="SubmitButton Grey Medium">
+                        Create Trade
+                    </button>
+                </a>
+                -->
+            </div>
+        </div>
+    </div>
+    <div class="LeftSide">
+        <h2 class="Bold">{{ Session.Roblox }}'s Items</h2>
+        <hr>
+        {% if WornItems|length == 0 %}
+            <div class="Center">
+                <h1>&nbsp;</h1>
+                <span class="Caption">This user has no tradeable items.</span>
+            </div>
+        {% endif %}
+        <div class="Container" style="max-height: 420px;overflow-y: scroll;">
+            {% for Item in WornItems %}
+                {% if Item.id is defined %}
+                    <div class="ItemPanel Limited" itemid="uitm-{{ Item.id }}">
+                        <span class="SerialNumber">
+                                                                    {% if Item.serial == 0 %}
+                                            N/A
+                                        {% else %}
+                                            #{{ Item.serial }}
+                                        {% endif %}
+                        </span>
+                        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail">
+                        <span class="ItemTitle">
+                            {{ Item.item_title }}
+                            <a href="#" onclick="GiveItem(this);" id="Link{{ Item.id }}">
+                                <button class="SubmitButton Grey Medium Right Middle">Give</button>
+                            </a>
+                        </span>
+                        <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, by {{ Item.item_author }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="RightSide">
+        <div style="padding-left: 10px;">
+            <h2 class="Bold">{{ OtherGuy.roblox_username }}'s Items</h2>
+            <hr>
+            {% if OtherItems|length == 0 %}
+                <div class="Center">
+                    <h1>&nbsp;</h1>
+                    <span class="Caption">This user has no tradeable items.</span>
+                </div>
+            {% endif %}
+            <div class="Container" style="max-height: 420px;overflow-y: scroll;">
+                {% for Item in OtherItems %}
+                    {% if Item.id is defined %}
+                        <div class="ItemPanel Limited" itemid="itm-{{ Item.id }}">
+                            <span class="SerialNumber">
+                                                                        {% if Item.serial == 0 %}
+                                            N/A
+                                        {% else %}
+                                            #{{ Item.serial }}
+                                        {% endif %}
+                            </span>
+                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail">
+                            <span class="ItemTitle">
+                                {{ Item.item_title }}
+                                <a href="#" onclick="TakeItem(this);" id="Link{{ Item.id }}">
+                                    <button class="SubmitButton Grey Medium Right Middle">Get</button>
+                                </a>
+                            </span>
+                            <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, by {{ Item.item_author }}</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="FullWidth" style="overflow: hidden">
+        <hr>
+        <h3 class="Bold">Items you want</h3>
+        <hr>
+        <div class="ItemSlots" id="js_want">
+            <div class="ItemSlot" id="want_0"></div>
+            <div class="ItemSlot" id="want_1"></div>
+            <div class="ItemSlot" id="want_2"></div>
+            <div class="ItemSlot" id="want_3"></div>
+            <div class="ItemSlot" id="want_4"></div>
+            <div class="ItemSlot" id="want_5"></div>
+        </div>
+        <hr>
+        <h3 class="Bold">Items you will give</h3>
+        <hr>
+        <div class="ItemSlots" id="js_give">
+            <div class="ItemSlot" id="give_0"></div>
+            <div class="ItemSlot" id="give_1"></div>
+            <div class="ItemSlot" id="give_2"></div>
+            <div class="ItemSlot" id="give_3"></div>
+            <div class="ItemSlot" id="give_4"></div>
+            <div class="ItemSlot" id="give_5"></div>
+        </div>
+    </div>
+    <hr>
+    <div class="Center">
+        <button class="SubmitButton Blue Medium" onclick="CreateTrade()">
+            Create Trade
+        </button>
+    </div>
+    <script>
+        var itemsToGive = [];
+        var itemsToTake = [];
+
+        function GiveItem(item) {
+            console.log($(item).closest('.ItemSlot'));
+            var id = $(item).closest('.ItemSlot').attr('id');
+            console.log(id);
+
+            if(typeof id == 'undefined') {
+                let itemsCount = itemsToGive.length;
+                let itemID = $(item).attr('itemid');
+                console.log($(item).attr('itemid'));
+                itemsToGive.push($(item).attr('itemid'));
+                let name = '#give_' + itemsCount;
+                $(item).parent().parent().appendTo(name);
+                $(name).css({"padding": "0px", "width": "140px"}) //anything is the 'content' value
+
+                console.log(name)
+                console.log($(name))
+            }
+        }
+
+        function TakeItem(item) {
+            console.log($(item).closest('.ItemSlot'));
+            var id = $(item).closest('.ItemSlot').attr('id');
+            console.log(id);
+
+            if(typeof id == 'undefined') {
+                let itemsCount = itemsToTake.length;
+                let itemID = $(item).attr('itemid');
+                itemsToTake.push(itemID);
+                let name = '#want_' + itemsCount;
+                $(item).parent().parent().appendTo(name);
+                $(name).css({"padding": "0px", "width": "140px"}) //anything is the 'content' value
+                $(item).find(".SubmitButton ").css({"display": "none"});
+
+                console.log(name)
+                console.log($(name))
+            }
+        }
+
+        function CreateTrade() {
+            let giveBuffer = [];
+            let takeBuffer = [];
+
+            $('#js_give').children('div').each(function(i) {
+                let b = $(this).find(".ItemPanel").attr('itemid'); // buffer
+                if(typeof b !== 'undefined') {
+                    console.log(b);
+                    giveBuffer.push(b.replace("uitm-", ""));
+                }
+            });
+
+            $('#js_want').children('div').each(function(i) {
+                let b = $(this).find(".ItemPanel").attr('itemid'); // buffer
+                if(typeof b !== 'undefined') {
+                    console.log(b);
+                    takeBuffer.push(b.replace("itm-", ""));
+                }
+            });
+
+            console.log(giveBuffer);
+            console.log(takeBuffer);
+
+            let data = [
+                giveBuffer,
+                takeBuffer
+            ]
+
+            console.log(JSON.stringify(data));
+
+            $.ajax({
+                url: '/Trades/Create/{{ OtherGuy.id }}',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: false,
+                success: function(msg) {
+                    console.log(msg);
+                    window.location.replace("/Trades/Outgoing");
+                },
+                error: function(xhr, status, error) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+    </script>
+    <style>
+        .ItemPanel {
+            width: 128px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

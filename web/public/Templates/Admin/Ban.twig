@@ -1,0 +1,55 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <h2 class="Bold InlineBlock" style="margin-bottom: 6px;"><i class="far fa-gavel"></i> Ban User</h2><br>
+    <a href="/Admin/" class="Caption" style="display: inline-block;"><i class="far fa-backward"></i> Go Back</a><br><br>
+    <hr><br>
+    <form action="/Admin/User/Ban" method="POST" enctype="multipart/form-data">
+        <div class="LeftSide">
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Username:</span>
+                    <input type="text" name="username" placeholder="jackd" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Reason:</span>
+                    <input type="text" name="reason" placeholder="You suck!" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Date:</span>
+                    <input type="date" name="date" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Poison Ban: </span>
+                    <input type="checkbox" name="poisonban" class="InlineBlock">
+                    <b>MAKE SURE TO CHECK THEIR ALTS BEFORE BANNING !!</b>
+                </div>
+                <div class="FormField">
+                    <span class="Middle">IP Ban: </span>
+                    <input type="checkbox" name="ipban" class="InlineBlock">
+                    <b>MAKE SURE TO CHECK THEIR ALTS BEFORE BANNING !!</b>
+                </div>
+                <span class="Caption">All actions are logged.</span>
+                <input type="submit" class="SubmitButton Medium Green Right" value="Ban User">
+            </div>
+        </div>
+    </form>
+    <style>
+        .RobloxContainer {
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

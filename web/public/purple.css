@@ -1,0 +1,91 @@
+header {
+    background-image: url(/Request/Images/Purple_City.png);
+}
+
+img[src*="Logo"]{ content: url("/Request/Images/logo_dark_purple.png"); }
+
+img[src*="robux"]{ content: url("/Request/Images/robuc.png"); }
+
+.robux {
+    color: #5600d9;
+}
+
+img[src*="tickets"]{ content: url("/Request/Images/ticket.png"); }
+
+.currency .metadata.tickets {
+    color: #bc51ff;
+}
+
+.game-panel a {
+    color: #582bdb;
+}
+
+.game-categories a {
+    color: #582bdb;
+}
+
+.asset-title {
+    color: #582bdb;
+    text-shadow: 0px 0px 1px #582bdb;
+}
+
+.user .metadata a {
+    color: #582bdb;
+}
+
+.item-panel a {
+    color: #582bdb;
+}
+
+.tickets {
+    color: #582bdb;
+}
+
+.comment a {
+    color: #582bdb;
+}
+
+.commenter .date-sent {
+    color: #582bdb;
+}
+
+.admin-text {
+    color: #582bdb;
+}
+
+img[src*="admin"]{ content: url("/Request/Images/adminn.png"); }
+
+.game-display a {
+    color: #582bdb;
+}
+
+.cb-button {
+    background-image: linear-gradient(180deg, rgb(135 87 255) 0%, rgb(50 9 185) 100%);
+    background-color: rgb(38 6 127);
+}
+
+.cb-button:hover {
+    background-image: linear-gradient(180deg, rgb(122, 76, 238) 0%, rgb(41, 5, 159) 100%);
+    background-color: rgb(38 6 127);
+}
+
+.ut-button-green, .join-game {
+    background-image: linear-gradient(to bottom, #8757ff, #5529db);
+    color: #ffffff;
+}
+
+.ut-button-green, .join-game:hover {
+    background-image: linear-gradient(to bottom, #7a4cec, #4b22c8);
+}
+
+
+.item-display a {
+    color: #582bdb;
+    text-decoration: none;
+}
+
+.edit-game {
+    background: linear-gradient(0deg, rgb(128 104 201) 0%, rgb(163 133 243) 100%);
+    border: 1px solid #704dd9;
+    color: #ffffff;
+}

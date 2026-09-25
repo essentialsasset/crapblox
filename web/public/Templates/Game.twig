@@ -1,0 +1,818 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            border: 1px solid #ccc;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <h1 class="Bold">{{ Game.server_title }}</h1>
+        <hr>
+    </div>
+    <div class="LeftSide GamesPage" style="height: 425px;">
+        <div id="ItemThumbnail" style="height:280px; width: 500px; position: relative;">
+            <div id="currentImage"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}.png" height="280" width="500" border="0"></div>
+            <div id="newImage" style="position: absolute; top: 0; left: 0; opacity: 0;"><img src="" height="280" width="500" border="0"></div>
+        </div>
+        {% if Thumbs[0] == false and Thumbs[1] == false and Thumbs[2] == false and Thumbs[3] == false %}
+
+        {% else %}
+            <div id="divSmallGalleryItemBox">
+                <div id="divSmallGalleryScrollContainer">
+                    {% if Thumbs[0] == true %}
+                    <div class="divSmallGalleryItem SelectedYouTubeGalleryIcon">
+                        <div class="smallGalleryThumbItem">
+                            <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}.png"  height="70" width="120" border="0"></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if Thumbs[1] == true %}
+                    <div class="divSmallGalleryItem">
+                        <div class="smallGalleryThumbItem">
+                            <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}_2.png" height="70" width="120" border="0"></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if Thumbs[2] == true %}
+                    <div class="divSmallGalleryItem">
+                        <div class="smallGalleryThumbItem">
+                            <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}_3.png" height="70" width="120" border="0"></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if Thumbs[3] == true %}
+                    <div class="divSmallGalleryItem">
+                        <div class="smallGalleryThumbItem">
+                            <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}_4.png" height="70" width="120" border="0"></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="RightSide GamesPage">
+        <div class="GameInfo">
+            {% if Game.server_group == 0 %}
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Author.id }}.png">
+            {% else %}
+                <img src="/get-asset/Groups/{{ Game.group_id }}.png">
+            {% endif %}
+
+            {% if Session.Roblox == Game.server_owner or Session.Admin == "y" %}
+                <div class="dropdown">
+                    <img src="/Images/Menu.png" style="height:unset;width:unset;filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+                    <div id="editDropdown" class="dropdown-content">
+                        <a href="/Edit/Game/{{ Game.id }}">Edit Game</a>
+                        <a href="/API/Game/Delete/{{ Game.id }}">Delete Game</a>
+                        <a href="/API/Game/Shutdown/{{ Game.id }}">Shutdown Game</a>
+                    </div>
+                </div>
+            {% endif %}
+            {% if Game.server_group == 0 %}
+                <span class="BuilderInfo InlineBlock Bold Top">
+                    <span class="Bold">Builder:</span>
+                    <span class="AuthorLink"><a href="/User/{{ Author.roblox_username }}">{{ Author.roblox_username }}</a></span>
+                    <span class="Caption">Joined:  {{ Author.roblox_created|date('m/d/Y') }}</span>
+                </span>
+            {% else %}
+                <span class="BuilderInfo InlineBlock Bold Top">
+                    <span class="Bold">Group:</span>
+                    <span class="AuthorLink"><a href="/Groups/{{ Game.group_id }}">{{ Game.group_title }}</a></span>
+                    <span class="Caption">Created:  {{ Game.group_created|date('m/d/Y') }}</span>
+                </span>
+            {% endif %}
+        </div>
+        <hr>
+        <div class="GameMetrics">
+            <span class="CreationDate"><b>Created: </b> {{ Game.server_created|date('m/d/Y') }}</span>
+            <span class="CreationDate"><b>Last Activity: </b> {{ Game.server_ping|timeago }}</span>
+            <span class="CreationDate"><b>Favorites: </b> {{ Favorites }}</span>
+            <span class="CreationDate"><b>Visited: </b> {{ Visits }}</span>
+            <span class="CreationDate"><b>Category: </b> {{ Game.server_category }}</span>
+        </div>
+        <hr>
+        <div class="GameBar">
+            <div class="video-extras-sparkbars">
+                <div class="video-extras-sparkbar-likes" style="    float: left;
+                        height: 10px;
+                        border-right: 1px solid #fff;
+                        background: #0066009c;width:{{ Game.rating_likes_width }}%"></div>
+                <div class="video-extras-sparkbar-dislikes" style="    float: right;
+                        height: 10px;
+                        margin-right: -1px;
+                        background: #c009;width:{{ Game.rating_dislikes_width }}%"></div>
+            </div>
+
+            <span class="video-extras-likes-dislikes Caption">
+                <span class="likes">{{ Game.rating_likes }}</span> likes, <span class="dislikes">{{ Game.rating_dislikes }}</span> dislikes
+            </span>
+            <div class="InlineBlock Right">
+                {% if Favorite.id is not defined %}
+                    <a href="/API/Game/Favorite/{{ Game.id }}" class="FavoriteButton">
+                        <img src="/Images/Silk/star.png" class="Icon">
+                        <span class="label">
+                                Favorite
+                            </span>
+                    </a>
+                {% else %}
+                    <a href="/API/Game/Favorite/{{ Game.id }}" class="FavoriteButton">
+                        <img src="/Images/Silk/star.png" class="Icon Active">
+                        <span class="label">
+                                Unfavorite
+                            </span>
+                    </a>
+                {% endif %}
+                <a href="/API/Game/Like/{{ Game.id }}">
+                    <img src="/Images/Silk/thumb_up.png" class="Icon" title="Like">
+                </a>
+                <a href="/API/Game/Dislike/{{ Game.id }}"style="margin-right:  7px;" >
+                    <img src="/Images/Silk/thumb_down.png" class="Icon" title="Like">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <div class="GameActions">
+            {% if Session.Roblox == Game.server_owner %}
+                <a href="/Game/Download/{{ Game.id }}">
+                    <button class="SubmitButton Grey Medium">
+                        <i class="far fa-download"></i> Download
+                    </button>
+                </a>
+            {% endif %}
+            {% if Game.server_allowed == "Everyone" %}
+                <a href="#" onclick="joinGame()">
+                    <button class="SubmitButton Blue Large">
+                        <i class="far fa-play"></i> Join Game
+                    </button>
+                </a>
+            {% elseif Game.server_allowed == "Unlisted" %}
+                <a href="#" onclick="joinGame()">
+                    <button class="SubmitButton Blue Large">
+                        <i class="far fa-play"></i> Join Game
+                    </button>
+                </a>
+                <span class="Caption InlineBlock Center" style="width: 100%;margin-top: 7px ;">This game is unlisted.</span>
+            {% elseif Game.server_allowed == "Friends Only" %}
+                {% if Friended or Session.Roblox == Game.server_owner %}
+                    <a href="#" onclick="joinGame()">
+                        <button class="SubmitButton Blue Large">
+                            <i class="far fa-play"></i> Join Game
+                        </button>
+                    </a>
+                {% else %}
+                    <a href="#">
+                        <button disabled class="SubmitButton Blue Large">
+                            <i class="far fa-play"></i> Join Game
+                        </button>
+                    </a>
+                    <span class="Caption InlineBlock Center" style="width: 100%;margin-top: 7px ;">You cannot join this game.</span>
+                {% endif %}
+                <span class="Caption InlineBlock Center" style="width: 100%;margin-top: 7px ;">Only {{ Game.server_owner }}'s friends can join this game.</span>
+            {% else %}
+                {% if Game.server_owner == Session.Roblox %}
+                    <a href="#" onclick="joinGame()">
+                        <button class="SubmitButton Blue Large">
+                            <i class="far fa-play"></i> Join Game
+                        </button>
+                    </a>
+                {% else %}
+                    <a href="#">
+                        <button disabled class="SubmitButton Blue Large">
+                            <i class="far fa-play"></i> Join Game
+                        </button>
+                    </a>
+                {% endif %}
+                <span class="Caption InlineBlock Center" style="width: 100%;margin-top: 7px ;">Only {{ Game.server_owner }} can join this game.</span>
+            {% endif %}
+
+            <!--
+            {% if Session.Roblox == Author.roblox_username %}
+                <a href="craphost://{{ HostToken }}">
+                    <button class="SubmitButton Blue Large">
+                        Host Game
+                    </button>
+                </a>
+            {% endif %}
+            -->
+        </div>
+    </div>
+    <form id="InstallInstructions" class="modal">
+        <div class="Padding Center">
+            <img class="Logo" style="/* filter:invert(1); */width: 100px;" src="/Images/LogoSmall.png">
+            <div style="margin-top:30px;margin-bottom: 30px"><h2>You're moments away from getting into the game!</h2></div>
+
+            <a href="/binaries/CrapbloxLauncher.exe">
+                <button class="SubmitButton Green Large">
+                    Download and Install CRAPBLOX
+                </button>
+            </a>
+        </div>
+    </form>
+    <form id="JoiningGame" class="modal">
+        <div class="Padding Center">
+            <img class="Logo" style="/* filter:invert(1); */width: 100px;" src="/Images/LogoSmall.png">
+            <div style="margin-top:30px;margin-bottom: 30px"><h2>CRAPBLOX is now loading. Get ready to play!</h2></div>
+
+            <img src="/Images/blockLoading.gif" style="width: 100px;">
+        </div>
+    </form>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab Primary" id="About" style="margin-left: 30px;">
+                <a href="#" onclick="DisplayAbout()">About</a>
+            </div>
+            <div class="Tab" id="Servers">
+                <a href="#" onclick="DisplayServers()">Players ({{ Game.server_player_list.rows }})</a>
+            </div>
+            <div class="Tab" id="Comments">
+                <a href="#" onclick="DisplayComments()">Comments ({{ Comments|length }})</a>
+            </div>
+            <div class="Tab" id="Recommended">
+                <a href="#" onclick="DisplayRecommendeds()">Recommendations</a>
+            </div>
+        </div>
+        <div class="CardBig">
+            <div id="AboutGame">
+                <h2 class="NoMargin Bold">Description</h2><hr>
+                <p class="NoMargin">{{ Game.server_description|nl2br }}</p>
+            </div>
+
+            <div id="PlayerlistGame" style="display: none;">
+                <h2 class="NoMargin Bold">Player List</h2>
+                <hr>
+                {% if Game.server_player_list|length != 0 %}
+                    {% if Game.active == true %}
+                        {% for Key, Player in Game.server_player_list %}
+                            {% if Player.roblox_username is defined %}
+                                <div class="item-panel">
+                                    <center>
+                                        <a href="/User/{{ Player.roblox_username }}">
+                                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Player.id }}.png" class="item-thumbnail">
+                                            <br><span class="asset-title" style="min-height:unset;">{{ Player.roblox_username }}</span><br>
+                                        </a>
+                                    </center>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+                {% if Game.server_player_list.rows == 0 %}
+                    <div class="Center">
+                        <h2>&nbsp;</h2>
+                        <span class="Caption">
+                            There are no players in this game.
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div id="CommentGame" style="display: none;">
+                <h2 class="NoMargin Bold">Comments</h2>
+                <hr>
+                <form class="FeedForm" action="/API/Comment/Game/{{ Game.id }}" method="POST">
+                    <textarea style="width: 91.5%;height: 50px;" type="text" name="comment" class="InputText InlineBlock"></textarea>
+                    <input type="submit" class="SubmitButton Grey">
+                </form><br>
+                {% for Comment in Comments %}
+                    {% if Comment.id is defined %}
+                        <div class="Comment" id="Comment{{ Comment.id }}">
+                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Comment.author_id }}.png" class="CommentAuthor">
+                            <div class="CommentContents InlineBlock Top">
+                                <a href="/User/{{ Comment.comment_author }}" class="AuthorLink">{{ Comment.comment_author }}</a>
+                                <p>
+                                    {{ Comment.comment_text|nl2br }}
+                                </p>
+                                <span class="Caption">{{ Comment.comment_sent|timeago }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% if Comments|length == 0 %}
+                    <div class="Center">
+                        <h2>&nbsp;</h2>
+                        <span class="Caption">
+                            There are no comments. Be the first to comment!
+                        </span>
+                        <h2>&nbsp;</h2>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div id="RecommendedGames" style="display: none;">
+                <h2 class="NoMargin Bold">Recommended Games</h2>
+                <hr>
+                {% for Game in Games %}
+                    {% if Game.id is defined %}
+                        <a href="/Game/{{ Game.id }}">
+                            <div class="GamePanel">
+                                <img src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="GameThumbnail">
+                                <span class="GameTitle" style="width: 99%;">{{ Game.server_title }}</span>
+                                <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <style>
+        .RightSide.GamesPage, .RightSide.ItemPage {
+            height: 425px;
+        }
+
+        .CardBig {
+            min-height: 150px;
+        }
+
+        .item-panel {
+            display: inline-block;
+            width: 136px;
+            vertical-align: middle;
+            min-height: 150px;
+        }
+
+        .GamePanel {
+            margin-right: 34px;
+        }
+    </style>
+    <script>
+        // Consider suicide V2
+        // Please stop writing code like this
+        let aboutGame = $("#AboutGame");
+        let playerList = $("#PlayerlistGame");
+        let recommendedGames = $("#RecommendedGames");
+        let commentsList = $("#CommentGame");
+
+        let aboutTab = $("#About");
+        let serverTab = $("#Servers");
+        let commentsTab = $("#Comments");
+        let recommendationsTab = $("#Recommended");
+
+        function DisplayAbout() {
+            aboutGame.fadeIn();
+            playerList.fadeOut();
+            commentsList.fadeOut();
+            recommendedGames.fadeOut();
+
+            aboutTab.addClass("Primary");
+            serverTab.removeClass("Primary");
+            commentsTab.removeClass("Primary");
+            recommendationsTab.removeClass("Primary");
+        }
+
+        function DisplayServers() {
+            aboutGame.fadeOut();
+            playerList.fadeIn();
+            commentsList.fadeOut();
+            recommendedGames.fadeOut();
+
+            aboutTab.removeClass("Primary");
+            serverTab.addClass("Primary");
+            commentsTab.removeClass("Primary");
+            recommendationsTab.removeClass("Primary");
+        }
+
+        function DisplayComments() {
+            aboutGame.fadeOut();
+            playerList.fadeOut();
+            commentsList.fadeIn();
+            recommendedGames.fadeOut();
+
+            aboutTab.removeClass("Primary");
+            serverTab.removeClass("Primary");
+            commentsTab.addClass("Primary");
+            recommendationsTab.removeClass("Primary");
+        }
+
+        function DisplayRecommendeds() {
+            aboutGame.fadeOut();
+            playerList.fadeOut();
+            commentsList.fadeOut();
+            recommendedGames.fadeIn();
+
+            aboutTab.removeClass("Primary");
+            serverTab.removeClass("Primary");
+            commentsTab.removeClass("Primary");
+            recommendationsTab.addClass("Primary");
+        }
+    </script>
+    {% if Game.server_allowed == "Everyone" or LoggedInUser.roblox_admin == "y" %}
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function dropdown() {
+                document.getElementById("editDropdown").classList.toggle("show");
+            }
+            // Close the dropdown menu if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+
+            var appurl = 'crapblox2016://{{ Token }}';
+            var appstore = '/binaries/CrapbloxLauncher.exe';
+
+            var timeout;
+
+            function preventPopup() {
+                clearTimeout(timeout);
+                timeout = null;
+                window.removeEventListener('pagehide', preventPopup);
+            }
+
+            function joinGame() {
+                console.info("[Join] - Opening modal...");
+
+                $('#JoiningGame').modal();
+
+                console.info("[Join] - Renewing lease for 10094");
+
+                $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                    // alert("Data: " + data + "\nStatus: " + status);
+                });
+
+                let flag = false;
+
+                function checkFlag() {
+                    if(flag === false) {
+                        $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                            // alert("Data: " + data + "\nStatus: " + status);
+                        });
+
+                        setTimeout(function() {
+                            $.ajax({
+                                url: "/arbiter/{{ Game.id }}/serverrunning",
+                                type: 'GET',
+                                success: function (res) {
+                                    if(res == "true") {
+                                        console.info("[Join] - Gameserver is running... Joining");
+                                        $.modal.close();
+                                        flag = true;
+                                    } else {
+                                        // keep retrying . . .
+                                        console.error("[Join] - Gameserver is not running... Retrying");
+                                    }
+
+                                    console.info("[Join] - Checking if gameserver is up...");
+                                }
+                            });
+
+                            window.setTimeout(checkFlag, 2000);
+                        }, 2000);
+                    } else {
+                        window.location = appurl;
+                        window.addEventListener('pagehide', preventPopup);
+                    }
+                }
+                checkFlag();
+
+                timeout = setTimeout(function(){
+                    $('#InstallInstructions').modal();
+                }, 30000);
+            }
+
+        </script>
+    {% elseif Game.server_allowed == "Unlisted" or LoggedInUser.roblox_admin == "y" %}
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function dropdown() {
+                document.getElementById("editDropdown").classList.toggle("show");
+            }
+            // Close the dropdown menu if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+
+            var appurl = 'crapblox2016://{{ Token }}';
+            var appstore = '/binaries/CrapbloxLauncher.exe';
+
+            var timeout;
+
+            function preventPopup() {
+                clearTimeout(timeout);
+                timeout = null;
+                window.removeEventListener('pagehide', preventPopup);
+            }
+
+            function joinGame() {
+                console.info("[Join] - Opening modal...");
+
+                $('#JoiningGame').modal();
+
+                console.info("[Join] - Renewing lease for 10094");
+
+                $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                    // alert("Data: " + data + "\nStatus: " + status);
+                });
+
+                let flag = false;
+
+                function checkFlag() {
+                    if(flag === false) {
+                        $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                            // alert("Data: " + data + "\nStatus: " + status);
+                        });
+
+                        setTimeout(function() {
+                            $.ajax({
+                                url: "/arbiter/{{ Game.id }}/serverrunning",
+                                type: 'GET',
+                                success: function (res) {
+                                    if(res == "true") {
+                                        console.info("[Join] - Gameserver is running... Joining");
+                                        $.modal.close();
+                                        flag = true;
+                                    } else {
+                                        // keep retrying . . .
+                                        console.error("[Join] - Gameserver is not running... Retrying");
+                                    }
+
+                                    console.info("[Join] - Checking if gameserver is up...");
+                                }
+                            });
+
+                            window.setTimeout(checkFlag, 2000);
+                        }, 2000);
+                    } else {
+                        window.location = appurl;
+                        window.addEventListener('pagehide', preventPopup);
+                    }
+                }
+                checkFlag();
+
+                timeout = setTimeout(function(){
+                    $('#InstallInstructions').modal();
+                }, 30000);
+            }
+
+        </script>
+    {% elseif Game.server_owner == Session.Roblox or LoggedInUser.roblox_admin == "y" %}
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function dropdown() {
+                document.getElementById("editDropdown").classList.toggle("show");
+            }
+            // Close the dropdown menu if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+
+            var appurl = 'crapblox2016://{{ Token }}';
+            var appstore = '/binaries/CrapbloxLauncher.exe';
+
+            var timeout;
+
+            function preventPopup() {
+                clearTimeout(timeout);
+                timeout = null;
+                window.removeEventListener('pagehide', preventPopup);
+            }
+
+            function joinGame() {
+                console.info("[Join] - Opening modal...");
+
+                $('#JoiningGame').modal();
+
+                console.info("[Join] - Renewing lease for 10094");
+
+                $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                    // alert("Data: " + data + "\nStatus: " + status);
+                });
+
+                let flag = false;
+
+                function checkFlag() {
+                    if(flag === false) {
+                        $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                            // alert("Data: " + data + "\nStatus: " + status);
+                        });
+
+                        setTimeout(function() {
+                            $.ajax({
+                                url: "/arbiter/{{ Game.id }}/serverrunning",
+                                type: 'GET',
+                                success: function (res) {
+                                    if(res == "true") {
+                                        console.info("[Join] - Gameserver is running... Joining");
+                                        $.modal.close();
+                                        flag = true;
+                                    } else {
+                                        // keep retrying . . .
+                                        console.error("[Join] - Gameserver is not running... Retrying");
+                                    }
+
+                                    console.info("[Join] - Checking if gameserver is up...");
+                                }
+                            });
+
+                            window.setTimeout(checkFlag, 2000);
+                        }, 2000);
+                    } else {
+                        window.location = appurl;
+                        window.addEventListener('pagehide', preventPopup);
+                    }
+                }
+                checkFlag();
+
+                timeout = setTimeout(function(){
+                    $('#InstallInstructions').modal();
+                }, 30000);
+            }
+        </script>
+    {% elseif Game.server_allowed == "Friends Only" and (Friended or Session.Roblox == Game.server_owner) or LoggedInUser.roblox_admin == "y" %}
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function dropdown() {
+                document.getElementById("editDropdown").classList.toggle("show");
+            }
+            // Close the dropdown menu if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+
+            var appurl = 'crapblox2016://{{ Token }}';
+            var appstore = '/binaries/CrapbloxLauncher.exe';
+
+            var timeout;
+
+            function preventPopup() {
+                clearTimeout(timeout);
+                timeout = null;
+                window.removeEventListener('pagehide', preventPopup);
+            }
+
+            function joinGame() {
+                console.info("[Join] - Opening modal...");
+
+                $('#JoiningGame').modal();
+
+                console.info("[Join] - Renewing lease for 10094");
+
+                $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                    // alert("Data: " + data + "\nStatus: " + status);
+                });
+
+                let flag = false;
+
+                function checkFlag() {
+                    if(flag === false) {
+                        $.get("/API/Job/RenewLease/{{ Game.id }}", function(data, status){
+                            // alert("Data: " + data + "\nStatus: " + status);
+                        });
+
+                        setTimeout(function() {
+                            $.ajax({
+                                url: "/arbiter/{{ Game.id }}/serverrunning",
+                                type: 'GET',
+                                success: function (res) {
+                                    if(res == "true") {
+                                        console.info("[Join] - Gameserver is running... Joining");
+                                        $.modal.close();
+                                        flag = true;
+                                    } else {
+                                        // keep retrying . . .
+                                        console.error("[Join] - Gameserver is not running... Retrying");
+                                    }
+
+                                    console.info("[Join] - Checking if gameserver is up...");
+                                }
+                            });
+
+                            window.setTimeout(checkFlag, 2000);
+                        }, 2000);
+                    } else {
+                        window.location = appurl;
+                        window.addEventListener('pagehide', preventPopup);
+                    }
+                }
+                checkFlag();
+
+                timeout = setTimeout(function(){
+                    $('#InstallInstructions').modal();
+                }, 30000);
+            }
+
+        </script>
+    {% endif %}
+    <script>
+        // Thanks to Ham for the javascript
+
+        var galleryItems = document.querySelectorAll('.divSmallGalleryItem');
+        var currentIndex = 0;
+        var autoIndex = true;
+
+        function toggleAutoIndex() {
+            autoIndex = !autoIndex;
+        }
+
+        function showImage(index) {
+            var oldImage = document.querySelector('#ItemThumbnail img');
+            var newImageSrc = galleryItems[index].querySelector('img').getAttribute('src');
+            var newImage = document.querySelector('#newImage');
+            var clickedItem = galleryItems[index];
+            var imageDivs = document.querySelectorAll('.divSmallGalleryItem');
+            for (var j = 0; j < imageDivs.length; j++) {
+                imageDivs[j].classList.remove('SelectedYouTubeGalleryIcon');
+            };
+            clickedItem.classList.add('SelectedYouTubeGalleryIcon');
+
+            newImage.querySelector('img').setAttribute('src', newImageSrc);
+            newImage.style.opacity = 0;
+
+            var opacity = 0;
+            var fadeEffect = setInterval(function () {
+                opacity += 0.1;
+                newImage.style.opacity = opacity;
+                oldImage.style.opacity = 1 - opacity;
+
+                if (opacity >= 1) {
+                    clearInterval(fadeEffect);
+                    oldImage.style.opacity = 1;
+                    oldImage.setAttribute('src', newImageSrc);
+                }
+            }, 40);
+
+            currentIndex = index;
+        }
+
+        function nextImage() {
+            var nextIndex = (currentIndex + 1) % galleryItems.length;
+            showImage(nextIndex);
+        }
+
+        setInterval(function() {
+            if (autoIndex) {
+                nextImage()
+            }
+        }, 5000);
+
+        for (var i = 0; i < galleryItems.length; i++) {
+            galleryItems[i].addEventListener('click', function() {
+                var clickedIndex = Array.prototype.indexOf.call(galleryItems, this);
+                showImage(clickedIndex);
+            });
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

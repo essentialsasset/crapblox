@@ -1,0 +1,69 @@
+<html>
+    <script id="Functions" type="text/jscript">
+        function insertContent(id)
+        {
+            try
+            {
+                window.external.Insert("http://dungblx.cf/Asset/?id=" + id);
+            }
+            catch(x)
+            {
+                alert("Sorry, Unable to insert item.");
+            }
+        }
+        function dragRBX(id)
+        {
+            try
+            {
+                window.external.StartDrag("http://dungblx.cf/Asset/?id=" + id);
+            }
+            catch(x)
+            {
+                alert("Sorry, Unable to drag item.");
+            }
+        }
+        function clickButton(e, buttonid)
+        {
+            var bt = document.getElementById(buttonid);
+            if (typeof bt == 'object')
+            {
+            if(navigator.appName.indexOf("Netscape")>(-1))
+            {
+                if (e.keyCode == 13)
+                {
+                    bt.click();
+                    return false;
+                }
+            }
+            if (navigator.appName.indexOf("Microsoft Internet Explorer")>(-1))
+                {
+                    if (event.keyCode == 13)
+                    {
+                        bt.click();
+                        return false;
+                    }
+                }
+            }
+        }
+
+    </script>
+    <link href="/Styles/Base.css" rel="stylesheet">
+    <div class="Padding">
+        <h2 class="Bold InlineBlock" style="padding: 0px;margin:0px">Toolbox</h2>
+        <div class="Right" style="position:relative;top:5px">
+            <span class="Caption Middle"><img src="/Images/Silk/bricks.png" class="Icon Middle" style="vertical-align: middle"> <span class="InlineBlock Middle"> Models</span></span>
+        </div>
+        <hr>
+        {% for Item in Catalog %}
+            {% if Item.id is defined %}
+                <div class="ItemPanel" style="width: 24.7%;height: 120px" id='span_setitem_{{ Item.id }}' ondragstart='dragRBX({{ Item.id }})'>
+                    <a href="javascript:insertContent({{ Item.id }})" class='itemLink' title='{{ Item.item_title }}'>
+                        <img alt='{{ Item.item_title }}' id='img_span_setitem_{{ Item.id }}' onerror='return Roblox.Controls.Image.OnError(this)' src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail" style="width: 100%;height: 70px;">
+                        <span class="ItemTitle">{{ Item.item_title }}</span>
+                        <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</html>

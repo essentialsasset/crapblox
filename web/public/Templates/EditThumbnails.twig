@@ -1,0 +1,189 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="FullWidth">
+        <h1 class="Bold">{{ Game.server_title }} (PREVIEW)</h1>
+        <hr>
+    </div>
+    <div class="LeftSide GamesPage">
+        <div id="ItemThumbnail" style="height:280px; width: 500px; position: relative;">
+            <div id="currentImage"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}.png" height="280" width="500" border="0"></div>
+            <div id="newImage" style="position: absolute; top: 0; left: 0; opacity: 0;"><img src="" height="280" width="500" border="0"></div>
+        </div>
+        <div id="divSmallGalleryItemBox">
+            <div id="divSmallGalleryScrollContainer">
+                <div class="divSmallGalleryItem SelectedYouTubeGalleryIcon">
+                    <div class="smallGalleryThumbItem">
+                        <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}.png"  height="70" width="120" border="0"></a>
+                    </div>
+                </div>
+                <div class="divSmallGalleryItem">
+                    <div class="smallGalleryThumbItem">
+                        <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}_2.png" height="70" width="120" border="0"></a>
+                    </div>
+                </div>
+                <div class="divSmallGalleryItem">
+                    <div class="smallGalleryThumbItem">
+                        <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}_3.png" height="70" width="120" border="0"></a>
+                    </div>
+                </div>
+                <div class="divSmallGalleryItem">
+                    <div class="smallGalleryThumbItem">
+                        <a style="display:inline-block;height:70px;width:120px;cursor:pointer;"><img onerror="if (this.src != '/get-asset/Games/Default.png') this.src = '/get-asset/Games/Default.png';" src="/get-asset/Games/{{ Game.id }}_4.png" height="70" width="120" border="0"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="RightSide GamesPage">
+        <div class="GameInfo">
+            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';"  src="/get-asset/Avatars/{{ Author.id }}.png">
+            {% if Session.Roblox == Game.server_owner %}
+                <div class="dropdown">
+                    <img src="/Images/Menu.png" style="height:unset;width:unset;filter: contrast(10);" onclick="dropdown()" class="Icon Right dropbtn">
+                    <div id="editDropdown" class="dropdown-content">
+                        <a href="/Edit/Game/{{ Game.id }}">Edit Game</a>
+                        <a href="/API/Game/Delete/{{ Game.id }}">Delete Game</a>
+                    </div>
+                </div>
+            {% endif %}
+            <span class="BuilderInfo InlineBlock Bold Top">
+                <span class="Bold">Builder:</span>
+                <span class="AuthorLink"><a href="/User/{{ Author.roblox_username }}">{{ Author.roblox_username }}</a></span>
+                <span class="Caption">Joined:  {{ Author.roblox_created|date('m/d/Y') }}</span>
+            </span>
+        </div>
+        <hr>
+        <div class="GameMetrics">
+            <span class="CreationDate"><b>Created: </b> {{ Game.server_created|date('m/d/Y') }}</span>
+            <span class="CreationDate"><b>Last Activity: </b> {{ Game.server_ping|timeago }}</span>
+            <span class="CreationDate"><b>Favorited: </b> 0</span>
+            <span class="CreationDate"><b>Visited: </b> 0</span>
+            <span class="CreationDate"><b>Max Players: </b> ∞</span>
+        </div>
+        <hr>
+        <p class="GameDescription">
+            {{ Game.server_description|nl2br }}
+        </p>
+        <hr>
+    </div>
+    <div class="FullWidth">
+        <form action="/API/Edit/Game/Thumbnail/{{ Game.id }}" method="POST" enctype="multipart/form-data">
+            <div class="LeftSide">
+                <hr>
+                <div class="TabGroup" style="margin-bottom: 10px;">
+                    <div class="Tab" style="margin-left: 30px;">
+                        <a href="/Edit/Game/{{ Game.id }}">Basic Settings</a>
+                    </div>
+                    <div class="Tab Primary">
+                        <a href="/Edit/Game/{{ Game.id }}/Thumbnails">Thumbnails</a>
+                    </div>
+                    <div class="Tab">
+                        <a href="/Edit/Game/{{ Game.id }}/Badges">Badges</a>
+                    </div>
+                </div><br>
+                <div class="SignInForm">
+                    <div class="FormField">
+                        <span class="Middle">Main Thumbnail: </span>
+                        <input type="file" class="InputText" name="thumbnail_1">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Secondary Thumbnail: </span>
+                        <input type="file" class="InputText" name="thumbnail_2">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Third Thumbnail: </span>
+                        <input type="file" class="InputText" name="thumbnail_3">
+                    </div>
+                    <div class="FormField">
+                        <span class="Middle">Fourth Thumbnail: </span>
+                        <input type="file" class="InputText" name="thumbnail_4">
+                    </div>
+                    <input type="submit" class="SubmitButton Medium Green Right" value="Update">
+                </div>
+            </div>
+            <div class="RightSide">
+                <hr>
+                <div class="TabGroup" style="visibility: hidden;margin-bottom: -8px;">
+                    <div class="Tab" style="margin-left: 30px;">
+                        <a href="/Edit/Game/{{ Game.id }}">Basic Settings</a>
+                    </div>
+                    <div class="Tab">
+                        <a href="/Edit/Game/{{ Game.id }}/Thumbnails">Thumbnails</a>
+                    </div>
+                    <div class="Tab Primary">
+                        <a href="/Edit/Game/{{ Game.id }}/Badges">Badges</a>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </form>
+    </div>
+    <script>
+        // Thanks to Ham for the javascript
+
+        var galleryItems = document.querySelectorAll('.divSmallGalleryItem');
+        var currentIndex = 0;
+        var autoIndex = true;
+
+        function toggleAutoIndex() {
+            autoIndex = !autoIndex;
+        }
+
+        function showImage(index) {
+            var oldImage = document.querySelector('#ItemThumbnail img');
+            var newImageSrc = galleryItems[index].querySelector('img').getAttribute('src');
+            var newImage = document.querySelector('#newImage');
+            var clickedItem = galleryItems[index];
+            var imageDivs = document.querySelectorAll('.divSmallGalleryItem');
+            for (var j = 0; j < imageDivs.length; j++) {
+                imageDivs[j].classList.remove('SelectedYouTubeGalleryIcon');
+            };
+            clickedItem.classList.add('SelectedYouTubeGalleryIcon');
+
+            newImage.querySelector('img').setAttribute('src', newImageSrc);
+            newImage.style.opacity = 0;
+
+            var opacity = 0;
+            var fadeEffect = setInterval(function () {
+                opacity += 0.1;
+                newImage.style.opacity = opacity;
+                oldImage.style.opacity = 1 - opacity;
+
+                if (opacity >= 1) {
+                    clearInterval(fadeEffect);
+                    oldImage.style.opacity = 1;
+                    oldImage.setAttribute('src', newImageSrc);
+                }
+            }, 40);
+
+            currentIndex = index;
+        }
+
+        function nextImage() {
+            var nextIndex = (currentIndex + 1) % galleryItems.length;
+            showImage(nextIndex);
+        }
+
+        setInterval(function() {
+            if (autoIndex) {
+                nextImage()
+            }
+        }, 5000);
+
+        for (var i = 0; i < galleryItems.length; i++) {
+            galleryItems[i].addEventListener('click', function() {
+                var clickedIndex = Array.prototype.indexOf.call(galleryItems, this);
+                showImage(clickedIndex);
+            });
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

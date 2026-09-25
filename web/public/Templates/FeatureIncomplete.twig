@@ -1,0 +1,16 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="Center ErrorPage">
+        <h1 class="Bold">Feature Incomplete</h1>
+        <b>If you are seeing this, the current feature is incomplete and will be finished soon.</b>
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

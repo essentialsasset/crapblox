@@ -1,0 +1,105 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab" style="margin-left: 30px;">
+                <a href="/Develop">Develop</a>
+            </div>
+            <div class="Tab Primary">
+                <a href="/Settings">Settings</a>
+            </div>
+            <div class="Tab">
+                <a href="/Ads">Advertisements</a>
+            </div>
+            <div class="Tab">
+                <a href="/Referral">Referrals</a>
+            </div>
+        </div>
+    </div>
+    <div class="LeftSide">
+        <h2 class="Bold">Settings</h2>
+        <hr>
+        <div style="padding-right: 8px;">
+            <form action="/API/Update/Profile/Description/{{ User.roblox_username }}" method="POST">
+                <div class="FormField">
+                    <span class="Middle">Description: <br><span class="Caption">Make sure you describe yourself well!</span></span>
+                    <textarea type="text" style="width: 74.9%;height: 150px;vertical-align: top;" autocomplete="off" name="comment" class="NoResize InputText InlineBlock">{{ User.roblox_description }}</textarea>
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Update User">
+            </form><br><br>
+            <hr>
+            <form action="/API/Update/Profile/CSS/{{ User.roblox_username }}" method="POST">
+                <div class="FormField">
+                    <span class="Middle">CSS: <br><span class="Caption">Limit: 4096 characters. <br><br><b>FOR IMAGES, USE PROXY: https://wsrv.nl/?url=</b></span></span>
+                    <textarea type="text" style="width: 74.9%;height: 150px;vertical-align: top;" autocomplete="off" name="comment" class="NoResize InputText InlineBlock">{{ User.roblox_css }}</textarea>
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Update Style">
+            </form><br><br>
+            <hr>
+            <form action="/API/Theme/Set" method="POST">
+                <div class="FormField">
+                    <span class="Middle">Theme: <br></span>
+                    <select name="category" style="width: 66%;" class="InputText InlineBlock">
+                        <option value="Default" name="category" id="category">Default</option>
+                        <option value="Dark" name="category" id="category">Dark</option>
+                        <option value="Finobe" name="category" id="category">Finobe</option>
+                    </select>
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Use Theme">
+            </form><br><br>
+            <hr>
+        </div>
+        <h2 class="Bold NoMargin">Two Factor Authentication</h2>
+        <span class="Caption">Hover to uncover the QR code / authentication code.</span>
+        <hr>
+        <div class="QrCode">
+            <img src="{{ TwoFactorImage }}" style="height: 128px;">
+            <div class="InlineBlock Top" style="width: 310px;margin-left: 15px;">
+                Please use the following QR code with your authentication app:
+                <br><span class="Caption">...or use the following code: <code>{{ TwoFactorCode }}</code></span>
+                <p>
+                    {% if TwoFactorStatus %}
+                        <i class="far fa-lock"></i> ENABLED!
+                    {% else %}
+                        <i class="far fa-lock-open"></i> NOT ENABLED
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="RightSide">
+        <h2 class="Bold">Previews</h2>
+        <hr>
+        <div style="border-left: 1px solid #cccccc; padding-left: 8px;    height: 400px;">
+            <div class="ImagePreview">
+                <img src="/Images/Description.png">
+                <span class="Caption Right">This is the description. You can edit it with the Description form on the left.</span>
+            </div>
+
+            <div class="ImagePreview">
+                <img src="/Images/Default.png">
+                <span class="Caption Right">Default Theme</span>
+            </div>
+
+            <div class="ImagePreview">
+                <img src="/Images/Purple.png">
+                <span class="Caption Right">Purple Theme</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

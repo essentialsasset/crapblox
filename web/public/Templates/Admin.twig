@@ -1,0 +1,95 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <h2 class="Bold InlineBlock">Admin Panel</h2>
+    <span class="Caption Right" style="position: relative;top: 30px;"><i class="far fa-eye"></i> All actions are logged.</span>
+    <hr>
+    <div class="CardBig">
+        <div class="Column-3 Center">
+            <h2><i class="far fa-user"></i> {{ TotalUsers }} users</h2>
+            <p>are currently registered on Crapblox</p>
+        </div>
+        <div class="Column-3 Center">
+            <h2><i class="fa-sharp fas fa-chart-line"></i> {{ OnlineUsers }} users</h2>
+            <p>have been online in the past 10 minutes</p>
+        </div>
+        <div class="Column-3 Center">
+            <h2><i class="far fa-gears"></i> {{ RunningJobs|length }} job(s)</h2>
+            <p>are currently running</p>
+        </div>
+    </div>
+    <div class="Columns">
+        <div class="Column-4">
+            <h3>Users</h3>
+            <hr>
+            <ul>
+                <li><a href="/Admin/User/Ban">Ban User</a></li>
+                <li><a href="/Admin/User/Unban">Unban User</a></li>
+                <li><a href="/Admin/User/Compensate">Compensate User</a></li>
+                <li><a href="/Admin/News/Create">Create News Post</a></li>
+                <li><a href="/Admin/Redact/Description">Redact User Description</a></li>
+                <li><a href="/Admin/Redact/CSS">Redact User CSS</a></li>
+                <li><a href="/Admin/User/Name">Change Username</a></li>
+                <li><a href="/Admin/User/Delete">Delete User</a></li>
+            </ul>
+        </div>
+        <div class="Column-4">
+            <h3>Games</h3>
+            <hr>
+            <ul>
+                <li><a href="/Admin/Game/Close">Force Close Game</a></li>
+                <li><a href="/Admin/Game/Feature">Feature Game</a></li>
+                <li><a href="#">Edit Game</a></li>
+                <li><a href="#">Delete Game</a></li>
+            </ul>
+        </div>
+        <div class="Column-4">
+            <h3>Catalog</h3>
+            <hr>
+            <ul>
+                <li><a href="/Admin/Catalog/Approvals">Approve Items</a></li>
+                <li><a href="#">Delete Item</a></li>
+                <li><a href="/Admin/User/Item">Give User Item</a></li>
+            </ul>
+        </div>
+        <div class="Column-4">
+            <h3>Jobs</h3>
+            <hr>
+            <ul>
+                <li><a href="#">Get Running Jobs</a></li>
+                <li><a href="#">Set Lease Time</a></li>
+                <li><a href="#">Stop Job</a></li>
+                <li><a href="#">Script Execution</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="FullWidth">
+        <h3>Recent Logs</h3>
+        <hr>
+        {% for Log in Logs %}
+            {% if Log.id is defined %}
+                <code style="display: block;">
+                    {{ Log.log_message|trim|striptags|markdown_to_html }}
+                </code>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <style>
+        .RobloxContainer {
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

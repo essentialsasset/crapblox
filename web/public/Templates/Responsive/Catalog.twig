@@ -1,0 +1,15 @@
+{% for Item in Catalog %}
+    {% if Item.id is defined %}
+        <a href="/Item/{{ Item.id }}">
+            <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                <img src="/get-asset/Assets/{{ Item.id }}.png" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" class="ItemThumbnail">
+                <span class="ItemTitle" style="font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ Item.item_title }}</span>
+                {% if Item.item_quantity > -1 %}
+                    <span class="ItemSold"><b>was {{ Item.item_tix }}屁<br>lowest {{ Item.lowest_bid|number_format }}屁</b> {{ Item.bought }} sold</span>
+                {% else %}
+                    <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, {{ Item.bought }} sold</span>
+                {% endif %}
+            </div>
+        </a>
+    {% endif %}
+{% endfor %}

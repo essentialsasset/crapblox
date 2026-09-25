@@ -1,0 +1,40 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <form action="/API/Create/Group" method="POST" enctype="multipart/form-data">
+        <div class="LeftSide">
+            <h1>Create Group</h1>
+            <hr>
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Group Title:</span>
+                    <input type="text" name="title" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Group Photo: </span>
+                    <input type="file" class="InputText" name="asset">
+                </div>
+                <span class="Caption">Make sure your group is unique!</span>
+            </div>
+        </div>
+        <div class="RightSide">
+            <h1>&nbsp;</h1>
+            <hr>
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Group Description: <br><span class="Caption">Make sure you describe your group well!</span></span>
+                    <textarea type="text" style="width: 64%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock"></textarea>
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Create Group">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

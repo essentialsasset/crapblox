@@ -1,0 +1,82 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <div class="FullWidth">
+        <div class="TabGroup">
+            <div class="Tab" style="margin-left: 30px;">
+                <a href="/Develop">Develop</a>
+            </div>
+            <div class="Tab">
+                <a href="/Settings">Settings</a>
+            </div>
+            <div class="Tab">
+                <a href="/Ads">Advertisements</a>
+            </div>
+            <div class="Tab Primary">
+                <a href="/Referral">Referrals</a>
+            </div>
+        </div>
+    </div>
+    <div class="FullWidth">
+        <h2 class="Bold InlineBlock">Referrals</h2>
+        <a href="/API/Create/Referral" class="Right Bottom">
+            <button class="SubmitButton Grey">
+                Create Referral
+            </button>
+        </a>
+        <hr>
+        <div class="referrals">
+            {% for Key in Referrals %}
+                {% if Key.id is defined %}
+                    <div class="referral">
+                                <span class="inline-block">
+                                    {% if Key.key_usedby == "" %}
+                                        <span style="color:green">
+                                            (not used)
+                                        </span>
+                                    {% else %}
+                                        <a href="/User/{{ Key.key_usedby }}"><img style="width: 8px" src="/Images/Silk/user.png"> {{ Key.key_usedby }}</a>
+                                    {% endif %}
+                                    <br>
+                                    <span class="small" style="color:#666;">
+                                        {{ Key.key_created|timeago() }}
+                                    </span>
+                                </span>
+                        <span class="inline-block right top referral-key" onclick="navigator.clipboard.writeText(this.innerHTML).then(function () {alert('Copied referral key to clipboard')});">
+                                    {{ Key.key_code }}
+                                </span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if Referrals.rows == 0 %}
+                <small>No referral keys found... :'(</small>
+            {% endif %}
+        </div>
+        {% if User.roblox_admin == "y" %}
+            <h2>Available Keys (Only shows to Admins)</h2>
+            <hr>
+            <span class="Caption">Post these keys to unverifieds.</span>
+            {% for Key in Referrals %}
+                {% if Key.id is defined %}
+                    {% if Key.key_usedby == "" %}
+                        <pre>{{ Key.key_code }}</pre>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

@@ -1,0 +1,35 @@
+<div class="Sidebar">
+    <div class="GameInfo">
+        <img src="/get-asset/Avatars/{{ Session.UserID }}.png">
+        <span class="BuilderInfo InlineBlock Bold Top">
+            <span class="Bold">Logged in as:</span>
+            <span class="AuthorLink"><a href="/User/{{ Session.Roblox }}">{{ Session.Roblox }}</a></span>
+            <span class="Caption">Crapblox Member</span>
+        </span>
+    </div>
+    <div class="SidebarItems">
+        <div class="TextPadding">
+            <a href="/Avatar/"><img src="/Images/Silk/user_edit.png" class="Icon"> Avatar</a>
+            <a href="/Develop/"><img src="/Images/Silk/controller.png" class="Icon"> Develop</a>
+            <a href="/Users/"><img src="/Images/Silk/user.png" class="Icon"> Users</a>
+            <a href="/Groups/"><img src="/Images/Silk/group.png" class="Icon"> Groups</a>
+            <a href="/Stocks/"><img src="/Images/Silk/chart_pie.png" class="Icon"> Stocks</a>
+            <a href="/Friends/"><img src="/Images/Silk/user_add.png" class="Icon"> Friends
+                {% if FriendRequests > 0 %}
+                    <div class="NotificationCount InlineBlock">{{ FriendRequests }}</div>
+                {% endif %}
+            </a>
+            <a href="/Forum/"><img src="/Images/Silk/comment.png" class="Icon"> Forums</a>
+            <a href="/Referral/"><img src="/Images/Silk/key.png" class="Icon"> Referrals</a>
+            <a href="/Ads/"><img src="/Images/Silk/chart_bar.png" class="Icon"> Ads</a>
+            <a href="/Settings/"><img src="/Images/Silk/cog.png" class="Icon"> Settings</a>
+            <!-- <a href="/Membership/"><img src="/Images/Silk/star.png" class="Icon"> Membership</a> -->
+        </div>
+        <hr>
+        <div class="TextPadding">
+            <a href="/API/Auth/Logout">
+                <img src="/Images/Silk/door_out.png" class="Icon"> Sign Out
+            </a>
+        </div>
+    </div>
+</div>

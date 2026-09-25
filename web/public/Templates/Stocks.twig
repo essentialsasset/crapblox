@@ -1,0 +1,98 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['User', 'Money'],
+                {% for Share in MarketShare %}
+                {% if Share.roblox_tickets > 0 %}
+                ['{{ Share.roblox_username }}', {{ Share.roblox_tickets }}],
+                {% endif %}
+                {% endfor %}
+                ['',     0]
+            ]);
+            var options = {
+                title: 'Cash'
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
+    </script>
+{% endblock %}
+
+{%- block Container -%}
+    <!--
+    <br>
+    <h2 class="Bold NoMargin TextPadding"><img class="icon" src="/Images/Silk/chart_bar.png"> Owned Stocks</h2>
+    <p class="NoMargin Caption">
+        Buy stocks from this side of the page.
+    </p>
+    <hr>
+    {% if StocksOwned.rows == 0 %}
+        <span class="Caption">You own no stocks.</span>
+    {% endif %}
+    {% for Market in StocksOwned %}
+        {% if Market.id is defined %}
+            <div class="stock-owned-container">
+                <a href="/API/Stock/Sell/{{ Market.id }}" class="right inline-block">
+                    <button class="SubmitButton Blue Medium Right">
+                        Sell
+                    </button>
+                </a>
+                <span class="inline-block">
+                    <b><img src="/Images/Silk/money.png" class="Icon">{{ Market.stock_name }}</b><br><span class="Caption">{{ Market.stock_amount|number_format }} owned</span>
+                </span>
+
+            </div>
+        {% endif %}
+    {% endfor %}
+    <br><br>
+    <hr>
+    <div class="LeftSide">
+        <div style="padding-right: 8px;">
+            <h2 class="Bold"><img class="Icon" src="/Images/Silk/cart_add.png"> Buy Stocks</h2>
+            <p class="no-margin Caption">
+                Buy stocks from this side of the page.
+            </p>
+            <hr>
+            {% for Market in StockMarket %}
+                {% if Market.id is defined %}
+                    <div class="transaction-container">
+                        <b><img src="/Images/Silk/building.png" class="Icon"> {{ Market.stock_name }}</b>
+                        <span class="metadata tickets right"><img src="/Images/Silk/money.png" class="icon">{{ Market.stock_price|number_format }}</span><br>
+                        <span class="Caption">{{ Market.stock_alias }}</span>
+                    </div>
+                    <hr>
+                {% endif %}
+            {% endfor %}
+            <br>
+            <form method="POST" action="/API/Stock/Buy">
+                <input class="InputText TextMargin" type="text" name="stock" placeholder="Stock Name"><br>
+                <input class="InputText TextMargin" type="text" name="amount" placeholder="Stock Amount"><br>
+                <input class="SubmitButton Medium Blue TextMargin" type="submit" value="Buy Stock">
+            </form>
+        </div>
+    </div>
+
+    <div class="RightSide">
+
+        <hr>
+
+    </div>
+    -->
+    <h2 class="Bold"><img class="Icon" src="/Images/Silk/chart_pie.png"> Market Share</h2>
+    <p class="no-margin Caption">
+        The market share will be displayed below. Use a Javascript enabled browser.
+    </p>
+    <hr>
+    <div id="piechart" style="width: 100%; height: 500px;"></div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block Head %}
+            <title>Crapblox - {{ PageSettings.PageTitle|escape }}</title>
+            <meta property="og:title" content="{{ PageSettings.PageTitle|escape }}" />
+            <meta property="og:description" content="{{ PageSettings.PageDescription|escape }}" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="/Styles/Base.css" rel="stylesheet">
+            <link href="https://rawcdn.githack.com/hung1001/font-awesome-pro-v6/44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+            {% if Theme is defined and Theme != "default" and DisableTheme is not defined %}
+                <link href="/Styles/{{ Theme }}.css" rel="stylesheet">
+            {% endif %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'self' *.google.com *.youtube.com *.googleapis.com *.cloudflare.com *.githack.com *.gstatic.com *.cloudflare.com; font-src 'self' *.githack.com *.cloudflare.com data: *.googleapis.com *.gstatic.com *.fontawesome.com ; img-src 'self' data: wsrv.nl images.weserv.nl; style-src 'self' *.gstatic.com *.cloudflare.com 'unsafe-inline';">
+        {% endblock %}
+    </head>
+    <body>
+        {% block Header %}
+            {% include 'Includes/Header.twig' %}
+        {% endblock %}
+
+        <div class="RobloxContainer">
+            {% if Args.launcherSuccess is defined %}
+            <div class="RobloxAlert TypeSuccess">
+                The launcher has successfully installed! Go enjoy & play some games!
+            </div>
+            {% endif %}
+
+            {% if Session.Errors is defined %}
+                {% for Error in Session.Errors %}
+                    <div class="RobloxAlert TypeError">
+                        {{ Error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if Session.Success is defined %}
+                {% for Success in Session.Success %}
+                    <div class="RobloxAlert TypeSuccess">
+                        {{ Success }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if SystemMessage is defined %}
+                <div class="RobloxAlert {{ SystemMessageType }}">
+                    {{ SystemMessage }}
+                </div>
+            {% endif %}
+
+            {% block Container %}
+                
+            {% endblock %}
+        </div>
+        {% block Footer %}
+            {% include 'Includes/Footer.twig' %}
+        {% endblock %}
+    </body>
+</html>

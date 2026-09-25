@@ -1,0 +1,179 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <style>
+        .modal a.close-modal {
+            display: none;
+        }
+
+        .modal {
+            border-radius: 0px;
+            padding: 0px;
+            border: 5px solid #e1e1e1;
+        }
+    </style>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div>
+    <br>
+    <div class="HomepageTop">
+        <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Headshots/{{ Session.UserID }}.png" style="border-radius: 420px;" class="HomepageProfilePicture">
+        <div class="LastBlurb InlineBlock">
+            <h1 class="InlineBlock Middle Bold">Hello, {{ Session.Roblox }}!</h1><br>
+            <b>Last Post: </b> <span class="Caption" style="position: relative;top: 3px;display: inline-block;width: 300px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{ Blurb }}</span>
+        </div>
+    </div>
+    <h2 class="Bold InlineBlock">Friends ({{ Relationship.rows }})</h2>
+    <a href="#" onclick="viewMoreOutfit()">
+        <button class="SubmitButton Grey Medium Right" style="margin-top: 13px;">
+            View More
+        </button>
+    </a>
+    <hr>
+    {% if Relationship|length > 1 %}
+        {% set Friends = 0 %}
+        {% for Item in Relationship %}
+            {% if Item.id is defined %}
+                {% if Friends < 8 %}
+                    {% set Friends = Friends + 1 %}
+                    <a href="/User/{{ Item.roblox_username }}">
+                        <div class="ItemPanel Friend">
+                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Headshots/{{ Item.profile_picture }}.png" class="ItemThumbnail">
+                            <span class="ItemTitle Center Bold">{{ Item.roblox_username }}</span>
+                            {% if Item.active == true %}
+                                <img src="/Images/Silk/bullet_green.png" class="Icon">
+                            {% else %}
+                                <img src="/Images/Silk/bullet_red.png" class="Icon">
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <div id="FriendsMore" class="modal">
+        <div style="padding: 1px;background-color: #e1e1e1;">
+            <h2 class="Bold Center">Your Friends</h2>
+        </div>
+        <div style="padding: 14px;">
+            {% for Item in Relationship %}
+                {% if Item.id is defined %}
+                    <a href="/User/{{ Item.roblox_username }}">
+                        <div class="ItemPanel Friend" style="    width: 91px;    margin-right: 7px;">
+                            <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Item.profile_picture }}.png" class="ItemThumbnail" style="    width: 91px;height: 91px;">
+                            <span class="ItemTitle Center Bold">{{ Item.roblox_username }}</span>
+                            {% if Item.active == true %}
+                                <img src="/Images/Silk/bullet_green.png" style="/* filter:invert(1); */" class="Icon">
+                            {% else %}
+                                <img src="/Images/Silk/bullet_red.png" style="/* filter:invert(1); */" class="Icon">
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% if Favorites|length > 1 %}
+        <h2 class="Bold">Favorites</h2>
+        <hr>
+        {% for Game in Favorites %}
+            {% if Game.id is defined %}
+                <a href="/Game/{{ Game.id }}">
+                    <div class="GamePanel RecentlyPlayed">
+                        <img src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="GameThumbnail">
+                        <span class="GameTitle">{{ Game.server_title }}</span>
+                        <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                        <span class="GameMetadata">
+                                <span class="GameAdded">Active <span class="Right">{{ Game.server_ping|timeago }}</span></span>
+                                <span class="GameAdded">Created <span class="Right">{{ Game.server_created|timeago }}</span></span>
+                            </span>
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if Games|length > 1 %}
+        <h2 class="Bold">Recently Played</h2>
+        <hr>
+        {% for Game in Games %}
+            {% if Game.id is defined %}
+                <a href="/Game/{{ Game.id }}">
+                    <div class="GamePanel RecentlyPlayed">
+                        <img src="/get-asset/Games/{% if Game.use_thumbnail == 'n' %}Default.png{% else %}{{ Game.id }}.png{% endif %}" class="GameThumbnail">
+                        <span class="GameTitle">{{ Game.server_title }}</span>
+                        <span class="GamePlayers">{% if Game.active == true %}{{ Game.server_players }}{% else %}0{% endif %} Players Online</span>
+                        <span class="GameMetadata">
+                                <span class="GameAdded">Active <span class="Right">{{ Game.server_ping|timeago }}</span></span>
+                                <span class="GameAdded">Created <span class="Right">{{ Game.server_created|timeago }}</span></span>
+                            </span>
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <h2 class="Bold">Feed</h2>
+    <hr>
+    <form class="FeedForm" action="/API/Feed/New" method="POST">
+        <textarea type="text" style="width: 92%;height: 45px;" name="comment" class="InputText InlineBlock"></textarea>
+        <input type="submit" class="SubmitButton Grey" value="Submit">
+    </form><br>
+    {% for Comment in Comments %}
+        {% if Comment.id is defined %}
+            <div class="Comment" id="Comment{{ Comment.id }}">
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Avatars/{{ Comment.author_id }}.png" class="CommentAuthor">
+                <div class="CommentContents InlineBlock Top">
+                    <a href="/User/{{ Comment.comment_author }}" class="AuthorLink">{{ Comment.comment_author }}</a>
+                    <p>
+                        {{ Comment.comment_text|nl2br }}
+                    </p>
+                    <span class="Caption">{{ Comment.comment_sent|timeago }}</span>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <style>
+        .RobloxContainer {
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function dropdown() {
+            document.getElementById("editDropdown").classList.toggle("show");
+        }
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function viewMoreOutfit() {
+            $('#FriendsMore').modal();
+        }
+    </script>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

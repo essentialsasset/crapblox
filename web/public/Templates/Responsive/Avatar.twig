@@ -1,0 +1,22 @@
+{% for Item in Items %}
+    {% if Item.id is defined %}
+        <a href="#" onclick="WearAsset({{ Item.id }});" id="Link{{ Item.id }}">
+            <div class="ItemPanel {% if Item.item_quantity > -1 %}Limited{% endif %}">
+                <img onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';" src="/get-asset/Assets/{{ Item.id }}.png" class="ItemThumbnail">
+                <span class="ItemTitle">
+                    {{ Item.item_title }}
+                    <!--
+                    <a href="#" onclick="WearAsset({{ Item.id }});" id="Link{{ Item.id }}">
+                        {% if Item.wearing == false %}
+                            <button class="SubmitButton Grey Medium Right Middle">Wear</button>
+                        {% else %}
+                            <button style="left: 77px;" class="SubmitButton Grey Medium Right Middle">Unwear</button>
+                        {% endif %}
+                    </a>
+                    -->
+                </span>
+                <span class="ItemSold"><b>{{ Item.item_tix }}屁</b>, by {{ Item.item_author }}</span>
+            </div>
+        </a>
+    {% endif %}
+{% endfor %}

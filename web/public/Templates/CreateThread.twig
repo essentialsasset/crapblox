@@ -1,0 +1,49 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <form action="/API/Create/Thread/{{ Category.id }}" method="POST">
+        <div class="SignInForm">
+            <h1>Create Thread</h1>
+            <hr>
+            <div class="FormField">
+                <span class="Middle">Thread Title:</span>
+                <input type="text" name="title" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Thread Description: <br><span class="Caption">You can use markdown in threads. <a href="https://commonmark.org/help/" target="_blank">Markdown Syntax</a></span></span>
+                <textarea type="text" style="width: 64%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock"></textarea>
+            </div>
+            <input type="submit" class="SubmitButton Medium Blue Right" value="Create Thread">
+        </div>
+    </form>
+    <style>
+        .SignInForm {
+            width: 930px;
+        }
+
+        .SignInForm textarea {
+            height: 200px;
+        }
+
+        .FormField .Middle {
+            width: 100px;
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 15px;
+            /* god i am sorry for i have sinned */
+        }
+
+        .SignInForm .SubmitButton {
+            position: relative;
+            right: 207px;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

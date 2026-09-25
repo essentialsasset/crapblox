@@ -1,0 +1,98 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <form action="/API/Create/Asset" method="POST" enctype="multipart/form-data">
+        <div class="LeftSide">
+            <h1>Create Asset</h1>
+            <hr>
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Item Title:</span>
+                    <input type="text" name="title" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Item Description: <br><span class="Caption">Make sure you describe your asset well!</span></span>
+                    <textarea type="text" style="width: 64%;" autocomplete="off" name="description" class="NoResize InputText InlineBlock"></textarea>
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Asset Visibility: <br><span class="Caption">Determines if your item is visible in the catalog.</span></span>
+                    <input type="checkbox" checked name="visibility" value="visible" class="InputText InlineBlock">
+                </div>
+                {% if IsAdmin == true %}
+                    <div class="FormField">
+                        <span class="Middle">Limited: <br><span class="Caption">Toggled.</span></span>
+                        <input type="checkbox" name="limited" id="js_limited" value="limited" class="InputText InlineBlock">
+                    </div>
+                    <div id="js_quantity" style="visibility: hidden">
+                        <div class="FormField">
+                            <span class="Middle">Item Quantity: </span>
+                            <input type="number" name="quantity" class="InputText InlineBlock">
+                        </div>
+                    </div>
+                {% endif %}
+                <span class="Caption">Make sure your asset is valid!</span>
+
+                {% if Args.GroupID is defined %}
+                    <input type="hidden" name="groupid" value="{{ Args.GroupID }}">
+                {% endif %}
+            </div>
+        </div>
+        <div class="RightSide">
+            <h1>&nbsp;</h1>
+            <hr>
+            <div class="SignInForm">
+                <div class="FormField">
+                    <span class="Middle">Item Price: </span>
+                    <input type="number" name="price" class="InputText InlineBlock">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Asset Type: </span>
+                    <select name="category" style="width: 66%;" class="InputText InlineBlock">
+                        <option value="T-Shirt" name="category" id="category">T-Shirt</option>
+                        <option value="Shirt" name="category" id="category">Shirt</option>
+                        <option value="Pants" name="category" id="category">Pants</option>
+                        <option value="Decal" name="category" id="category">Decal</option>
+                        <option value="Audio" name="category" id="category">Audio</option>
+                        <option value="Model" name="category" id="category">Model</option>
+                        {% if IsAdmin == true %}
+                            <option value="Package" name="category" id="category">Package (Admin Only)</option>
+                            <option value="Gear" name="category" id="category">Gear (Admin Only)</option>
+                            <option value="Hat" name="category" id="category">Hat (Admin Only)</option>
+                            <option value="Face" name="category" id="category">Face (Admin Only)</option>
+                            <option value="Mesh" name="category" id="category">Mesh (Admin Only)</option>
+                            <option value="Heads" name="category" id="category">Heads (Admin Only)</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="FormField">
+                    <span class="Middle">Asset File: </span>
+                    <input type="file" class="InputText" name="asset">
+                </div>
+                <div class="FormField">
+                    <span class="Middle">On Sale: <br><span class="Caption">Determines if your asset is on-sale.</span></span>
+                    <input type="checkbox" checked name="onsale" value="true" class="InputText InlineBlock">
+                </div>
+                <input type="submit" class="SubmitButton Medium Blue Right" value="Create Asset">
+            </div>
+        </div>
+        <script>
+            const checkbox = document.getElementById('js_limited')
+
+            checkbox.addEventListener('change', (event) => {
+                if (event.currentTarget.checked) {
+                    document.getElementById('js_quantity').style.visibility = "visible";
+                } else {
+                    document.getElementById('js_quantity').style.visibility = "hidden";
+                }
+            })
+        </script>
+    </form>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}

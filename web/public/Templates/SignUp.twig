@@ -1,0 +1,116 @@
+    {% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+    <script>
+        function onLogin(token){ document.getElementById('submitform').submit(); }
+    </script>
+{% endblock %}
+
+{%- block Container -%}
+    <div class="LeftSide">
+        <h2 class="Bold">Sign up</h2>
+        <hr>
+        <form action="API/Auth/Register" id="submitform" class="SignInForm" method="POST">
+            <div class="FormField">
+                <span class="Middle">Username: </span>
+                <input type="text" autocomplete="off" placeholder="john_doe" name="username" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Password: </span>
+                <input type="password" name="password" placeholder="***********" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Confirm Password: </span>
+                <input type="password" name="password_confirmation" placeholder="***********" class="InputText InlineBlock">
+            </div>
+            <!--
+            <div class="FormField">
+                <span class="Middle">Referral: </span>
+                <input type="text" autocomplete="off" name="referral" placeholder="crapblox_xxxxxxxxxxxxxxxxxxxxx" class="InputText InlineBlock">
+            </div>
+            -->
+            <div class="FormField">
+                <span class="Middle">Over 13: <br><span class="Caption">You have to be 13 or over to use Crapblox.</span></span>
+                <input type="checkbox" required {% if Item.item_onsale == "y" %}checked{% endif %} name="onsale" value="true" class="InputText InlineBlock">
+            </div>
+            <div class="FormField">
+                <span class="Middle">Agree to Code of Conduct: <br></span>
+                <input type="checkbox" required {% if Item.item_onsale == "y" %}checked{% endif %} name="onsale" value="true" class="InputText InlineBlock">
+            </div>
+            <span class="Caption"><a href="/">...or log in</a></span>
+            <input type="submit" class="SubmitButton Medium Blue Right g-recaptcha" value="Sign Up" data-sitekey="{{ PublicKey }}" data-callback="onLogin">
+        </form>
+    </div>
+    <div class="RightSide">
+        <h2 class="Bold">Our Code of Conduct</h2>
+        <hr>
+        <pre>
+Welcome to Crapblox, an Old Roblox Revival where everyone is welcome! We want to ensure that everyone who registers and plays our game has a positive and enjoyable experience. To help achieve this, we ask that you follow our Code of Conduct
+
+- No racism, homophobia, or any other form of discrimination will be tolerated. We want to create a welcoming community where everyone can feel comfortable and respected.
+
+- Do not exploit any glitches or loopholes in the game. This includes but is not limited to hacking, cheating, or any other unauthorized means of gaining an advantage.
+
+- Players must be 13 or over to play Crapblox. If we discover that you are under 13, your account will be banned.
+
+- Do not harass or bully other players. We want to maintain a friendly and respectful environment for everyone.
+
+- Keep it clean. Any form of explicit or inappropriate content is prohibited.
+
+- Do not share personal information about yourself or others. This includes but is not limited to full names, addresses, phone numbers, or email addresses.
+
+- Do not impersonate other players or game moderators. This includes creating fake accounts or pretending to be someone else in the game.
+
+- Follow the instructions of game moderators. They are there to help maintain a safe and enjoyable environment for everyone.
+
+We take these rules very seriously and any violation of the Code of Conduct may result in a warning, suspension, or permanent ban from the game. Thank you for your cooperation and have fun playing Crapblox!
+        </pre>
+    </div>
+    <style>
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-y: scroll;
+            height: 295px;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid #ccc;
+            color: grey;
+            margin-bottom: 0px;
+        }
+
+        .LeftSide {
+            float: left;
+            width: calc(34% - 20px);
+        }
+
+        .RightSide {
+            float: right;
+            width: calc(69% - 20px);
+        }
+
+        .RobloxContainer {
+            min-height: 100px;
+            overflow: hidden;
+        }
+
+        footer {
+            height: 600px;
+        }
+
+        .LandingPage {
+            filter: sepia(1) hue-rotate(238deg);
+        }
+
+        .u-non-blurred {
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+{% endblock %}
+
+{%- block Footer -%}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "Base.twig" %}
+
+{%- block Header -%}
+    {{ parent() }}
+{% endblock %}
+
+{%- block Container -%}
+    <div class="AdContainer">
+        <a href="{{ Ad.ad_target }}">
+            <img src="/get-asset/Ads/{{ Ad.ad_file }}" class="Ad">
+        </a>
+        <span class="Caption Right">Advertisement</span>
+    </div><br>
+    <div class="LeftSide GroupPageSide Games">
+        <div class="Padding">
+            <h2 class="Bold">Groups You're In</h2>
+            <hr>
+            <a href="/Create/Group">
+                <button class="Large Blue SubmitButton FullWidth">
+                    Create
+                </button>
+            </a>
+            <hr>
+            <div class="GamesList">
+                {% if GroupsIn|length == 1 %}
+                    <div class="Center">
+                        <h3>&nbsp;</h3>
+                        <span class="Caption">You are currently in no groups.</span>
+                        <h3>&nbsp;</h3>
+                    </div>
+                {% endif %}
+                {% for Group in GroupsIn %}
+                    {% if Group.id is defined %}
+                        <a href="/Groups/{{ Group.id }}"><img src="/Images/Silk/group.png" class="Icon"> {{ Group.group_title }}</a><br>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="RightSide Games">
+        <form class="SearchForm GroupSearch InlineBlock" style="margin-left: 0px;" action="/Groups/Search/" method="GET">
+            <input type="text" name="Search" placeholder="Search all groups" class="InputText InlineBlock">
+            <input type="submit" style="height: 23px;" value="Search" class="SubmitButton Grey">
+        </form>
+        <hr>
+        {% for Group in Groups %}
+            {% if Group.id is defined %}
+                <div class="Group">
+                    <img src="{% if Group.group_thumbnail_moderated == 'y' %}/get-asset/Groups/{{ Group.id }}.png{% elseif Group.group_thumbnail_moderated == 'd' %}/get-asset/Groups/Denied.png{% else %}/get-asset/Groups/Default.png{% endif %}" class="ProfilePicture" onerror="if (this.src != '/Images/Fallback.png') this.src = '/Images/Fallback.png';">
+                    <div class="UserInfo InlineBlock Top">
+                        <a href="/Groups/{{ Group.id }}">{{ Group.group_title }}</a> <span class="Caption">({{ Group.members }} members)</span>
+                        <p class="NoMargin">{{ Group.group_description }}</p>
+                        <span class="Caption InlineBlock Bold">
+                        created {{ Group.group_created|timeago }}
+                    </span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% macro pagination(total, current, url, nearbyPagesLimit = 4) %}
+            {% apply spaceless %}
+                {% if total > 1 %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="pagination-area">
+                                {% if current > 1 %}
+                                    <a class="prev page-numbers" href="{{ (url ~ (current-1))|e }}">Prev</a>
+                                {% endif %}
+
+                                {% for i in 1..total %}
+                                    {% if 0 == (current - nearbyPagesLimit) - loop.index %}
+                                        <a class="page-numbers" href="{{ (url ~ 1)|e }}">1</a>
+                                        {% if 1 != loop.index %}
+                                            <span class="page-numbers">...</span>
+                                        {% endif %}
+                                    {% elseif 0 == (current + nearbyPagesLimit) - loop.index  and (current + nearbyPagesLimit) < total %}
+                                        <span class="page-numbers">...</span>
+                                    {% elseif 0 < (current - nearbyPagesLimit) - loop.index %}
+                                    {% elseif 0 > (current + nearbyPagesLimit) - loop.index %}
+                                    {% else %}
+                                        {% if current == loop.index  %}
+                                            <span class="page-numbers current" aria-current="page">{{ loop.index }}</span>
+                                        {% else %}
+                                            <a class="page-numbers" href="{{ url ~ loop.index }}">{{ loop.index }}</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                                {% if current != total  and (current + nearbyPagesLimit) < total %}
+                                    <a class="page-numbers" href="{{ (url ~ total)|e }}">{{ total }}</a>
+                                {% endif %}
+                                {% if current < total %}
+                                    <a class="next page-numbers" href="{{ (url ~ (current+1))|e }}">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endapply %}
+        {% endmacro %}
+
+        {{ _self.pagination(total, current, url) }}
+    </div>
+{% endblock %}
+
+{%- block Footer -%}
+{{ parent() }}
+{% endblock %}
